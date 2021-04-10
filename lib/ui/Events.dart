@@ -9,6 +9,14 @@ class Events extends StatefulWidget {
 
 class _EventsState extends State<Events> {
 
+  CalendarController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = CalendarController();
+  }
+
   @override
   Widget build(BuildContext context) {
     var newheight = (MediaQuery.of(context).size.height - AppBar().preferredSize.height-MediaQuery.of(context).padding.top );
@@ -40,11 +48,65 @@ class _EventsState extends State<Events> {
       ],
     ) ;
 
-
     return Scaffold(
+      backgroundColor: ColorSet.primaryColor,
       appBar: myAppBar,
-      //SETTING THE CALANDAR
-      body:null,
+      //SETTING THE CALANDAR AND CALENDAR STYLE
+      body:ListView(
+        children: [
+          Center(
+            child: Container(
+              padding: EdgeInsets.only(top: 10,bottom: 10),
+              width: MediaQuery.of(context).size.width*0.93,
+              child: TableCalendar(calendarController: controller,
+                headerStyle: HeaderStyle(formatButtonVisible: false),
+                calendarStyle: CalendarStyle(
+                  weekdayStyle: TextStyle(color: ColorSet.primaryColor),
+                  weekendStyle: TextStyle(color: ColorSet.primaryColor),
+                  outsideWeekendStyle: TextStyle(color: ColorSet.primaryColor),
+                  holidayStyle: TextStyle(color: ColorSet.primaryColor),
+                  outsideHolidayStyle: TextStyle(color: ColorSet.primaryColor),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: ColorSet.whiteColor,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: ColorSet.shadowcolour,
+                    spreadRadius: 4,
+                    blurRadius: 3,
+                    offset: Offset(1,3),
+                  ),
+                ]
+              ),
+            ),
+          ),
+          SizedBox(height: 10,),
+          //SHOW EVENTS CONTAINER
+          Container(
+            width: double.infinity,
+            child: Column(
+              children: [
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
+
+              ],
+            ),
+            decoration: BoxDecoration(
+                color: ColorSet.whiteColor,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
+            ),
+          ),
+        ],
+      ),
     );
 
   }
