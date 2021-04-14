@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:lms_pro/app_style.dart';
 
 class Bus extends StatelessWidget {
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
+  const Bus(
+      {Key key,
+        this.menuScreenContext,
+        this.onScreenHideButtonPressed,
+        this.hideStatus = false})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

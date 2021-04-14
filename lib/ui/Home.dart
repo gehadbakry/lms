@@ -6,9 +6,20 @@ import 'package:lms_pro/ui/choose_student.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:lms_pro/utils/ChatButton.dart';
 import '../app_style.dart';
 
 class Home extends StatefulWidget {
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
+  const Home(
+      {Key key,
+        this.menuScreenContext,
+        this.onScreenHideButtonPressed,
+        this.hideStatus = false})
+      : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -19,8 +30,6 @@ class _HomeState extends State<Home> {
   @override
 
   Widget build(BuildContext context) {
-
-
     //Coustume mde app bar
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.whiteColor,
@@ -28,7 +37,7 @@ class _HomeState extends State<Home> {
       leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.primaryColor,
           iconSize: 25,
           onPressed: (){
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => ChooseStudent()),
             );
@@ -50,6 +59,7 @@ class _HomeState extends State<Home> {
 
 
     return  Scaffold(
+      floatingActionButton: ChatButton(),
       backgroundColor: ColorSet.whiteColor,
       appBar: MyAppBar ,
       //Main widget in the page

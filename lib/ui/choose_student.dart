@@ -12,9 +12,10 @@ class ChooseStudent extends StatefulWidget {
 }
 
 class _ChooseStudentState extends State<ChooseStudent> {
+  int index = 0;
   @override
   Widget build(BuildContext context) {
-
+    index++;
     List chilcard = [StudentCard(context),StudentCard(context),StudentCard(context)];
 
     return Scaffold(

@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/ui/Home.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
+import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../app_style.dart';
 class Events extends StatefulWidget {
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
+  const Events(
+      {Key key,
+        this.menuScreenContext,
+        this.onScreenHideButtonPressed,
+        this.hideStatus = false})
+      : super(key: key);
   @override
   _EventsState createState() => _EventsState();
 }
@@ -29,8 +41,9 @@ class _EventsState extends State<Events> {
       leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
           iconSize: 25,
           onPressed: (){
-            Navigator.pop(
+            Navigator.pushReplacement(
               context,
+              MaterialPageRoute(builder: (context) => BNV()),
             );
           }) ,
       centerTitle: true,
@@ -49,6 +62,7 @@ class _EventsState extends State<Events> {
     ) ;
 
     return Scaffold(
+      floatingActionButton: ChatButton(),
       backgroundColor: ColorSet.primaryColor,
       appBar: myAppBar,
       //SETTING THE CALANDAR AND CALENDAR STYLE

@@ -29,7 +29,7 @@ class AppTextStyle {
       fontWeight: FontWeight.normal);
   static TextStyle subText = TextStyle(
       color: ColorSet.SecondaryColor,
-      fontSize: 18,
+      fontSize: 15,
       fontWeight: FontWeight.w500);
   static TextStyle subject = TextStyle(
       color: ColorSet.primaryColor,

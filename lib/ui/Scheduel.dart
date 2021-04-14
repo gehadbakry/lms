@@ -8,6 +8,15 @@ import '../app_style.dart';
 import 'NotifiPage.dart';
 
 class Scheduel extends StatefulWidget {
+  final BuildContext menuScreenContext;
+  final Function onScreenHideButtonPressed;
+  final bool hideStatus;
+  const Scheduel(
+      {Key key,
+        this.menuScreenContext,
+        this.onScreenHideButtonPressed,
+        this.hideStatus = false})
+      : super(key: key);
   @override
   _ScheduelState createState() => _ScheduelState();
 }
@@ -21,8 +30,10 @@ class _ScheduelState extends State<Scheduel> {
       leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
           iconSize: 25,
           onPressed: (){
-            Navigator.pop(
-              context,);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => BNV()),
+                );
           }) ,
       actions: [
         IconButton(icon: Icon(Icons.notifications),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/MyAppBar.dart';
 
@@ -31,8 +32,24 @@ class _NotifiState extends State<Notifi> {
 
     return Scaffold(
       appBar: MyAppBar,
-      body: Container(color: Colors.blue,),
+      body: ListView.builder(
+          itemCount: 2,
+          itemBuilder: (context , index){
+            return notifiTile(FontAwesomeIcons.syringe , "Vaccine");
+          }),
 
     );
+  }
+
+  Column notifiTile(IconData icon , String title) {
+    return Column(
+            children: [
+              ListTile(
+                leading: FaIcon(icon,color: ColorSet.primaryColor,),
+                title: Text(title , style: AppTextStyle.textstyle20,),
+              ),
+              Divider(height: 1.5,),
+            ],
+          );
   }
 }

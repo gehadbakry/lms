@@ -1,10 +1,12 @@
 class User {
   int Id;
-  String UserName;
-  User({this.Id,this.UserName});
+  int UserName;
+  String title;
+  User({this.Id,this.UserName,this.title});
   factory User.fromJson(Map<String,dynamic>json){
-   return User(Id:json['id'],
-   UserName: json['username']
+   return User(Id:json['id '],
+   UserName: json['userId'],
+     title: json['title']
    );
   }
 }
