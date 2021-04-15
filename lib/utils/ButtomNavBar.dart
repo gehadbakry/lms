@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/models/subject.dart';
+import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:lms_pro/app_style.dart';
 import 'package:lms_pro/ui/Bus.dart';
@@ -59,12 +61,6 @@ class _BNVState extends State<BNV> {
   //     ),
   //   ];
   // }
-  List pages = [
-    Home(),
-    Events(),
-    Scheduel(),
-    Bus(),
-  ];
 
   // List<PersistentBottomNavBarItem> _navBarsItems(){
   //   return [
@@ -109,40 +105,42 @@ class _BNVState extends State<BNV> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // body: PersistentTabView.custom(
-      //   context,
-      //   controller: _controller,
-      //   screens: pages,
-      //   itemCount: 4,
-      //   confineInSafeArea: true,
-      //   handleAndroidBackButtonPress: true,
-      //   stateManagement: true,
-      //   hideNavigationBar: _hideNavBar,
-      //   customWidget: CustomNavBarWidget(
-      //     items: _navBarsItems(),
-      //     onItemSelected: (index) {
-      //       setState(() {
-      //         _controller.index = index; // THIS IS CRITICAL!! Don't miss it!
-      //       });
-      //     },
-      //     selectedIndex: _controller.index,
-      //   ),
-      //
-      // ),
-      body: page[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home) , label: "Home"),
-              BottomNavigationBarItem(icon: Icon(Icons.event_available) ,label: "Events"),
-              BottomNavigationBarItem(icon: Icon(Icons.timer_rounded),label: "Schecuel"),
-              BottomNavigationBarItem(icon: Icon(Icons.directions_bus_rounded),label: "Bus"),
-            ],
-        currentIndex: _selectedIndex,
-        elevation: 0.9,
-        onTap: _onItemTapped,
-         selectedItemColor: ColorSet.primaryColor,
-        unselectedItemColor:  ColorSet.inactiveColor,
+    return Container(
+      child: Scaffold(
+        // body: PersistentTabView.custom(
+        //   context,
+        //   controller: _controller,
+        //   screens: pages,
+        //   itemCount: 4,
+        //   confineInSafeArea: true,
+        //   handleAndroidBackButtonPress: true,
+        //   stateManagement: true,
+        //   hideNavigationBar: _hideNavBar,
+        //   customWidget: CustomNavBarWidget(
+        //     items: _navBarsItems(),
+        //     onItemSelected: (index) {
+        //       setState(() {
+        //         _controller.index = index; // THIS IS CRITICAL!! Don't miss it!
+        //       });
+        //     },
+        //     selectedIndex: _controller.index,
+        //   ),
+        //
+        // ),
+        body: page[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(icon: Icon(Icons.home) , label: "Home"),
+                BottomNavigationBarItem(icon: Icon(Icons.event_available) ,label: "Events"),
+                BottomNavigationBarItem(icon: Icon(Icons.timer_rounded),label: "Schecuel"),
+                BottomNavigationBarItem(icon: Icon(Icons.directions_bus_rounded),label: "Bus"),
+              ],
+          currentIndex: _selectedIndex,
+          elevation: 0.9,
+          onTap: _onItemTapped,
+           selectedItemColor: ColorSet.primaryColor,
+          unselectedItemColor:  ColorSet.inactiveColor,
+        ),
       ),
     );
   }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:lms_pro/utils/MyAppBar.dart';
 
 import '../app_style.dart';
+import 'NotifiNext.dart';
 
 class Notifi extends StatefulWidget {
   @override
@@ -31,25 +33,37 @@ class _NotifiState extends State<Notifi> {
     );
 
     return Scaffold(
+      floatingActionButton: ChatButton(),
       appBar: MyAppBar,
       body: ListView.builder(
-          itemCount: 2,
+          itemCount: 10,
           itemBuilder: (context , index){
-            return notifiTile(FontAwesomeIcons.syringe , "Vaccine");
+            return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: ListTile(
+                      leading: FaIcon(FontAwesomeIcons.syringe ,color: ColorSet.primaryColor,),
+                      title: Text("Vaccine" , style: AppTextStyle.textstyle20,),
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NotifiNext()),
+                        );
+                      },
+
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                        width: MediaQuery.of(context).size.width*0.8,
+                        child: Divider(height: 2,color: Colors.black,)),
+                  ),
+                ],
+              );
+            //return notifiTile(FontAwesomeIcons.syringe , "Vaccine" ,NotifiNext(),);
           }),
 
     );
-  }
-
-  Column notifiTile(IconData icon , String title) {
-    return Column(
-            children: [
-              ListTile(
-                leading: FaIcon(icon,color: ColorSet.primaryColor,),
-                title: Text(title , style: AppTextStyle.textstyle20,),
-              ),
-              Divider(height: 1.5,),
-            ],
-          );
   }
 }

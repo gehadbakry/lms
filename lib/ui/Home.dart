@@ -231,7 +231,12 @@ class _HomeState extends State<Home> {
                     SizedBox(height:constraints.maxHeight*0.05 ,),
                     //RECENT EXAMS
                     GestureDetector(
-                      onTap:(){},
+                      onTap:(){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RecentAssignment()),
+                        );
+                      },
                       child: Container(
                         height:constraints.maxHeight*0.25,
                         width: constraints.maxWidth*0.65,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_pro/testpage.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
+import 'package:lms_pro/utils/ChatButton.dart';
 import '../app_style.dart';
 
 class SubjectPage extends StatefulWidget {
@@ -157,6 +158,7 @@ class _SubjectPageState extends State<SubjectPage> {
             ),
           )
       ),
+      floatingActionButton: ChatButton(),
     );
   }
 

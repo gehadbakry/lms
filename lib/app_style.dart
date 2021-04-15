@@ -18,7 +18,7 @@ class AppTextStyle {
   static TextStyle textstyle15 = TextStyle(
       color: ColorSet.primaryColor,
       fontSize: 15,
-      fontWeight: FontWeight.normal);
+      fontWeight: FontWeight.normal,);
   static TextStyle leadtextstyle = TextStyle(
       color: ColorSet.primaryColor,
       fontSize: 15,
