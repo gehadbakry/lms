@@ -14,7 +14,7 @@ class AppTextStyle {
   static TextStyle headerStyle = TextStyle(
       color: ColorSet.whiteColor, fontSize: 20, fontWeight: FontWeight.w700);
   static TextStyle headerStyle2 = TextStyle(
-      color: ColorSet.primaryColor, fontSize: 18, fontWeight: FontWeight.bold);
+      color: ColorSet.primaryColor, fontSize: 15, fontWeight: FontWeight.bold);
   static TextStyle textstyle15 = TextStyle(
       color: ColorSet.primaryColor,
       fontSize: 15,

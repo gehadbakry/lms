@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lms_pro/testpage.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
+import 'package:lms_pro/ui/subjectDetails.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
 import '../app_style.dart';
 
@@ -23,56 +23,8 @@ class _SubjectPageState extends State<SubjectPage> {
     "language":"Language",
     "chapter":2,
     "name":"Teacher name",
-    "rout" : Test(),
+    "rout" : SubjectDetails(),
     },
-      {
-        "cont":context,
-        "imageurl":"assets/images/Arabic.jpg",
-        "language":"Language",
-        "chapter":2,
-        "name":"Teacher name",
-        "rout" : Test(),
-      },
-      {
-        "cont":context,
-        "imageurl":"assets/images/Arabic.jpg",
-        "language":"Language",
-        "chapter":2,
-        "name":"Teacher name",
-        "rout" : Test(),
-      },
-      {
-        "cont":context,
-        "imageurl":"assets/images/Arabic.jpg",
-        "language":"Language",
-        "chapter":2,
-        "name":"Teacher name",
-        "rout" : Test(),
-      },
-      {
-        "cont":context,
-        "imageurl":"assets/images/Arabic.jpg",
-        "language":"Language",
-        "chapter":2,
-        "name":"Teacher name",
-        "rout" : Test(),
-      },
-      {
-        "cont":context,
-        "imageurl":"assets/images/Arabic.jpg",
-        "language":"Language",
-        "chapter":2,
-        "name":"Teacher name",
-        "rout" : Test(),
-      },
-      {
-        "cont":context,
-        "imageurl":"assets/images/Arabic.jpg",
-        "language":"Language",
-        "chapter":2,
-        "name":"Teacher name",
-        "rout" : Test(),
-      },
     ];
 
 
