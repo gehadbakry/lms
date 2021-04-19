@@ -20,21 +20,10 @@ class _SubjectDetailsState extends State<SubjectDetails> {
 
     //CUSTOM APP BAR
     Widget myAppBar = PreferredSize(
-      preferredSize: Size.fromHeight(105),
+      preferredSize: Size.fromHeight(75),
       child: AppBar(
-        bottom: TabBar(
-          tabs:[
-            Tab(text: "Material",),
-            Tab(text: "Assignments",),
-            Tab(text: "Quiz",),
-            Tab(text: "Online Exam",),
-          ],
-          indicatorWeight: 0.005,
-          labelPadding: EdgeInsets.only(right:MediaQuery.of(context).size.width*0.015
-          ),
-        ),
         title: Padding(
-          padding: const EdgeInsets.only(top: 17),
+          padding: const EdgeInsets.only(top: 13),
           child: Container(
             //Row has avatar as leading and the card as trailing
             child: Row(
@@ -42,10 +31,10 @@ class _SubjectDetailsState extends State<SubjectDetails> {
                 //Student's avatar
                 CircleAvatar(
                   backgroundImage: AssetImage('assets/images/teacher.png'),
-                  radius: 22.0,
+                  radius: 23.0,
                 ),
+                SizedBox(width: 10,),
                 //Container that contains the identifiction card
-                SizedBox(width: MediaQuery.of(context).size.width*0.02,),
                 Container(
                   child: Center(
                     child: Column(
@@ -92,22 +81,60 @@ class _SubjectDetailsState extends State<SubjectDetails> {
       ),
     ) ;
 
+    Widget bottomAppBar = PreferredSize(
+        preferredSize:  Size.fromHeight(45),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(24),
+              topLeft: Radius.circular(24),
+            ),
+          ),
+          backgroundColor: ColorSet.whiteColor,
+      elevation: 0.0,
+      bottom: TabBar(
+        tabs:[
+          FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text("Material",style:TextStyle(color: ColorSet.primaryColor,),)),
+          FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text("Assignments",style:TextStyle(color: ColorSet.primaryColor,),)),
+          FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text("Quiz",style:TextStyle(color: ColorSet.primaryColor,),)),
+          FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text("Online Exams",style:TextStyle(color: ColorSet.primaryColor),)),
+         ],
+        indicatorWeight: 0.005,
+        labelPadding: EdgeInsets.only(right:MediaQuery.of(context).size.width*0.015,
+        ),
+        unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
+      ),
+    ));
+
 
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: ColorSet.primaryColor,
+        backgroundColor: ColorSet.whiteColor,
         appBar: myAppBar,
-        body: TabBarView(
-          children: [
-            BuildSubjectDetails(BuildMaterialPage()),
-            BuildSubjectDetails(AssignmentDetails()),
-            BuildSubjectDetails(QuizPageDetails()),
-            BuildSubjectDetails(Test()),
-          ],
+        body: Scaffold(
+          backgroundColor: ColorSet.primaryColor,
+          appBar: bottomAppBar,
+          body: TabBarView(
+            children: [
+              BuildSubjectDetails(BuildMaterialPage()),
+              BuildSubjectDetails(AssignmentDetails()),
+              BuildSubjectDetails(QuizPageDetails()),
+              BuildSubjectDetails(QuizPageDetails()),
+            ],
 
+          ),
+          floatingActionButton: ChatButton(),
         ),
-        floatingActionButton: ChatButton(),
       ),
     );
   }

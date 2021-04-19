@@ -12,51 +12,55 @@ class buildPage extends StatefulWidget {
 class _buildPageState extends State<buildPage> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-          child: Card(
-            shadowColor: ColorSet.shadowcolour,
-            elevation: 9.0,
-            borderOnForeground: true,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: ColorSet.borderColor, width: 0.5),
-              borderRadius: BorderRadius.circular(20),
+    return Container(
+      color: ColorSet.whiteColor,
+      padding: EdgeInsets.only(top: 10),
+      child: ListView.builder(
+        itemBuilder: (BuildContext context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+            child: Card(
+              shadowColor: ColorSet.shadowcolour,
+              elevation: 9.0,
+              borderOnForeground: true,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: ColorSet.borderColor, width: 0.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: ListTile(
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    "Assignment Name", style: AppTextStyle.textstyle20,),
+                ),
+                trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("10/10/10", style: AppTextStyle.subText,),
+                    Spacer(),
+                    Text("Result:10", style: AppTextStyle.headerStyle2,),
+                  ],
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Type", style: AppTextStyle.subText,),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Text(mainText, style: AppTextStyle.textstyle15,
+                        maxLines: 1, overflow: TextOverflow.ellipsis,),
+                    ),
+                  ],
+                ),
+                onTap: () => alertDialog(context),
+              ),
             ),
-            child: ListTile(
-              title: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  "Assignment Name", style: AppTextStyle.textstyle20,),
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("10/10/10", style: AppTextStyle.subText,),
-                  Spacer(),
-                  Text("Result:10", style: AppTextStyle.headerStyle2,),
-                ],
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Type", style: AppTextStyle.subText,),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text(mainText, style: AppTextStyle.textstyle15,
-                      maxLines: 1, overflow: TextOverflow.ellipsis,),
-                  ),
-                ],
-              ),
-              onTap: () => alertDialog(context),
-            ),
-          ),
-        );
-      },
-      itemCount: 30,
+          );
+        },
+        itemCount: 30,
 
+      ),
     );
   }
 

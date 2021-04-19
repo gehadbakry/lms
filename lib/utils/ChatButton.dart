@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms_pro/app_style.dart';
+import 'package:lms_pro/ui/mainChatPage.dart';
 
 class ChatButton extends StatefulWidget {
   @override
@@ -12,6 +13,8 @@ class _ChatButtonState extends State<ChatButton> {
     return FloatingActionButton(
         backgroundColor: ColorSet.SecondaryColor,
         child:Icon(Icons.chat,color: ColorSet.whiteColor,),
-        onPressed: (){});
+        onPressed: (){
+          Navigator.push(context,  MaterialPageRoute(builder: (context) => ChatPage()));
+        },);
   }
 }

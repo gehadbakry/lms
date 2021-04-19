@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ColorSet {
   static Color primaryColor = Color.fromRGBO(18, 100, 97, 1);
-  static Color SecondaryColor = Color.fromRGBO(250, 228, 14, 1);
+  static Color SecondaryColor = Color.fromRGBO(243, 214, 24, 1);
   static Color inactiveColor = Color.fromRGBO(126, 146, 146, 1);
   static Color notifiColor = Color.fromRGBO(241, 10, 10, 1);
   static Color whiteColor = Color.fromRGBO(255, 255, 255, 1);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
+import 'package:lms_pro/utils/buildScheduelPage.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 
@@ -52,106 +53,76 @@ class _ScheduelState extends State<Scheduel> {
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
       ),
     );
-    Widget TimeContainer = Container(
-      height: 120,
-      child:  Padding(
-        padding: const EdgeInsets.only(left: 25,top: 30),
-        child: TimelineTile(
+   Widget bottomAppBar = PreferredSize(
+     preferredSize: Size.fromHeight(55.0),
+     child: AppBar(
+       shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.only(
+           topRight: Radius.circular(24),
+           topLeft: Radius.circular(24),
+         ),
+       ),
+       elevation: 0.0,
+       backgroundColor: ColorSet.whiteColor,
+     automaticallyImplyLeading: false,
+     bottom:TabBar(
+       tabs: [
+         DaysButton("Sun",context),
+         DaysButton("Mon",context),
+         DaysButton("Tues",context),
+         DaysButton("Wed",context),
+         DaysButton("Thur",context),
+       ],
+       unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
+       indicatorWeight: 0.005,
 
-          indicatorStyle: IndicatorStyle(
-            color: ColorSet.primaryColor,
-            indicatorXY: 0.4,
-            drawGap: true,
-          ),
-          endChild: ListTile(
-            title: Text("English" , style: AppTextStyle.headerStyle2,),
-            subtitle: Text("Teacher Name\nDetails" , style: AppTextStyle.subtextgrey,),
-            trailing: Text("8:00 Am : 8:30 Am",style: AppTextStyle.subText,),
-          ),
-          isFirst: true,
-        ),
-      ),
-    );
-
+     ) ,
+   ), );
     //Allowed height to work with
     var newheight = (MediaQuery.of(context).size.height - AppBar().preferredSize.height-MediaQuery.of(context).padding.top );
     String day;
 ////////////////////////GARABI EL MAP/////////////////////////////////////////////
     return Scaffold(
       appBar: MyAppBar,
-      body: Column(
-        children: [
-          SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              DaysButton("Sun"),
-              SizedBox(width: 10,),
-              DaysButton("Mon"),
-              SizedBox(width: 10,),
-              DaysButton("Tues"),
-              SizedBox(width: 10,),
-              DaysButton("Wed"),
-              SizedBox(width: 10,),
-              DaysButton("Thur"),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25,top: 30),
-            child: TimelineTile(
-
-              indicatorStyle: IndicatorStyle(
-                color: ColorSet.primaryColor,
-                indicatorXY: 0.4,
-                drawGap: true,
-              ),
-              endChild: ListTile(
-                title: Text("English" , style: AppTextStyle.headerStyle2,),
-                subtitle: Text("Teacher Name\nDetails" , style: AppTextStyle.subtextgrey,),
-                trailing: Text("8:00 Am : 8:30 Am",style: AppTextStyle.subText,),
-              ),
-              isFirst: true,
+      backgroundColor: ColorSet.primaryColor,
+      body: DefaultTabController(
+        length: 5,
+          child: Scaffold(
+            appBar: bottomAppBar,
+              backgroundColor: ColorSet.primaryColor,
+            body: TabBarView(
+              children: [
+                ScheduelPage(),
+                ScheduelPage(),
+                ScheduelPage(),
+                ScheduelPage(),
+                ScheduelPage(),
+              ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25),
-            child: TimelineTile(
-              indicatorStyle: IndicatorStyle(
-                color: ColorSet.primaryColor,
-              ),
-              endChild: ListTile(
-                title: Text("English" , style: AppTextStyle.headerStyle2,),
-                subtitle: Text("Teacher Name\nDetails" , style: AppTextStyle.subtextgrey,),
-                trailing: Text("8:00 Am : 8:30 Am",style: AppTextStyle.subText,),
-              ),
-            ),
-          ),
-        ],
+          )
       ),
+      // body:
       floatingActionButton: ChatButton(),
     );
   }
 //DAYS' NAMES CONTAINERS
-  GestureDetector DaysButton(String day) {
-    return GestureDetector(
-              child: Container(
-                height:35 ,
-                width: 55,
-                decoration: BoxDecoration(
-                  color: ColorSet.whiteColor,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ColorSet.shadowcolour,
-                      blurRadius: 3,
-                      spreadRadius: 3,
-                    ),
-                  ],
-                ),
-                child: Center(child: Text("$day",style: AppTextStyle.headerStyle2,)),
-              ),
-            );
+  Container DaysButton(String day ,  BuildContext ctx) {
+    return Container(
+      height:35 ,
+      width: (MediaQuery.of(ctx).size.width -MediaQuery.of(ctx).padding.right-MediaQuery.of(ctx).padding.left)*0.30,
+      decoration: BoxDecoration(
+        color: ColorSet.whiteColor,
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        boxShadow: [
+          BoxShadow(
+            color: ColorSet.shadowcolour,
+            blurRadius: 3,
+            spreadRadius: 3,
+          ),
+        ],
+      ),
+      child: Center(child: Text("$day",style: AppTextStyle.headerStyle2,maxLines: 1,softWrap: true,)),
+    );
   }
 
 }
