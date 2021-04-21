@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/app_style.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/ui/SubjectPage.dart';
+import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:provider/provider.dart';
 
 import 'Home.dart';
 
@@ -12,11 +16,13 @@ class ChooseStudent extends StatefulWidget {
 }
 
 class _ChooseStudentState extends State<ChooseStudent> {
-  int index = 0;
-  @override
+  static final route = '/choose';
+  LoginResponseModel logInInfo;
+  List <String> ChildrenCodes = new List<String>();
+@override
   Widget build(BuildContext context) {
-    index++;
-    List chilcard = [StudentCard(context),StudentCard(context),StudentCard(context)];
+    logInInfo = ModalRoute.of(context).settings.arguments;
+    ChildrenCodes = (logInInfo.childrenCode).split(",");
 
     return Scaffold(
       backgroundColor: ColorSet.whiteColor,
@@ -45,14 +51,15 @@ class _ChooseStudentState extends State<ChooseStudent> {
             ),
           ),
           Center(
-            child: CarouselSlider.builder(itemCount: chilcard.length,
+            child: CarouselSlider.builder(itemCount: ChildrenCodes.length-1,
                 itemBuilder: (_, int index, int realIndex){
-              return chilcard[index];
+              return StudentCard(context);
                 },
                 options: CarouselOptions(
                   height: 310,
                   autoPlay: false,
                   initialPage: 0,
+                enableInfiniteScroll: false,
                 )) ,
           )
         ],
@@ -96,11 +103,17 @@ class _ChooseStudentState extends State<ChooseStudent> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(right: 20),
-                                    child: ElevatedButton(onPressed: (){
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => BNV()),
-                                      );
+                                    child: ElevatedButton(
+                                      onPressed: (){
+                                        for(int index = 0;index <ChildrenCodes.length-1 ; index++ ){
+                                          Provider.of<StudentData>(context,listen: false).SData(int.parse(ChildrenCodes[index],onError: (source)=>0)).then((value) {
+
+                                          });
+                                        }
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(builder: (context) => BNV()),
+                                      // );
                                     },
                                       child: Text("Go",
                                         style: TextStyle(color: ColorSet.primaryColor),),

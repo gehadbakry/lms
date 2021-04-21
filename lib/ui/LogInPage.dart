@@ -3,7 +3,8 @@ import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/app_style.dart';
 import 'package:http/http.dart' as http;
 import 'package:lms_pro/models/login_model.dart';
-import 'package:lms_pro/models/user.dart';
+import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:provider/provider.dart';
 import '../ProgressHUD.dart';
 import 'choose_student.dart';
 import 'dart:convert';
@@ -86,7 +87,6 @@ class _LogInState extends State<LogIn> {
                     colors: [ColorSet.primaryColor, ColorSet.whiteColor],
                     stops: [0.0, 1.0],
                   ),
-                  //border: Border.all(width: 1.0, color: ColorSet.borderColor),
                 ),
               ),
             ),
@@ -233,35 +233,59 @@ class _LogInState extends State<LogIn> {
                               ),
                             ),
                             onPressed: () {
+                             // Provider.of<APIService>(context,listen: false).login(loginRequestModel);
                               if (validateAndSave()) {
                                 print(loginRequestModel.toJson());
                                 setState(() {
                                   isApiCallProcess = true;
                                 });
                                 APIService apiService = new APIService();
-                                apiService
-                                    .login(loginRequestModel)
-                                    .then((value) {
+                                Provider.of<APIService>(context,listen: false).login(loginRequestModel).then((value) {
+                                //apiService.login(loginRequestModel).then((value) {
                                   if (value != null) {
                                     setState(() {
                                       isApiCallProcess = false;
                                     });
-                                    print(apiService.usertype);
+                                    print(Provider.of<APIService>(context,listen: false).usertype);
                                   }
-                                  if(apiService.usertype =='-1'){
+                                  if(Provider.of<APIService>(context,listen: false).usertype =='-1'){
+                                  //if(apiService.usertype =='-1'){
                                     print("Account is invalid");
                                   }
-                                  else if(apiService.usertype == '0'){
+                                  else if(Provider.of<APIService>(context,listen: false).usertype == '0'){
                                     print('Account is inactive');
+                                  }
+                                  else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children!= "") ){
+                                  Navigator.pushNamed(context, '/choose',
+                                      arguments: LoginResponseModel(userType: Provider.of<APIService>(context,listen: false).usertype ,
+                                          userCode: Provider.of<APIService>(context,listen: false).usercode,
+                                          childrenCode: Provider.of<APIService>(context,listen: false).children
+                                      ),
+                                  );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => ChooseStudent(),
+                                    //   ),
+                                    // );
+                                  }
+                                  else if(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children == ""){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BNV(),
+                                      ),
+                                    );
                                   }
                                   else{
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ChooseStudent()),
+                                        builder: (context) => BNV(),
+                                      ),
                                     );
                                   }
-                                });
+                                });//68,
 
                               }
                             },
