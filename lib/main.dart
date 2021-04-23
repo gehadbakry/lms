@@ -33,13 +33,13 @@ class MyApp extends StatelessWidget {
      ),
       //initialRoute: '/',
       routes: {
-        '/LogIn':(context) => LogIn(),
+        '/LogIn':(context) => ChangeNotifierProvider(child: LogIn(),create: (_)=>StudentData(),),
         '/choose':(context) => ChangeNotifierProvider(child: ChooseStudent(),create: (_)=>StudentData(),),
         '/events':(context) => Events(),
-        '/home':(context) => Home(),
+        '/home':(context) => ChangeNotifierProvider(child: Home(),create: (_)=>StudentData(),),
         '/scheduel':(context) => Scheduel(),
         '/bus':(context) => Bus(),
-        '/BNV':(context) => BNV(),
+        '/BNV':(context) => ChangeNotifierProvider(child: BNV(),create: (_)=>StudentData(),),
 
 
       },

@@ -9,13 +9,18 @@ import 'package:provider/provider.dart';
 class StudentData with ChangeNotifier{
   Student student;
   var response;
+  var NameAr;
+  var studentcode;
+  List studentData;
   Future<Student> SData(int SCode) async {
     Uri url = Uri.parse("http://169.239.39.105/lms_api2/API/StudentApi/GetStudentProfile?student_code=$SCode");
     response = await http.get(url);
     if (response.statusCode == 200 || response.statusCode == 400) {
-      print("Response data ${response.body}");
+     print("Response data ${response.body}");
+      NameAr = Student.fromJson(json.decode(response.body),).sNameAR;
+      studentcode = Student.fromJson(json.decode(response.body),).studentCode;
       notifyListeners();
-      return Student.fromJson(
+      return  Student.fromJson(
         json.decode(response.body),
       );
     }

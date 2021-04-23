@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -17,6 +18,9 @@ class BNV extends StatefulWidget {
 
 class _BNVState extends State<BNV> {
   int _selectedIndex = 0;
+  LoginResponseModel logInInfo;
+   var usercode;
+  var usertype;
   // PersistentTabController _controller;
   // bool _hideNavBar;
 
@@ -97,14 +101,20 @@ class _BNVState extends State<BNV> {
     //   MaterialPageRoute(builder: (context) => pages[_selectedIndex]),
     // );
   }
-  List page = [
-    Home(),
-    Events(),
-    Scheduel(),
-    Bus(),
-  ];
+  // List page = [
+  //   Home(),
+  //   Events(),
+  //   Scheduel(),
+  //   Bus(),
+  // ];
   @override
   Widget build(BuildContext context) {
+    List page = [
+      Home(),
+      Events(),
+      Scheduel(),
+      Bus(),
+    ];
     return Container(
       child: Scaffold(
         // body: PersistentTabView.custom(

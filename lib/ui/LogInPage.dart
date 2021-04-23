@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/app_style.dart';
 import 'package:http/http.dart' as http;
+import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:provider/provider.dart';
+import 'package:lms_pro/ui/Home.dart';
 import '../ProgressHUD.dart';
 import 'choose_student.dart';
 import 'dart:convert';
@@ -23,7 +26,6 @@ class _LogInState extends State<LogIn> {
   bool isApiCallProcess = false;
   LoginRequestModel loginRequestModel;
   LoginResponseModel loginResponseModel;
-
 /////Dropdown list data
   int _counter = 0;
   String dropDownValue;
@@ -50,7 +52,6 @@ class _LogInState extends State<LogIn> {
     loginResponseModel = LoginResponseModel();
     loginRequestModel = new LoginRequestModel();
   }
-
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
@@ -246,7 +247,6 @@ class _LogInState extends State<LogIn> {
                                     setState(() {
                                       isApiCallProcess = false;
                                     });
-                                    print(Provider.of<APIService>(context,listen: false).usertype);
                                   }
                                   if(Provider.of<APIService>(context,listen: false).usertype =='-1'){
                                   //if(apiService.usertype =='-1'){
@@ -256,24 +256,31 @@ class _LogInState extends State<LogIn> {
                                     print('Account is inactive');
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children!= "") ){
-                                  Navigator.pushNamed(context, '/choose',
-                                      arguments: LoginResponseModel(userType: Provider.of<APIService>(context,listen: false).usertype ,
-                                          userCode: Provider.of<APIService>(context,listen: false).usercode,
-                                          childrenCode: Provider.of<APIService>(context,listen: false).children
-                                      ),
-                                  );
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) => ChooseStudent(),
-                                    //   ),
-                                    // );
+                                      Navigator.pushNamed(context, '/choose',
+                                        arguments: LoginResponseModel(
+                                          userType: Provider.of<APIService>(context, listen: false).usertype,
+                                          userCode: Provider.of<APIService>(context, listen: false).usercode,
+                                          childrenCode: Provider.of<APIService>(context, listen: false).children,
+                                          code: Provider.of<APIService>(context, listen: false).code,
+                                        ),
+                                      );
                                   }
-                                  else if(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children == ""){
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => BNV(),
+
+                                  else if(Provider.of<APIService>(context,listen: false).usertype == '2'&& Provider.of<APIService>(context,listen: false).children == ""){
+                                    Navigator.pushNamed(context, '/BNV',
+                                      arguments: LoginResponseModel(
+                                        userCode: Provider.of<APIService>(context, listen: false).usercode,
+                                        userType: Provider.of<APIService>(context, listen: false).usertype,
+                                        code: Provider.of<APIService>(context, listen: false).code,
+                                      ),
+                                    );
+                                  }
+                                  else if(Provider.of<APIService>(context,listen: false).usertype == '2'&& Provider.of<APIService>(context,listen: false).children == ""){
+                                    Navigator.pushNamed(context, '/home',
+                                      arguments: LoginResponseModel(
+                                        userCode: Provider.of<APIService>(context, listen: false).usercode,
+                                        userType: Provider.of<APIService>(context, listen: false).usertype,
+                                        code: Provider.of<APIService>(context, listen: false).code,
                                       ),
                                     );
                                   }

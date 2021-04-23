@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/student_data.dart';
+import 'package:lms_pro/models/Student.dart';
+import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:lms_pro/ui/Rassignments.dart';
 import 'package:lms_pro/ui/SubjectPage.dart';
@@ -7,19 +10,10 @@ import 'package:lms_pro/ui/choose_student.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
+import 'package:provider/provider.dart';
 import '../app_style.dart';
 
 class Home extends StatefulWidget {
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
-  const Home(
-      {Key key,
-        this.menuScreenContext,
-        this.onScreenHideButtonPressed,
-        this.hideStatus = false})
-      : super(key: key);
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -27,9 +21,21 @@ class Home extends StatefulWidget {
 
 
 class _HomeState extends State<Home> {
+  LoginResponseModel logInInfo;
+  var usercode;
+  var usertype;
+  var code;
   @override
 
+
+  @override
   Widget build(BuildContext context) {
+    logInInfo = ModalRoute.of(context).settings.arguments;
+    usercode = (logInInfo.userCode);
+    usertype = (logInInfo.userType);
+    code = (logInInfo.code);
+    print("From home $usercode");
+    print("From home $code");
     //Coustume mde app bar
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.whiteColor,
@@ -56,8 +62,6 @@ class _HomeState extends State<Home> {
     );
     //Allowed height to work with
     var newheight = (MediaQuery.of(context).size.height - AppBar().preferredSize.height-MediaQuery.of(context).padding.top -MediaQuery.of(context).padding.bottom);
-
-
     return  Scaffold(
       floatingActionButton: ChatButton(),
       backgroundColor: ColorSet.whiteColor,
@@ -100,49 +104,65 @@ class _HomeState extends State<Home> {
                     ),
                     //Column that contains the data of the student
                     child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Student Name" , style: AppTextStyle.headerStyle2,),
-                          SizedBox(height: 10,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("Stage:prim" , style: AppTextStyle.textstyle15,),
-                              SizedBox(width: 25,),
-                              Text("Class:A" , style: AppTextStyle.textstyle15,),
-                            ],
-                          ),
-                          SizedBox(height: 3,),
-                          //SOCIAL MEDIA CONTAINER
-                          Container(
-                            height: 35,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  icon:FaIcon(FontAwesomeIcons.facebook , color: ColorSet.SecondaryColor,),
-                                  onPressed: (){},
-                                ),
-                                IconButton(
-                                  icon:FaIcon(FontAwesomeIcons.twitter , color: ColorSet.SecondaryColor,),
-                                    onPressed: (){}
-                                ),
-                                IconButton(
-                                  icon:FaIcon(FontAwesomeIcons.linkedinIn , color: ColorSet.SecondaryColor,),
-                                    onPressed: (){}
-                                ),
-                                IconButton(
-                                  icon:FaIcon(FontAwesomeIcons.instagram , color: ColorSet.SecondaryColor,),
-                                    onPressed: (){}
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: FutureBuilder<Student>(
+                          future:StudentData().SData(int.parse(code)),
+                        builder:(context,snapshot){
+                          if(snapshot.hasData){
+                            return ListView.builder(
+                                itemCount: 1,
+                                itemBuilder: (context,index){
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(snapshot.data.sNameAR , style: AppTextStyle.headerStyle2,),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text("Stage: ${snapshot.data.stageNameAR}" , style: AppTextStyle.textstyle15,),
+                                          Text("Class:${snapshot.data.classNameAR}" , style: AppTextStyle.textstyle15,),
+                                        ],
+                                      ),
+
+                                      //SOCIAL MEDIA CONTAINER
+                                      Container(
+                                        height: 35,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            IconButton(
+                                              icon:FaIcon(FontAwesomeIcons.facebook , color: ColorSet.SecondaryColor,),
+                                              onPressed: (){
+                                              },
+                                            ),
+                                            IconButton(
+                                                icon:FaIcon(FontAwesomeIcons.twitter , color: ColorSet.SecondaryColor,),
+                                                onPressed: (){}
+                                            ),
+                                            IconButton(
+                                                icon:FaIcon(FontAwesomeIcons.linkedinIn , color: ColorSet.SecondaryColor,),
+                                                onPressed: (){}
+                                            ),
+                                            IconButton(
+                                                icon:FaIcon(FontAwesomeIcons.instagram , color: ColorSet.SecondaryColor,),
+                                                onPressed: (){}
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          }
+                          else if(snapshot.hasError){
+                            return Text("error");
+                          }
+                          return CircularProgressIndicator();
+
+                        }
+
+                      )
                     ),
                   ),
                 ),

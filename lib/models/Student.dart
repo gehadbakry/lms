@@ -56,24 +56,24 @@ class Student{
   //   return map;
   // }
 
-  factory Student.fromJson(Map<String,dynamic>json){
+  factory Student.fromJson(Map<String, dynamic> json){
     return Student(
-      sNameAR: json['student_full_name_ar'] == null ? null : json['student_full_name_ar'],
-      sNameEN: json['student_full_name_en'],
-      stageNameAR: json['stage_name_ar'],
-      stageNameEN: json['stage_name_en'],
-      classNameAR: json['school_class_name_ar'],
-      classNameEN: json['school_class_name_en'],
-      learningPhaseAR: json['learning_phase_name'],
-      learningPhaseEN: json['learning_phase_name_en'],
-      imagePath: json['img_path'],
-      userCode: json['user_code'],
-      studentCode: json['student_code'],
-      facebook: json['facebook_url'],
-      twitter: json['twitter_url'],
-      instgram: json['instagram_url'],
-      linkedIn: json['linked_url'],
-      schoolYear: json['schooling_year_code']
+      sNameAR: json['student_full_name_ar'] as String,
+      sNameEN: json['student_full_name_en'] as String,
+      stageNameAR: json['stage_name_ar'] as String,
+      stageNameEN: json['stage_name_en'] as String,
+      classNameAR: json['school_class_name_ar'] as String,
+      classNameEN: json['school_class_name_en'] as String,
+      learningPhaseAR: json['learning_phase_name'] as String,
+      learningPhaseEN: json['learning_phase_name_en'] as String,
+      imagePath: json['img_path'] as String,
+      userCode: json['user_code'] as int,
+      studentCode: json['student_code'] as int,
+      facebook: json['facebook_url'] as String,
+      twitter: json['twitter_url'] as String,
+      instgram: json['instagram_url'] as String,
+      linkedIn: json['linked_url'] as String,
+      schoolYear: json['schooling_year_code'] as int,
     );
   }
 
