@@ -33,11 +33,11 @@ class AppTextStyle {
       fontWeight: FontWeight.w500);
   static TextStyle subject = TextStyle(
       color: ColorSet.primaryColor,
-      fontSize: 12,
+      fontSize: 20,
       fontWeight: FontWeight.bold);
   static TextStyle chap = TextStyle(
       color: ColorSet.SecondaryColor,
-      fontSize: 8,
+      fontSize: 30,
       fontWeight: FontWeight.normal);
   static TextStyle subtextgrey = TextStyle(
       color: ColorSet.inactiveColor,

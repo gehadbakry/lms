@@ -11,6 +11,7 @@ import 'package:lms_pro/ui/Home.dart';
 import '../ProgressHUD.dart';
 import 'choose_student.dart';
 import 'dart:convert';
+import 'package:toast/toast.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -250,10 +251,12 @@ class _LogInState extends State<LogIn> {
                                   }
                                   if(Provider.of<APIService>(context,listen: false).usertype =='-1'){
                                   //if(apiService.usertype =='-1'){
-                                    print("Account is invalid");
+                                    Toast.show("Account is invalid", context,
+                                      duration:Toast.LENGTH_LONG,);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '0'){
-                                    print('Account is inactive');
+                                    Toast.show("Account is inactive", context,
+                                      duration:Toast.LENGTH_LONG,);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children!= "") ){
                                       Navigator.pushNamed(context, '/choose',
@@ -272,15 +275,7 @@ class _LogInState extends State<LogIn> {
                                         userCode: Provider.of<APIService>(context, listen: false).usercode,
                                         userType: Provider.of<APIService>(context, listen: false).usertype,
                                         code: Provider.of<APIService>(context, listen: false).code,
-                                      ),
-                                    );
-                                  }
-                                  else if(Provider.of<APIService>(context,listen: false).usertype == '2'&& Provider.of<APIService>(context,listen: false).children == ""){
-                                    Navigator.pushNamed(context, '/home',
-                                      arguments: LoginResponseModel(
-                                        userCode: Provider.of<APIService>(context, listen: false).usercode,
-                                        userType: Provider.of<APIService>(context, listen: false).usertype,
-                                        code: Provider.of<APIService>(context, listen: false).code,
+                                        schoolYearCode: Provider.of<APIService>(context, listen: false).schoolYear,
                                       ),
                                     );
                                   }
@@ -294,6 +289,10 @@ class _LogInState extends State<LogIn> {
                                   }
                                 });//68,
 
+                              }
+                              else if(validateAndSave() == false){
+                                Toast.show("Either user or password is wrong", context,
+                                  duration:Toast.LENGTH_LONG,);
                               }
                             },
                           ),

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/models/login_model.dart';
+import 'package:lms_pro/models/subject.dart';
+import 'package:provider/provider.dart';
 import '../app_style.dart';
 
 class AssignmentDetails extends StatefulWidget {
@@ -9,9 +12,18 @@ class AssignmentDetails extends StatefulWidget {
 }
 
 class _AssignmentDetailsState extends State<AssignmentDetails> {
-  // String oType = "Online";
-  // String ofType = "Offline",
   bool valuefirst = false;
+  LoginResponseModel logInInfo;
+  LoginRequestModel loginRequestModel;
+  Subject subject;
+  var code;
+
+  @override
+  void initState() {
+    loginRequestModel = LoginRequestModel();
+    subject = Subject();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -7,12 +7,18 @@ import 'package:lms_pro/ui/Home.dart';
 import 'package:lms_pro/ui/LogInPage.dart';
 import 'package:http/http.dart'as http;
 import 'package:lms_pro/ui/Scheduel.dart';
+import 'package:lms_pro/ui/SubjectPage.dart';
 import 'package:lms_pro/ui/choose_student.dart';
+import 'package:lms_pro/ui/subjectDetails.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:lms_pro/utils/subjectAssignDetails.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider<APIService>(
+      create: (_)=>APIService(),
+    child: MyApp(),
+  ));
 
 
 }
@@ -27,19 +33,20 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-     home: ChangeNotifierProvider<APIService>(
-         child: LogIn(),
-       create: (_)=>APIService(),
-     ),
+     home: LogIn(),
       //initialRoute: '/',
       routes: {
-        '/LogIn':(context) => ChangeNotifierProvider(child: LogIn(),create: (_)=>StudentData(),),
+        '/LogIn':(context) => ChangeNotifierProvider(child: LogIn(),create: (_)=>APIService(),),
         '/choose':(context) => ChangeNotifierProvider(child: ChooseStudent(),create: (_)=>StudentData(),),
         '/events':(context) => Events(),
-        '/home':(context) => ChangeNotifierProvider(child: Home(),create: (_)=>StudentData(),),
+        '/home':(context) => ChangeNotifierProvider<StudentData>(child: Home(),create: (_)=>StudentData(),),
         '/scheduel':(context) => Scheduel(),
-        '/bus':(context) => Bus(),
+        '/bus':(context) =>ChangeNotifierProvider(child: Bus(),create: (_)=>StudentData(),),
         '/BNV':(context) => ChangeNotifierProvider(child: BNV(),create: (_)=>StudentData(),),
+        '/subjects':(context) => ChangeNotifierProvider(child: SubjectPage(),create: (_)=>StudentData(),),
+        '/subjectassign':(context) => ChangeNotifierProvider(child: AssignmentDetails(),create: (_)=>APIService(),),
+        '/subjectdetils':(context) =>SubjectDetails(),
+
 
 
       },

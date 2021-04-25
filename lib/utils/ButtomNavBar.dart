@@ -21,6 +21,8 @@ class _BNVState extends State<BNV> {
   LoginResponseModel logInInfo;
    var usercode;
   var usertype;
+  var schoolyear;
+  var code;
   // PersistentTabController _controller;
   // bool _hideNavBar;
 
@@ -109,6 +111,7 @@ class _BNVState extends State<BNV> {
   // ];
   @override
   Widget build(BuildContext context) {
+    logInInfo = ModalRoute.of(context).settings.arguments;
     List page = [
       Home(),
       Events(),
@@ -116,6 +119,7 @@ class _BNVState extends State<BNV> {
       Bus(),
     ];
     return Container(
+
       child: Scaffold(
         // body: PersistentTabView.custom(
         //   context,

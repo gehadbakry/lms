@@ -16,7 +16,7 @@ class StudentData with ChangeNotifier{
     Uri url = Uri.parse("http://169.239.39.105/lms_api2/API/StudentApi/GetStudentProfile?student_code=$SCode");
     response = await http.get(url);
     if (response.statusCode == 200 || response.statusCode == 400) {
-     print("Response data ${response.body}");
+     print("student data ${response.body}");
       NameAr = Student.fromJson(json.decode(response.body),).sNameAR;
       studentcode = Student.fromJson(json.decode(response.body),).studentCode;
       notifyListeners();
@@ -29,3 +29,9 @@ class StudentData with ChangeNotifier{
     }
   }
 }
+// List<Student>StudentListData = [];
+// void add({ String sNameAR,String sNameEN, String stageNameAR, String stageNameEN, String classNameAR, String classNameEN,}){
+//   StudentListData.add(Student(
+//       sNameAR:Student.fromJson(json.decode(response.body),).sNameAR;
+//   ));
+//}

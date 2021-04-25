@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:lms_pro/app_style.dart';
+import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:lms_pro/models/bus_data.dart';
+import 'package:lms_pro/api_services/bus_info.dart';
 
 
 class Bus extends StatefulWidget {
@@ -10,10 +13,19 @@ class Bus extends StatefulWidget {
 }
 
 class _BusState extends State<Bus> {
+  var usercode;
+  var usertype;
+  var schoolyear;
+  var code;
+  LoginResponseModel logInInfo;
+
 
   @override
-  @override
   Widget build(BuildContext context) {
+    logInInfo = ModalRoute.of(context).settings.arguments;
+    code = int.parse(logInInfo.code);
+    schoolyear = logInInfo.schoolYearCode;
+
     return Center(
        child: Container(
          height: MediaQuery.of(context).size.height*0.70,
@@ -35,6 +47,7 @@ class _BusState extends State<Bus> {
              padding: const EdgeInsets.only(top: 15,left: 10),
              child: Column(
                   children: [
+                    //UPPER PART OF THE CARD
                     ListTile(
                       leading: Icon(
                         Icons.directions_bus_rounded,
@@ -50,169 +63,184 @@ class _BusState extends State<Bus> {
                           color: ColorSet.SecondaryColor,
                         ),
                         onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => BNV()),
-                          );
+                          Navigator.pushNamed(context, '/BNV',arguments:LoginResponseModel(code: logInInfo.code,schoolYearCode: logInInfo.schoolYearCode));
                         },
                       ),
                     ),
-                    Column(
-                      children: <Widget>[
-                        IntrinsicHeight(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Bus Id\nص و 275"),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              VerticalDivider(
-                                color: Colors.grey,
-                                width: 1,
-                                thickness: 1,
-                                endIndent: 0.5,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text("From\n8:00 Am"),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              VerticalDivider(
-                                  color: Colors.grey,
-                                  width: 1,
-                                  thickness: 1,
-                                  endIndent: 0.5),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text("To\n5:00 pm"),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width*0.65,
-                          child: Divider(
-                            thickness: 1,
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            ListTile(
-                              leading: Icon(
-                                Icons.person_pin_rounded,
-                                color: ColorSet.primaryColor,
-                              ),
-                              title: Text(
-                                "Driver",
-                                style: AppTextStyle.headerStyle2,
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                ListTile(
-                                  leading: Image(
-                                    image: AssetImage('assets/images/driver.png'),
-                                  ),
-                                  title: Text(
-                                    "Name:",
-                                    style: AppTextStyle.leadtextstyle,
-                                  ),
-                                  subtitle: Text(
-                                    "phone:",
-                                    style: AppTextStyle.leadtextstyle,
+                    //THE INFO IN THE CARD
+                    FutureBuilder<BusData>(
+                        future: BusInfo().getBus(code, schoolyear),
+                        builder: (context , snapshot){
+                          if(snapshot.hasData){
+                            return  Column(
+                              children: <Widget>[
+                                IntrinsicHeight(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Bus Id:\n ${snapshot.data.busLabel}"),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.grey,
+                                        width: 1,
+                                        thickness: 1,
+                                        endIndent: 0.5,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text("From:\n${(snapshot.data.zoneGoTime).substring(0,5)} am"),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      VerticalDivider(
+                                          color: Colors.grey,
+                                          width: 1,
+                                          thickness: 1,
+                                          endIndent: 0.5),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text("To:\n${(snapshot.data.zoneBackTime).substring(0,5)} pm"),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                InkWell(
-                                  child: Text(
-                                    "complaint",
-                                    style: AppTextStyle.complaint,
+                                Container(
+                                  width: MediaQuery.of(context).size.width*0.65,
+                                  child: Divider(
+                                    thickness: 1,
                                   ),
-                                  onTap: () {},
                                 ),
-                                IconButton(
-                                    icon: Icon(
-                                      Icons.phone,
-                                      color: ColorSet.SecondaryColor,
-                                      size: 20,
+                                Column(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.person_pin_rounded,
+                                        color: ColorSet.primaryColor,
+                                      ),
+                                      title: Text(
+                                        "Driver",
+                                        style: AppTextStyle.headerStyle2,
+                                      ),
                                     ),
-                                    onPressed: () {}),
-                                IconButton(
-                                    icon: Icon(Icons.file_copy,
-                                        color: ColorSet.SecondaryColor, size: 20),
-                                    onPressed: () {}),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width*0.65,
-                          child: Divider(
-                            thickness: 1,
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            ListTile(
-                              leading: Icon(
-                                Icons.person_pin_rounded,
-                                color: ColorSet.primaryColor,
-                              ),
-                              title: Text(
-                                "Supervisor",
-                                style: AppTextStyle.headerStyle2,
-                              ),
-                            ),
-                            Container(
-                              height: 95,
-                              child: ListTile(
-                                leading: Image(
-                                  image: AssetImage('assets/images/businesswoman.png'),
-                                ),
-                                title: Text(
-                                  "Name:",
-                                  style: AppTextStyle.leadtextstyle,
-                                ),
-                                subtitle: Text(
-                                  "phone:",
-                                  style: AppTextStyle.leadtextstyle,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                InkWell(
-                                  child: Text(
-                                    "complaint",
-                                    style: AppTextStyle.complaint,
-                                  ),
-                                  onTap: () {},
-                                ),
-                                IconButton(
-                                    icon: Icon(
-                                      Icons.phone,
-                                      color: ColorSet.SecondaryColor,
-                                      size: 20,
+                                    Column(
+                                      children: [
+                                        ListTile(
+                                          leading: Image(
+                                            image: AssetImage('assets/images/driver.png'),
+                                          ),
+                                          title: FittedBox(
+                                            child: Text(
+                                              "Name: ${snapshot.data.driverName}",
+                                              style: AppTextStyle.leadtextstyle,
+                                              maxLines: 1,
+                                            ),
+                                            fit: BoxFit.fill,
+                                          ),
+                                          subtitle: Text(
+                                            "phone: ${snapshot.data.driverPhoneNumb}",
+                                            style: AppTextStyle.leadtextstyle,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    onPressed: () {}),
-                                IconButton(
-                                    icon: Icon(Icons.file_copy,
-                                        color: ColorSet.SecondaryColor, size: 20),
-                                    onPressed: () {}),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          child: Text(
+                                            "complaint",
+                                            style: AppTextStyle.complaint,
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.phone,
+                                              color: ColorSet.SecondaryColor,
+                                              size: 20,
+                                            ),
+                                            onPressed: () {}),
+                                        IconButton(
+                                            icon: Icon(Icons.file_copy,
+                                                color: ColorSet.SecondaryColor, size: 20),
+                                            onPressed: () {}),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width*0.65,
+                                  child: Divider(
+                                    thickness: 1,
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.person_pin_rounded,
+                                        color: ColorSet.primaryColor,
+                                      ),
+                                      title: Text(
+                                        "Supervisor",
+                                        style: AppTextStyle.headerStyle2,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 95,
+                                      child: ListTile(
+                                        leading: Image(
+                                          image: AssetImage('assets/images/businesswoman.png'),
+                                        ),
+                                        title: Text(
+                                            "Name:${snapshot.data.supervisorName}",
+                                            style: AppTextStyle.leadtextstyle,
+                                            maxLines: 1,
+                                          ),
+
+                                        subtitle: Text(
+                                          "phone: ${snapshot.data.superPhoneNumb}",
+                                          style: AppTextStyle.leadtextstyle,
+                                        ),
+
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          child: Text(
+                                            "complaint",
+                                            style: AppTextStyle.complaint,
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.phone,
+                                              color: ColorSet.SecondaryColor,
+                                              size: 20,
+                                            ),
+                                            onPressed: () {}),
+                                        IconButton(
+                                            icon: Icon(Icons.file_copy,
+                                                color: ColorSet.SecondaryColor, size: 20),
+                                            onPressed: () {}),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            );
+                          }
+                          else if(snapshot.hasError){
+                            return Text("error");
+                          }
+                          return CircularProgressIndicator();
+                        })
                   ],
                 ),
            ),
