@@ -123,6 +123,8 @@ class _SubjectPageState extends State<SubjectPage> {
                                   Navigator.pushNamed(context, '/subjectdetils',arguments:Subject(
                                     subjectCode: snapshot.data[index].subjectCode,
                                     subjectNameEn: snapshot.data[index].subjectNameEn,
+                                    teacherNameEn: snapshot.data[index].teacherNameEn,
+                                    teacherImg: snapshot.data[index].teacherImg,
                                   ) );
                                   //Navigator.pushNamed(context, '/subjectdetils',arguments:LoginResponseModel(code: code) );
                                 },

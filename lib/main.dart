@@ -15,12 +15,12 @@ import 'package:lms_pro/utils/subjectAssignDetails.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider<APIService>(
-      create: (_)=>APIService(),
-    child: MyApp(),
+  runApp(MultiProvider(providers: [
+      ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
+    ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),),
+  ],
+  child: MyApp(),
   ));
-
-
 }
 
 class MyApp extends StatelessWidget {
@@ -36,15 +36,15 @@ class MyApp extends StatelessWidget {
      home: LogIn(),
       //initialRoute: '/',
       routes: {
-        '/LogIn':(context) => ChangeNotifierProvider(child: LogIn(),create: (_)=>APIService(),),
-        '/choose':(context) => ChangeNotifierProvider(child: ChooseStudent(),create: (_)=>StudentData(),),
+        '/LogIn':(context) =>  LogIn(),
+        '/choose':(context) => ChooseStudent(),
         '/events':(context) => Events(),
-        '/home':(context) => ChangeNotifierProvider<StudentData>(child: Home(),create: (_)=>StudentData(),),
+        '/home':(context) =>  Home(),
         '/scheduel':(context) => Scheduel(),
-        '/bus':(context) =>ChangeNotifierProvider(child: Bus(),create: (_)=>StudentData(),),
-        '/BNV':(context) => ChangeNotifierProvider(child: BNV(),create: (_)=>StudentData(),),
-        '/subjects':(context) => ChangeNotifierProvider(child: SubjectPage(),create: (_)=>StudentData(),),
-        '/subjectassign':(context) => ChangeNotifierProvider(child: AssignmentDetails(),create: (_)=>APIService(),),
+        '/bus':(context) => Bus(),
+        '/BNV':(context) =>  BNV(),
+        '/subjects':(context) =>  SubjectPage(),
+        '/subjectassign':(context) =>  AssignmentDetails(),
         '/subjectdetils':(context) =>SubjectDetails(),
 
 

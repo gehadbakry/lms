@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/models/Student.dart';
@@ -95,7 +97,9 @@ class _HomeState extends State<Home> {
                         if(snapshot.hasData) {
                           return FittedBox(
                             child: CircleAvatar(
-                              backgroundImage:  AssetImage('assets/images/student.png'),
+                              backgroundImage:HttpStatus.internalServerError != 500?
+                              NetworkImage('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}'):
+                              AssetImage('assets/images/student.png'),
                               radius: 35.0,
                             ),
                             fit: BoxFit.fill,

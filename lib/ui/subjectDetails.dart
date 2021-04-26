@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/subjects_info.dart';
@@ -36,11 +38,10 @@ class _SubjectDetailsState extends State<SubjectDetails> {
 
   @override
   Widget build(BuildContext context) {
-    //logInInfo = ModalRoute.of(context).settings.arguments;
     subject = ModalRoute.of(context).settings.arguments;
-    //print("from Details ${logInInfo.code}" );
     print("from Details ${subject.subjectCode}" );
-
+    print("from Details ${subject.subjectNameEn}" );
+    print("from Details ${subject.teacherNameEn}" );
     //CUSTOM APP BAR
     Widget myAppBar = PreferredSize(
       preferredSize: Size.fromHeight(75),
@@ -53,18 +54,23 @@ class _SubjectDetailsState extends State<SubjectDetails> {
               children: [
                 //Student's avatar
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/teacher.png'),
+                   backgroundImage:HttpStatus.internalServerError != 500?
+                   NetworkImage('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=F:/docs${subject.teacherImg}'):
+                    AssetImage('assets/images/teacher.png'),
                   radius: 23.0,
                 ),
-                SizedBox(width: 10,),
+                Spacer(),
                 //Container that contains the identifiction card
                 Container(
                   child: Center(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${Provider.of<APIService>(context,listen: true).usercode}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13)),
-                        Text("Teacher's Name" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 16,fontWeight: FontWeight.w700),),
+                        FittedBox(
+                          fit: BoxFit.fitWidth,
+                            child: Text("${subject.teacherNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 16,fontWeight: FontWeight.w700),maxLines: 1,)
+                        ),
+                        Text("${subject.subjectNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13)),
                       ],
                     ),
                   ),
@@ -146,68 +152,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
       length: 4,
       child: Scaffold(
           backgroundColor: ColorSet.whiteColor,
-          appBar:  PreferredSize(
-            preferredSize: Size.fromHeight(75),
-            child: AppBar(
-              title: Padding(
-                padding: const EdgeInsets.only(top: 13),
-                child: Container(
-                  //Row has avatar as leading and the card as trailing
-                  child: Row(
-                    children: [
-                      //Student's avatar
-                      CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/teacher.png'),
-                        radius: 23.0,
-                      ),
-                      SizedBox(width: 10,),
-                      //Container that contains the identifiction card
-                      Container(
-                        child: Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Consumer<APIService>(builder: (ctx,value,child)=>
-                                  Text("Name" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13)),),
-                              Text("Teacher's Name" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 16,fontWeight: FontWeight.w700),),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),),
-              ),
-              backgroundColor: ColorSet.primaryColor,
-              elevation: 0.0,
-              leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
-                  iconSize: 25,
-                  onPressed: (){
-                    Navigator.pop(
-                      context,
-                    );
-                  }) ,
-              actions: [
-                IconButton(icon: Icon(Icons.search),
-                    color: ColorSet.whiteColor,
-                    // iconSize: 25,
-                    onPressed: (){
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => Notifi()),
-                      // );
-                    }),
-                IconButton(icon: Icon(Icons.notifications),
-                    color: ColorSet.whiteColor,
-                    // iconSize: 25,
-                    onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Notifi()),
-                      );
-                    }),
-              ],
-            ),
-          ) ,
+          appBar: myAppBar,
           body: Scaffold(
             backgroundColor: ColorSet.primaryColor,
             appBar: bottomAppBar,

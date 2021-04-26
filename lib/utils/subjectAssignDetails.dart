@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/api_services/assignment_info.dart';
+import 'package:lms_pro/models/Assignment.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:provider/provider.dart';
@@ -27,68 +29,110 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: 5,
-        itemBuilder: (context , index){
-      return Padding(
-        padding: const EdgeInsets.only(left: 15 , right: 15 ,top: 20),
-        child: Card(
-          shadowColor: ColorSet.shadowcolour,
-          elevation: 9.0,
-          borderOnForeground: true,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: ColorSet.borderColor, width: 0.5),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: LayoutBuilder(builder:(context , constraints){
-            return ListTile(
-              title: Row(
-                children: [
-                  Text("Assignment Name" , style: AppTextStyle.headerStyle2,),
-                  //SizedBox(width: MediaQuery.of(context).size.width*0.2,),
-                  Spacer(),
-                  Text("10/10/10" , style: AppTextStyle.subText,),
-                ],
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Type",style: AppTextStyle.subText,),
-                  Center(
-                    child: RaisedButton(
-                        child: Text("Show Assignment"),
-                        textColor: ColorSet.whiteColor,
-                        color: ColorSet.SecondaryColor,
-                         shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(18.0),
-                         ),
-                        onPressed: (){}),
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(value: this.valuefirst,
-                          onChanged: (bool value) {
-                            setState(() {
-                              this.valuefirst = value;
-                            });
-                          },
-                      focusColor: ColorSet.primaryColor,
-                      ),
-                      SizedBox(width: 2,),
-                      Text("Assignment Done" ,style: AppTextStyle.subtextgrey,),
-                      //SizedBox(width: MediaQuery.of(context).size.width*0.09,),
-                      Spacer(),
-                      Text("Result : 10" , style: AppTextStyle.headerStyle2,),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          } ,
-          ),
-        ),
-      );
+    subject = ModalRoute.of(context).settings.arguments;
+    setState(() {
+      code = Provider.of<APIService>(context, listen: false).code;
     });
-
+    //AssignmentInfo().getAssignment(int.parse(code),subject.subjectCode );
+    return FutureBuilder<List<Assignment>>(
+        future: AssignmentInfo().getAssignment(
+            int.parse(code), subject.subjectCode),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.length > 0) {
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, top: 20),
+                      child: Card(
+                        shadowColor: ColorSet.shadowcolour,
+                        elevation: 9.0,
+                        borderOnForeground: true,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: ColorSet.borderColor, width: 0.5),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: LayoutBuilder(builder: (context, constraints) {
+                          return ListTile(
+                            title: Row(
+                              children: [
+                                Text("Assignment Name",
+                                  style: AppTextStyle.headerStyle2,),
+                                Spacer(),
+                                Text("10/10/10", style: AppTextStyle.subText,),
+                              ],
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Type", style: AppTextStyle.subText,),
+                                Center(
+                                  ////WIDGET RETURNED ACCORDING TO TYPE EITHER ONLINE OR OFFLINE
+                                    child: snapshot.data[index].type == 1
+                                        ? RaisedButton(
+                                        child: Text("Show Assignment"),
+                                        textColor: ColorSet.whiteColor,
+                                        color: ColorSet.SecondaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              18.0),
+                                        ),
+                                        onPressed: () {})
+                                        : RaisedButton(
+                                        child: Text("Show Assignment"),
+                                        textColor: ColorSet.whiteColor,
+                                        color: ColorSet.SecondaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              18.0),
+                                        ),
+                                        onPressed: () {}),
+                                ),
+                                Row(
+                                  children: [
+                                    Checkbox(value: this.valuefirst,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          this.valuefirst = value;
+                                        });
+                                      },
+                                      focusColor: ColorSet.primaryColor,
+                                    ),
+                                    SizedBox(width: 2,),
+                                    Text("Assignment Done",
+                                      style: AppTextStyle.subtextgrey,),
+                                    Spacer(),
+                                    Text("Result : 10",
+                                      style: AppTextStyle.headerStyle2,),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        ),
+                      ),
+                    );
+                  });
+            }
+            else {
+              return Center(
+                child: Text(
+                  "There is no Assignments", style: AppTextStyle.headerStyle2,),
+              );
+            }
+          }
+          else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error", style: AppTextStyle.headerStyle2,),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
   }
 }
