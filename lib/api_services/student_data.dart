@@ -10,6 +10,7 @@ class StudentData with ChangeNotifier{
   Student student;
   var response;
   var NameAr;
+  var NameEn;
   var studentcode;
   List studentData;
   Future<Student> SData(int SCode) async {
@@ -18,6 +19,8 @@ class StudentData with ChangeNotifier{
     if (response.statusCode == 200 || response.statusCode == 400) {
      print("student data ${response.body}");
       NameAr = Student.fromJson(json.decode(response.body),).sNameAR;
+      NameEn = Student.fromJson(json.decode(response.body),).sNameEN;
+      print("From student Data $NameEn");
       studentcode = Student.fromJson(json.decode(response.body),).studentCode;
       notifyListeners();
       return  Student.fromJson(

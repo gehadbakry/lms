@@ -26,6 +26,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
   LoginRequestModel loginRequestModel;
   Subject subject;
   var gSubjectInfo;
+  var subjectcode;
   var code;
 
   @override
@@ -39,9 +40,6 @@ class _SubjectDetailsState extends State<SubjectDetails> {
   @override
   Widget build(BuildContext context) {
     subject = ModalRoute.of(context).settings.arguments;
-    print("from Details ${subject.subjectCode}" );
-    print("from Details ${subject.subjectNameEn}" );
-    print("from Details ${subject.teacherNameEn}" );
     //CUSTOM APP BAR
     Widget myAppBar = PreferredSize(
       preferredSize: Size.fromHeight(75),
@@ -59,7 +57,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
                     AssetImage('assets/images/teacher.png'),
                   radius: 23.0,
                 ),
-                Spacer(),
+                SizedBox(width: 8,),
                 //Container that contains the identifiction card
                 Container(
                   child: Center(
@@ -145,9 +143,9 @@ class _SubjectDetailsState extends State<SubjectDetails> {
     ));
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
+      subjectcode = subject.subjectCode;
     });
 
-    print("from details $code");
     return DefaultTabController(
       length: 4,
       child: Scaffold(

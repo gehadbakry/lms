@@ -4,7 +4,7 @@ class Assignment {
   int totalGrade;
   String publishDate;
   String publishTime;
-  int assignmentMark;
+  double assignmentMark;
   String chapterNameAr;
   String chapterNameEn;
   String lessonNameAr;

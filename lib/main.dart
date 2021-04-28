@@ -11,6 +11,7 @@ import 'package:lms_pro/ui/SubjectPage.dart';
 import 'package:lms_pro/ui/choose_student.dart';
 import 'package:lms_pro/ui/subjectDetails.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:lms_pro/utils/buildQuizPage.dart';
 import 'package:lms_pro/utils/subjectAssignDetails.dart';
 import 'package:provider/provider.dart';
 
@@ -33,8 +34,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-     home: LogIn(),
-      //initialRoute: '/',
+    // home: LogIn(),
+      initialRoute: '/LogIn',
       routes: {
         '/LogIn':(context) =>  LogIn(),
         '/choose':(context) => ChooseStudent(),
@@ -46,9 +47,7 @@ class MyApp extends StatelessWidget {
         '/subjects':(context) =>  SubjectPage(),
         '/subjectassign':(context) =>  AssignmentDetails(),
         '/subjectdetils':(context) =>SubjectDetails(),
-
-
-
+        '/quizdetils':(context) =>ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),child: QuizPageDetails(),),
       },
     );
   }////13186F,123

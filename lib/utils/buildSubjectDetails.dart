@@ -7,7 +7,7 @@ import '../app_style.dart';
 Widget BuildSubjectDetails(var page){
 
   return Container(
-      color: ColorSet.whiteColor,
+    color: ColorSet.whiteColor,
     child: page,
 
   );

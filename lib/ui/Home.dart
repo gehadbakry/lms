@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
@@ -33,7 +34,10 @@ class _HomeState extends State<Home> {
     logInInfo = ModalRoute.of(context).settings.arguments;
     usercode = (logInInfo.userCode);
     usertype = (logInInfo.userType);
-    code = (logInInfo.code);
+    //code = (logInInfo.code);
+    setState(() {
+      code = Provider.of<APIService>(context, listen: false).code;
+    });
     //Coustume mde app bar
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.whiteColor,
