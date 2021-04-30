@@ -47,23 +47,9 @@ class MyApp extends StatelessWidget {
         '/subjects':(context) =>  SubjectPage(),
         '/subjectassign':(context) =>  AssignmentDetails(),
         '/subjectdetils':(context) =>SubjectDetails(),
-        '/quizdetils':(context) =>ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),child: QuizPageDetails(),),
+        '/quizdetils':(context) => QuizPageDetails(),
       },
     );
   }////13186F,123
 }
 
-class MyHomePage extends StatefulWidget {
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Center();
-  }
-}

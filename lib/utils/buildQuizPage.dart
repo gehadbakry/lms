@@ -23,14 +23,13 @@ class QuizPageDetails extends StatefulWidget {
 
 class _QuizPageDetailsState extends State<QuizPageDetails> {
   Subject subject;
-  Student studentName;
   var code;
   var subjectCode;
   Quiz quiz;
   var studentRank;
   var quizcode;
   var StudentProvider;
-
+  String studentN;
   @override
   void initState() {
     subject = Subject();
@@ -43,11 +42,12 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
     subject = ModalRoute.of(context).settings.arguments;
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
-      StudentProvider =Provider.of<StudentData>(context);
+      studentN = Provider.of<StudentData>(context ,listen: false).NameEn;
       subjectCode = subject.subjectCode;
     });
-    print("from provider ${StudentProvider.NameEn}");
-    print( Provider.of<StudentData>(context, listen: true).NameEn);
+
+    //print("this is studentN $studentN");
+    print("from quiz $studentN");
     return FutureBuilder<List<Quiz>>(
        // future: QuizInfo().getQuiz(int.parse(code), subjectCode),
         future: QuizInfo().getQuiz(969, 35),
@@ -73,13 +73,10 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                               title: Padding(
                                 padding: const EdgeInsets.only(top: 10,bottom: 5),
                                 child:
-                                  Consumer<StudentData>(builder:(context, item, child) {
-                                    return Text(item.NameEn);
-                                  },)
-                                    // Text(
-                                    //   snapshot.data[index].quizName,
-                                    //   style: AppTextStyle.headerStyle2,
-                                    // ),
+                                    Text(
+                                      snapshot.data[index].quizName,
+                                      style: AppTextStyle.headerStyle2,
+                                    ),
                                     //SizedBox(width: MediaQuery.of(context).size.width*0.2,),
                               ),
                               subtitle:  Padding(

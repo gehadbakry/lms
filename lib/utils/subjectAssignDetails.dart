@@ -37,6 +37,7 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
       subjectCode = subject.subjectCode;
     });
     //AssignmentInfo().getAssignment(int.parse(code),subject.subjectCode );
+    print("from Assignme ${Provider.of<StudentData>(context ,listen: false).NameEn}");
     return Container(
       child: FutureBuilder<List<Assignment>>(
           future: AssignmentInfo().getAssignment(

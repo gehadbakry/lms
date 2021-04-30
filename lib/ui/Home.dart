@@ -38,6 +38,8 @@ class _HomeState extends State<Home> {
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
     });
+    Provider.of<StudentData>(context,listen: false).SData(int.parse(code)).then((value) {
+    });
     //Coustume mde app bar
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.whiteColor,
