@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/day_scheduel_info.dart';
@@ -44,13 +45,37 @@ class _ScheduelPageState extends State<ScheduelPage> {
                         indicatorXY: 0.4,
                         drawGap: true,
                       ),
-                      endChild: ListTile(
-                        title: Text(snapshot.data[index].subjectNameEn , style: AppTextStyle.headerStyle2,),
-                        subtitle: Text(snapshot.data[index].teacherNameEn, style: AppTextStyle.subtextgrey,),
-                        trailing: Text("${(snapshot.data[index].startTime).substring(0,5)} : ${(snapshot.data[index].endTime).substring(0,5)}",style: AppTextStyle.subText,),
+                      endChild: Column(
+                        children: [
+                          ListTile(
+                            title: Text(snapshot.data[index].subjectNameEn , style: AppTextStyle.headerStyle2,),
+                            subtitle: Text(snapshot.data[index].teacherNameEn, style: AppTextStyle.subtextgrey,),
+                            trailing: Text("${(snapshot.data[index].startTime).substring(0,5)} : ${(snapshot.data[index].endTime).substring(0,5)}",style: AppTextStyle.subText,),
+                          ),
+                            if(index == 2)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 60),
+                              child: Container(
+                                height: 60,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                ),
+                                child: Center(child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Break" , style: AppTextStyle.headerStyle2,),
+                                   SizedBox(height: 5,),
+                                    Text("${(snapshot.data[2].endTime).substring(0,5)} : ${(snapshot.data[3].startTime).substring(0,5)}" ,style: AppTextStyle.subText ),
+                                  ],
+                                ))
+                              ),
+                            ),
+                        ],
                       ),
-                      isFirst: index == 0 ? true : false,
-                      isLast: index == 8 ? true : false,
+                      isFirst: index == 0  || index == 3? true : false,
+                      isLast: index == 8 || index == 2? true : false,
                     ),
                   ) ;
                 });

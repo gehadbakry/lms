@@ -63,7 +63,7 @@ class _BusState extends State<Bus> {
                           color: ColorSet.SecondaryColor,
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/BNV',arguments:LoginResponseModel(code: logInInfo.code,schoolYearCode: logInInfo.schoolYearCode));
+                          Navigator.pushReplacementNamed(context, '/BNV',arguments:LoginResponseModel(code: logInInfo.code,schoolYearCode: logInInfo.schoolYearCode));
                         },
                       ),
                     ),

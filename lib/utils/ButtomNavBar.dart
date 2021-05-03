@@ -100,24 +100,18 @@ class _BNVState extends State<BNV> {
     });
     // Navigator.push(
     //   context,
-    //   MaterialPageRoute(builder: (context) => pages[_selectedIndex]),
+    //   MaterialPageRoute(builder: (context) => page[_selectedIndex]),
     // );
   }
-  // List page = [
-  //   Home(),
-  //   Events(),
-  //   Scheduel(),
-  //   Bus(),
-  // ];
+  List page = [
+    Home(),
+    Events(),
+    Scheduel(),
+    Bus(),
+  ];
   @override
   Widget build(BuildContext context) {
     logInInfo = ModalRoute.of(context).settings.arguments;
-    List page = [
-      Home(),
-      Events(),
-      Scheduel(),
-      Bus(),
-    ];
     return Container(
 
       child: Scaffold(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/all_days_info.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/models/all_days_scheduel.dart';
+import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:lms_pro/utils/buildScheduelPage.dart';
@@ -34,9 +35,8 @@ class _ScheduelState extends State<Scheduel> {
       leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
           iconSize: 25,
           onPressed: (){
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => BNV()),
+                Navigator.pushReplacementNamed(
+                  context, '/BNV' , arguments: LoginResponseModel(code: Scode,schoolYearCode: yearCode)
                 );
           }) ,
       actions: [
