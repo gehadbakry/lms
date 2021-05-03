@@ -10,6 +10,7 @@ import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:lms_pro/utils/buildMaterialPage.dart';
 import 'package:lms_pro/utils/buildQuizPage.dart';
 import 'package:lms_pro/utils/buildSubjectDetails.dart';
+import 'package:lms_pro/utils/build_online_exam.dart';
 import 'package:lms_pro/utils/subjectAssignDetails.dart';
 import 'package:provider/provider.dart';
 
@@ -41,75 +42,87 @@ class _SubjectDetailsState extends State<SubjectDetails> {
   Widget build(BuildContext context) {
     subject = ModalRoute.of(context).settings.arguments;
     //CUSTOM APP BAR
-    Widget myAppBar = PreferredSize(
-      preferredSize: Size.fromHeight(75),
-      child: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(top: 13),
-          child: Container(
-            //Row has avatar as leading and the card as trailing
-            child: Row(
-              children: [
-                //Student's avatar
-                CircleAvatar(
-                   backgroundImage:HttpStatus.internalServerError != 500?
-                   NetworkImage('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=F:/docs${subject.teacherImg}'):
-                    AssetImage('assets/images/teacher.png'),
-                  radius: 23.0,
-                ),
-                SizedBox(width: 8,),
-                //Container that contains the identifiction card
-                Container(
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.fitWidth,
-                            child: Text("${subject.teacherNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 16,fontWeight: FontWeight.w700),maxLines: 1,)
-                        ),
-                        Text("${subject.subjectNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13)),
-                      ],
-                    ),
+    Widget myAppBar =PreferredSize(child: AppBar(
+      toolbarHeight: MediaQuery.of(context).size.height*0.2,
+      automaticallyImplyLeading: false,
+     // centerTitle: true,
+      title: Padding(
+        padding: const EdgeInsets.only(top: 25),
+        child: Container(
+          //Row has avatar as leading and the card as trailing
+          width: MediaQuery.of(context).size.width*0.7,
+          child: Row(
+            children: [
+              //Student's avatar
+              CircleAvatar(
+                 backgroundImage:HttpStatus.internalServerError != 500?
+                 NetworkImage('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=F:/docs${subject.teacherImg}'):
+                  AssetImage('assets/images/teacher.png'),
+                radius: 25.0,
+              ),
+             Spacer(),
+              //Container that contains the identifiction card
+              Container(
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                          child: Text("${subject.teacherNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 16,fontWeight: FontWeight.w700),maxLines: 1,)
+                      ),
+                      Text("${subject.subjectNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13)),
+                    ],
                   ),
                 ),
-              ],
-            ),),
-        ),
-        backgroundColor: ColorSet.primaryColor,
-        elevation: 0.0,
-        leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
+              ),
+            ],
+          ),),
+      ),
+      backgroundColor: ColorSet.primaryColor,
+      elevation: 0.0,
+      leading: Padding(
+        padding: const EdgeInsets.only(bottom: 55),
+        child: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
             iconSize: 25,
             onPressed: (){
               Navigator.pop(
                 context,
               );
-            }) ,
-        actions: [
-          IconButton(icon: Icon(Icons.search),
+            }),
+      ) ,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 55),
+          child: IconButton(icon: Icon(Icons.search),
               color: ColorSet.whiteColor,
-             // iconSize: 25,
+              // iconSize: 25,
               onPressed: (){
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(builder: (context) => Notifi()),
                 // );
               }),
-          IconButton(icon: Icon(Icons.notifications),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 55),
+          child: IconButton(icon: Icon(Icons.notifications),
               color: ColorSet.whiteColor,
-             // iconSize: 25,
+              // iconSize: 25,
               onPressed: (){
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Notifi()),
                 );
               }),
-        ],
-      ),
-    ) ;
+        ),
+      ],
+    ), preferredSize: Size.fromHeight(122));
+
 
     Widget bottomAppBar = PreferredSize(
-        preferredSize:  Size.fromHeight(45),
+        preferredSize:  Size.fromHeight(35),
         child: AppBar(
           automaticallyImplyLeading: false,
           shape: RoundedRectangleBorder(
@@ -149,7 +162,6 @@ class _SubjectDetailsState extends State<SubjectDetails> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-          backgroundColor: ColorSet.whiteColor,
           appBar: myAppBar,
           body: Scaffold(
             backgroundColor: ColorSet.primaryColor,
@@ -159,7 +171,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
                 BuildSubjectDetails(BuildMaterialPage()),
                 BuildSubjectDetails(AssignmentDetails()),
                 BuildSubjectDetails(QuizPageDetails()),
-                BuildSubjectDetails(QuizPageDetails()),
+                BuildSubjectDetails(OnlineExam()),
               ],
 
             ),

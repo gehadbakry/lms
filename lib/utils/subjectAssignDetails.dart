@@ -7,7 +7,9 @@ import 'package:lms_pro/models/Assignment.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../app_style.dart';
+import 'package:toast/toast.dart';
 
 class AssignmentDetails extends StatefulWidget {
   @override
@@ -67,13 +69,13 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
                                   Text(snapshot.data[index].assignmentName,
                                     style: AppTextStyle.headerStyle2,),
                                   Spacer(),
-                                  Text("10/10/10", style: AppTextStyle.subText,),
+                                  Text("${(snapshot.data[index].publishDate).substring(0,10)}", style: AppTextStyle.subText,),
                                 ],
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Type", style: AppTextStyle.subText,),
+                                  Text("${snapshot.data[index].lessonNameEn}", style: AppTextStyle.subtextgrey,),
                                   Center(
                                     ////WIDGET RETURNED ACCORDING TO TYPE EITHER ONLINE OR OFFLINE
                                     child: snapshot.data[index].type == 1
@@ -85,33 +87,53 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
                                           borderRadius: BorderRadius.circular(
                                               18.0),
                                         ),
-                                        onPressed: () {})
-                                        : RaisedButton(
-                                        child: Text("Show Assignment"),
-                                        textColor: ColorSet.whiteColor,
-                                        color: ColorSet.SecondaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              18.0),
+                                        onPressed: () async{
+                                          String url = "http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data[index].filePath}";
+                                          try{
+                                            await canLaunch(url)?await launch(url ):throw 'error';
+                                          }
+                                          catch(e){
+                                            Toast.show("Assignment not found ", context,
+                                              duration:Toast.LENGTH_LONG,);
+                                          }
+                                        })
+                                        : Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(Icons.file_download),
+                                          iconSize: 35,
+                                          color:  ColorSet.primaryColor,
+
                                         ),
-                                        onPressed: () {}),
+                                        SizedBox(width: 10,),
+                                        IconButton(
+                                          icon: Icon(Icons.file_upload),
+                                          iconSize: 35,
+                                          color: ColorSet.SecondaryColor,
+                                          disabledColor: ColorSet.primaryColor,
+                                            onPressed: () async{
+                                              String url = "http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data[index].filePath}";
+                                              try{
+                                                await canLaunch(url)?await launch(url ):throw 'error';
+                                              }
+                                              catch(e){
+                                                Toast.show("Assignment not found ", context,
+                                                  duration:Toast.LENGTH_LONG,);
+                                              }
+                                            }
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Row(
                                     children: [
-                                      Checkbox(value: this.valuefirst,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            this.valuefirst = value;
-                                          });
-                                        },
-                                        focusColor: ColorSet.primaryColor,
-                                      ),
-                                      SizedBox(width: 2,),
-                                      Text("Assignment Done",
-                                        style: AppTextStyle.subtextgrey,),
                                       Spacer(),
-                                      Text("Result : 10",
-                                        style: AppTextStyle.headerStyle2,),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5 ,bottom: 5),
+                                        child: Text("Result : ${snapshot.data[index].assignmentMark} / ${snapshot.data[index].totalGrade}",
+                                          style: AppTextStyle.headerStyle2,),
+                                      ),
                                     ],
                                   ),
                                 ],

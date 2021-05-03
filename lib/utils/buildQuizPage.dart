@@ -12,10 +12,6 @@ import 'package:lms_pro/models/subject.dart';
 import 'package:provider/provider.dart';
 
 import '../app_style.dart';
-
-String mainText =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud";
-
 class QuizPageDetails extends StatefulWidget {
   @override
   _QuizPageDetailsState createState() => _QuizPageDetailsState();
@@ -45,12 +41,9 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
       studentN = Provider.of<StudentData>(context ,listen: false).NameEn;
       subjectCode = subject.subjectCode;
     });
-
-    //print("this is studentN $studentN");
-    print("from quiz $studentN");
     return FutureBuilder<List<Quiz>>(
-       // future: QuizInfo().getQuiz(int.parse(code), subjectCode),
-        future: QuizInfo().getQuiz(969, 35),
+       future: QuizInfo().getQuiz(int.parse(code), subjectCode),
+        //future: QuizInfo().getQuiz(969, 35),
         builder: (context , snapshot){
           if(snapshot.hasData){
             if(snapshot.data.length >0 ){
@@ -108,6 +101,7 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                               snapshot.data[index].studentMark,
                                 snapshot.data[index].totalQuizGrade,
                                 snapshot.data[index].quizName,
+                                studentN
                               ),
 
                             );
@@ -133,92 +127,117 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
     );
   }
 
-   alertDialog(BuildContext context , var quizc , var studentrank,var studentMark , var total , var quizName) {
+   alertDialog(BuildContext context , var quizc , var studentrank,var studentMark , var total , var quizName , String studentname) {
     var alert = FutureBuilder<List<Rank>>(
         future: RankInfo().getRank(quizc, int.parse(code)),
         builder: (context,snapshot){
           if(snapshot.hasData){
-            return Center(
-              child: Container(
-                height: MediaQuery.of(context).size.height*0.7,
-                child: AlertDialog(
-                  title: Center(
-                    child: ListTile(
-                            title: Row(
-                              children: [
-                                FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                    child: Text(
-                                      "Student Name",
-                                      style: AppTextStyle.headerStyle2,
-                                    )),
-                                Spacer(),
-                                FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                    child: Text(
-                                      "Rank:${studentrank}",
-                                      style: AppTextStyle.subtextgrey,
-                                    )),
-                              ],
-                            ),
-                            subtitle: Row(
-                              children: [
-                                FittedBox(
+            return AlertDialog(
+              title: Container(
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              studentname,
+                              style: AppTextStyle.textstyle20,
+                              maxLines: 1,
+                            )),
+                      ),
+                      subtitle: Row(
+                        children: [
+                          FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                quizName,
+                                style: AppTextStyle.subText,
+                              )),
+                          Spacer(),
+                          Column(
+                            children: [
+                              FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      quizName,
-                                      style: AppTextStyle.subText,
-                                    )),
-                                Spacer(),
-                                FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        "Result: ${studentMark} / ${total} ",
-                                        style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
-                                      ),
-                                    )),
-                              ],
-                            ),
+                                      "Result: ${studentMark} / ${total} ",
+                                      style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
+                                    ),
+                                  )),
+                              FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      "Rank: $studentrank ",
+                                      style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
+                                    ),
+                                  )),
+                            ],
                           ),
-                  ),
-
-                  actions: [
-                    FlatButton(
-                      child: Text(
-                        "Okay",
-                        style: TextStyle(color: ColorSet.SecondaryColor),
+                        ],
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                  content: Container(
-                    height: MediaQuery.of(context).size.height*0.7,
-                    child: ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 10,left: 10),
-                            child: Row(
-                              children: [
-                                Text("${snapshot.data[index].noStudent}"),
-                                Spacer(),
-                                Text("${snapshot.data[index].studentMark}"),
-                              ],
-                            ),
-                          );
-                        }),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(24.0),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Divider(height: 1,thickness: 2,),
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10,bottom: 10),
+                            child: Text("Statistics" , style: TextStyle(fontSize: 15 , color: Colors.red),),
+                          ),
+                          Row(
+                            children: [
+                              Text("Students",style: TextStyle(fontSize: 14,color: ColorSet.inactiveColor),),
+                              Spacer(),
+                              Text("Marks",style: TextStyle(fontSize: 14,color: ColorSet.inactiveColor),),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              content:  Container(
+                height: MediaQuery.of(context).size.height*0.25,
+                child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10,left: 12),
+                        child: Row(
+                          children: [
+                            Text("${snapshot.data[index].noStudent}",style: AppTextStyle.textstyle15,),
+                            Spacer(),
+                            Text("${snapshot.data[index].studentMark}",style: AppTextStyle.textstyle15,),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+              actions: [
+                FlatButton(
+                  child: Text(
+                    "Okay",
+                    style: TextStyle(color: ColorSet.SecondaryColor),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(24.0),
+                  ),
+                ),
             );
           }
           else if(snapshot.hasError){

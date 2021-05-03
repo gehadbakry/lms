@@ -6,7 +6,6 @@ import '../app_style.dart';
 import 'NotifiPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:lms_pro/models/Rassign.dart';
 class RecentAssignment extends StatefulWidget {
   @override
   _RecentAssignmentState createState() => _RecentAssignmentState();
@@ -14,22 +13,6 @@ class RecentAssignment extends StatefulWidget {
 
 class _RecentAssignmentState extends State<RecentAssignment> {
 
-  Future<Assignment> GAssign;
-  //FETCHIING YOUR DATA
-  Future<Assignment> getAssignment() async {
-    Uri url = Uri.parse('https://jsonplaceholder.typicode.com/comments/1');
-    http.Response MyAssign = await http.get(url);
-    if (MyAssign.statusCode == 200) {
-    // print(MyAssign.body);
-      return Assignment.fromJson(json.decode(MyAssign.body));
-    } else {
-      throw Exception("can't get data");
-    }
-  }
-  void initState() {
-    GAssign = getAssignment();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

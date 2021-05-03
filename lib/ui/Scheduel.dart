@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/all_days_info.dart';
+import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/models/all_days_scheduel.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:lms_pro/utils/buildScheduelPage.dart';
+import 'package:lms_pro/utils/customDrawer.dart';
+import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 
@@ -9,15 +14,6 @@ import '../app_style.dart';
 import 'NotifiPage.dart';
 
 class Scheduel extends StatefulWidget {
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
-  const Scheduel(
-      {Key key,
-        this.menuScreenContext,
-        this.onScreenHideButtonPressed,
-        this.hideStatus = false})
-      : super(key: key);
   @override
   _ScheduelState createState() => _ScheduelState();
 }
@@ -25,6 +21,13 @@ class Scheduel extends StatefulWidget {
 class _ScheduelState extends State<Scheduel> {
   @override
   Widget build(BuildContext context) {
+    var Scode;
+    var yearCode;
+    setState(() {
+      Scode = Provider.of<APIService>(context, listen: false).code;
+      yearCode =Provider.of<APIService>(context, listen: false).schoolYear;
+    });
+   //AllDaysScheduelInfo().getAllDays(int.parse(Scode), yearCode);
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.9,
@@ -53,7 +56,7 @@ class _ScheduelState extends State<Scheduel> {
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
       ),
     );
-   Widget bottomAppBar = PreferredSize(
+   Widget bottomAppBar =  PreferredSize(
      preferredSize: Size.fromHeight(55.0),
      child: AppBar(
        shape: RoundedRectangleBorder(
@@ -64,42 +67,58 @@ class _ScheduelState extends State<Scheduel> {
        ),
        elevation: 0.0,
        backgroundColor: ColorSet.whiteColor,
-     automaticallyImplyLeading: false,
-     bottom:TabBar(
-       tabs: [
-         DaysButton("Sun",context),
-         DaysButton("Mon",context),
-         DaysButton("Tues",context),
-         DaysButton("Wed",context),
-         DaysButton("Thur",context),
-       ],
-       unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
-       indicatorWeight: 0.005,
+       automaticallyImplyLeading: false,
+       bottom:TabBar(
+         tabs: [
+           DaysButton("Sun",context),
+           DaysButton("Mon",context),
+           DaysButton("Tues",context),
+           DaysButton("Wed",context),
+           DaysButton("Thur",context),
+         ],
+         unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
+         indicatorWeight: 0.005,
 
-     ) ,
-   ), );
+       ) ,
+     ), );
     //Allowed height to work with
     var newheight = (MediaQuery.of(context).size.height - AppBar().preferredSize.height-MediaQuery.of(context).padding.top );
     String day;
-////////////////////////GARABI EL MAP/////////////////////////////////////////////
     return Scaffold(
       appBar: MyAppBar,
       backgroundColor: ColorSet.primaryColor,
       body: DefaultTabController(
         length: 5,
-          child: Scaffold(
-            appBar: bottomAppBar,
-              backgroundColor: ColorSet.primaryColor,
-            body: TabBarView(
-              children: [
-                ScheduelPage(),
-                ScheduelPage(),
-                ScheduelPage(),
-                ScheduelPage(),
-                ScheduelPage(),
-              ],
-            ),
-          )
+          child: FutureBuilder<List<AllDaysScheduel>>(
+            future: AllDaysScheduelInfo().getAllDays(int.parse(Scode), yearCode),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                return  Scaffold(
+                  appBar: bottomAppBar,
+                  backgroundColor: ColorSet.primaryColor,
+                  body: TabBarView(
+                    children: [
+                      ////GRABI TDI KOL PAGE EL CODE BTA3 EL YOUM
+                      //Sunday(dayCode: snapshot.data[0].dayCode,),
+                      ScheduelPage(dayCode: snapshot.data[0].dayCode,),
+                      ScheduelPage(dayCode: snapshot.data[1].dayCode,),
+                      ScheduelPage(dayCode: snapshot.data[2].dayCode,),
+                      ScheduelPage(dayCode: snapshot.data[3].dayCode,),
+                      ScheduelPage(dayCode: snapshot.data[4].dayCode,),
+                    ],
+                  ),
+                );
+              }
+              else if (snapshot.hasError){
+                return Center(child: Text("error"));
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+
+
       ),
       // body:
       floatingActionButton: ChatButton(),
@@ -109,7 +128,7 @@ class _ScheduelState extends State<Scheduel> {
   Container DaysButton(String day ,  BuildContext ctx) {
     return Container(
       height:35 ,
-      width: (MediaQuery.of(ctx).size.width -MediaQuery.of(ctx).padding.right-MediaQuery.of(ctx).padding.left)*0.30,
+      width: (MediaQuery.of(ctx).size.width -MediaQuery.of(ctx).padding.right-MediaQuery.of(ctx).padding.left)*0.3,
       decoration: BoxDecoration(
         color: ColorSet.whiteColor,
         borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -121,7 +140,9 @@ class _ScheduelState extends State<Scheduel> {
           ),
         ],
       ),
-      child: Center(child: Text("$day",style: AppTextStyle.headerStyle2,maxLines: 1,softWrap: true,)),
+      child: Center(child: FittedBox(
+        fit: BoxFit.fitWidth,
+          child: Text("$day",style: AppTextStyle.headerStyle2,maxLines: 1,softWrap: true,))),
     );
   }
 
