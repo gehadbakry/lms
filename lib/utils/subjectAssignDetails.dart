@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/assignment_info.dart';
 import 'package:lms_pro/api_services/student_data.dart';
@@ -39,7 +40,7 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
       subjectCode = subject.subjectCode;
     });
     //AssignmentInfo().getAssignment(int.parse(code),subject.subjectCode );
-    print("from Assignme ${Provider.of<StudentData>(context ,listen: false).NameEn}");
+    //print("from Assignme ${Provider.of<StudentData>(context ,listen: false).NameEn}");
     return Container(
       child: FutureBuilder<List<Assignment>>(
           future: AssignmentInfo().getAssignment(
@@ -47,103 +48,119 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data.length > 0) {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15, right: 15, top: 20),
-                        child: Card(
-                          shadowColor: ColorSet.shadowcolour,
-                          elevation: 9.0,
-                          borderOnForeground: true,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                color: ColorSet.borderColor, width: 0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: LayoutBuilder(builder: (context, constraints) {
-                            return ListTile(
-                              title: Row(
-                                children: [
-                                  Text(snapshot.data[index].assignmentName,
-                                    style: AppTextStyle.headerStyle2,),
-                                  Spacer(),
-                                  Text("${(snapshot.data[index].publishDate).substring(0,10)}", style: AppTextStyle.subText,),
-                                ],
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("${snapshot.data[index].lessonNameEn}", style: AppTextStyle.subtextgrey,),
-                                  Center(
-                                    ////WIDGET RETURNED ACCORDING TO TYPE EITHER ONLINE OR OFFLINE
-                                    child: snapshot.data[index].type == 1
-                                        ? RaisedButton(
-                                        child: Text("Show Assignment"),
-                                        textColor: ColorSet.whiteColor,
-                                        color: ColorSet.SecondaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              18.0),
-                                        ),
-                                        onPressed: () async{
-                                          String url = "http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data[index].filePath}";
-                                          try{
-                                            await canLaunch(url)?await launch(url ):throw 'error';
-                                          }
-                                          catch(e){
-                                            Toast.show("Assignment not found ", context,
-                                              duration:Toast.LENGTH_LONG,);
-                                          }
-                                        })
-                                        : Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                return GroupedListView<Assignment, int>(
+                  elements: snapshot.data.toList(),
+                  groupBy: (Assignment e) => e.assignmentCode,
+                  groupHeaderBuilder: (Assignment e) =>  Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20),
+                            child: GestureDetector(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: ColorSet.whiteColor,
+                                    borderRadius:BorderRadius.all(Radius.circular(15)),
+                                    boxShadow:[ BoxShadow(
+                                      color: ColorSet.shadowcolour,
+                                      spreadRadius: 1,
+                                      blurRadius: 5,
+                                      offset: Offset(4, 3),
+                                    ),]
+                                ),
+                                child: LayoutBuilder(builder: (context, constraints) {
+                                  return ListTile(
+                                    title: Padding(
+                                      padding: const EdgeInsets.only(top: 5,right: 5 , left: 5),
+                                      child: Row(
+                                        children: [
+                                          Text(e.assignmentName,
+                                            style: AppTextStyle.headerStyle2,),
+                                          Spacer(),
+                                          Text("${(e.publishDate).substring(0,10)}", style: AppTextStyle.subText,),
+                                        ],
+                                      ),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        IconButton(
-                                          icon: Icon(Icons.file_download),
-                                          iconSize: 35,
-                                          color:  ColorSet.primaryColor,
+                                        SizedBox(height: 10,),
+                                        Center(
+                                          ////WIDGET RETURNED ACCORDING TO TYPE EITHER ONLINE OR OFFLINE
+                                          child: e.type == 1
+                                              ? RaisedButton(
+                                              child: Text("Show Assignment"),
+                                              textColor: ColorSet.whiteColor,
+                                              color: ColorSet.SecondaryColor,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    18.0),
+                                              ),
+                                              onPressed: () async{
+                                                String url = "http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${e.filePath}";
+                                                try{
+                                                  await canLaunch(url)?await launch(url ):throw 'error';
+                                                }
+                                                catch(e){
+                                                  Toast.show("Assignment not found ", context,
+                                                    duration:Toast.LENGTH_LONG,);
+                                                }
+                                              })
+                                              : Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(Icons.file_download),
+                                                iconSize: 35,
+                                                color:  ColorSet.primaryColor,
 
+                                              ),
+                                              SizedBox(width: 10,),
+                                              IconButton(
+                                                icon: Icon(Icons.file_upload),
+                                                iconSize: 35,
+                                                color: ColorSet.SecondaryColor,
+                                                disabledColor: ColorSet.primaryColor,
+                                                  onPressed: () async{
+                                                    String url = "http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${e.filePath}";
+                                                    try{
+                                                      await canLaunch(url)?await launch(url ):throw 'error';
+                                                    }
+                                                    catch(e){
+                                                      Toast.show("Assignment not found ", context,
+                                                        duration:Toast.LENGTH_LONG,);
+                                                    }
+                                                  }
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(width: 10,),
-                                        IconButton(
-                                          icon: Icon(Icons.file_upload),
-                                          iconSize: 35,
-                                          color: ColorSet.SecondaryColor,
-                                          disabledColor: ColorSet.primaryColor,
-                                            onPressed: () async{
-                                              String url = "http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data[index].filePath}";
-                                              try{
-                                                await canLaunch(url)?await launch(url ):throw 'error';
-                                              }
-                                              catch(e){
-                                                Toast.show("Assignment not found ", context,
-                                                  duration:Toast.LENGTH_LONG,);
-                                              }
-                                            }
-                                        ),
+                                        SizedBox(height: 5,),
+                                            Center(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 5 ,right: 5,left: 5,bottom: 7),
+                                                child: Row(
+                                                  children: [
+                                                    Text("Result : ${e.assignmentMark} / ${e.totalGrade}",
+                                                      style: AppTextStyle.headerStyle2,),
+                                                    Spacer(),
+                                                    InkWell(child: Text("Show lessons",style: AppTextStyle.complaint,),),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                       ],
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Spacer(),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 5 ,bottom: 5),
-                                        child: Text("Result : ${snapshot.data[index].assignmentMark} / ${snapshot.data[index].totalGrade}",
-                                          style: AppTextStyle.headerStyle2,),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                  );
+                                },
+                                ),
                               ),
-                            );
-                          },
+                              onTap:  () => alertDialog(e.assignmentCode , e.assignmentName),
+                            ),
                           ),
-                        ),
-                      );
-                    });
+                  itemBuilder: (context, Assignment e){
+                    return null;
+                  },
+                  order: GroupedListOrder.ASC,
+                );
               }
               else {
                 return Center(
@@ -162,5 +179,58 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
             );
           })
     );
+  }
+  alertDialog(var newCode , String newName) {
+    var alert = FutureBuilder<List<Assignment>>(
+        future: AssignmentInfo().getAssignment(int.parse(code), subjectCode),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return  AlertDialog(
+              title: Column(
+                children: [
+                  Text(newName , style: AppTextStyle.headerStyle2,),
+                  Center(child: Text("Lessons" , style: AppTextStyle.complaint,)),
+                ],
+              ),
+              content: Container(
+                height: MediaQuery.of(context).size.height*0.3,
+                child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder:(context , index){
+                      if(snapshot.data[index].assignmentCode == newCode){
+                        return Center(child: Text('${snapshot.data[index].lessonNameAr}' , style: AppTextStyle.textstyle15,));
+                      }
+                      return Text("");
+                    } ),
+              ),
+              actions: [
+                FlatButton(
+                  child: Text(
+                    "Okay",
+                    style: TextStyle(color: ColorSet.SecondaryColor),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(24.0),
+                ),
+              ),
+            );
+          }
+          else if(snapshot.hasError){
+            return Center(
+              child: Text("error"),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+    );
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
 }

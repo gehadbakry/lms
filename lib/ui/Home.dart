@@ -7,6 +7,7 @@ import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:lms_pro/ui/Rassignments.dart';
+import 'package:lms_pro/ui/RecentExams.dart';
 import 'package:lms_pro/ui/SubjectPage.dart';
 import 'package:lms_pro/ui/choose_student.dart';
 
@@ -34,7 +35,7 @@ class _HomeState extends State<Home> {
     logInInfo = ModalRoute.of(context).settings.arguments;
     usercode = (logInInfo.userCode);
     usertype = (logInInfo.userType);
-    //code = (logInInfo.code);
+    //code =int.parse(logInInfo.code) ;
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
     });
@@ -368,7 +369,7 @@ class _HomeState extends State<Home> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RecentAssignment()),
+                            builder: (context) => RExams()),
                       );
                     },
                     child: Container(

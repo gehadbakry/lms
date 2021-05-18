@@ -37,4 +37,5 @@ class OnlineExams{
       examName: json['exam_name'],
     );
   }
+
 }

@@ -42,8 +42,8 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
       subjectCode = subject.subjectCode;
     });
     return FutureBuilder<List<Quiz>>(
-       future: QuizInfo().getQuiz(int.parse(code), subjectCode),
-        //future: QuizInfo().getQuiz(969, 35),
+      // future: QuizInfo().getQuiz(int.parse(code), subjectCode),
+        future: QuizInfo().getQuiz(969, 35),
         builder: (context , snapshot){
           if(snapshot.hasData){
             if(snapshot.data.length >0 ){
@@ -52,17 +52,18 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
-                      child: Card(
-                        shadowColor: ColorSet.shadowcolour,
-                        elevation: 9.0,
-                        borderOnForeground: true,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: ColorSet.borderColor, width: 0.5),
-                          borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: ColorSet.whiteColor,
+                            borderRadius:BorderRadius.all(Radius.circular(15)),
+                            boxShadow:[ BoxShadow(
+                              color: ColorSet.shadowcolour,
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: Offset(4, 3),
+                            ),]
                         ),
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return ListTile(
+                        child: ListTile(
                               title: Padding(
                                 padding: const EdgeInsets.only(top: 10,bottom: 5),
                                 child:
@@ -91,22 +92,19 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                                   Spacer(),
                                   Text(
                                     "Show Rank",
-                                    style: AppTextStyle.subText,
+                                    style: AppTextStyle.complaint,
                                   ),
                                 ],
                               ),
                               onTap: () => alertDialog(context ,
                                   snapshot.data[index].quizCode ,
                                   snapshot.data[index].studentRank,
-                              snapshot.data[index].studentMark,
+                              snapshot.data[index].grade,
                                 snapshot.data[index].totalQuizGrade,
                                 snapshot.data[index].quizName,
                                 studentN
                               ),
-
-                            );
-                          },
-                        ),
+                            ),
                       ),
                     );
                   });
@@ -128,6 +126,7 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
   }
 
    alertDialog(BuildContext context , var quizc , var studentrank,var studentMark , var total , var quizName , String studentname) {
+   var Srank;
     var alert = FutureBuilder<List<Rank>>(
         future: RankInfo().getRank(quizc, int.parse(code)),
         builder: (context,snapshot){
@@ -167,15 +166,15 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                                       style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
                                     ),
                                   )),
-                              FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      "Rank: $studentrank ",
-                                      style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
-                                    ),
-                                  )),
+                              // FittedBox(
+                              //     fit: BoxFit.fitWidth,
+                              //     child: FittedBox(
+                              //       fit: BoxFit.scaleDown,
+                              //       child: Text(
+                              //         "Rank: $Srank ",
+                              //         style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
+                              //       ),
+                              //     )),
                             ],
                           ),
                         ],
@@ -206,17 +205,23 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                 ),
               ),
               content:  Container(
-                height: MediaQuery.of(context).size.height*0.25,
+                height: MediaQuery.of(context).size.height*0.3,
                 child: ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 10,left: 12),
-                        child: Row(
+                        child: Column(
                           children: [
-                            Text("${snapshot.data[index].noStudent}",style: AppTextStyle.textstyle15,),
-                            Spacer(),
-                            Text("${snapshot.data[index].studentMark}",style: AppTextStyle.textstyle15,),
+                            Row(
+                              children: [
+                                Text("${snapshot.data[index].noStudent}",style: AppTextStyle.textstyle15,),
+                                Spacer(),
+                                Text("${snapshot.data[index].studentMark}",style: AppTextStyle.textstyle15,),
+                              ],
+                            ),
+                            studentMark == snapshot.data[index].studentMark?Text(' Student Rank: ${Srank = snapshot.data[index].rank}',
+                              style: AppTextStyle.textstyle15,):Text(''),
                           ],
                         ),
                       );

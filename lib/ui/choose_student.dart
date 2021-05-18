@@ -24,7 +24,7 @@ class _ChooseStudentState extends State<ChooseStudent> {
   LoginResponseModel logInInfo;
   List<String> ChildrenCodes = new List<String>();
   var studentInfo;
-  var Code;
+  var code;
   List codeList = [];
   List<dynamic> studentListData = List<dynamic>();
 
@@ -37,19 +37,9 @@ class _ChooseStudentState extends State<ChooseStudent> {
   Widget build(BuildContext context) {
     logInInfo = ModalRoute.of(context).settings.arguments;
     ChildrenCodes = (logInInfo.childrenCode).split(",");
-    Code= (logInInfo.code);
-    print("from cs $Code");
-    //returnList();
-    // for (int index = 0; index < ChildrenCodes.length - 1; index++) {
-    //   Provider.of<StudentData>(context, listen: false).SData(int.parse(Code)).then((value) {
-    //       setState(() {
-    //         if (value.studentCode != null) {
-    //           studentInfo = value.studentCode;
-    //         }
-    //       });
-    //   });
-    // }
-    // print(studentInfo);
+    setState(() {
+      code = Provider.of<APIService>(context, listen: false).code;
+    });
     return Scaffold(
       backgroundColor: ColorSet.whiteColor,
       //Page body
@@ -78,8 +68,15 @@ class _ChooseStudentState extends State<ChooseStudent> {
           ),
           Center(
             child: CarouselSlider.builder(
-                itemCount: ChildrenCodes.length - 1,
+                itemCount: ChildrenCodes.length,
                 itemBuilder: (_, int index, int realIndex) {
+                  // for(int i = 0;i<ChildrenCodes.length ;i++){
+                  //   return StudentCard(context ,ChildrenCodes[i]);
+                  // }
+                  // ChildrenCodes.forEach((element) {
+                  //   return StudentCard(context, element);
+                  // });
+                  // return Text("something went wrong");
                   return StudentCard(context);
                 },
                 options: CarouselOptions(
@@ -93,7 +90,6 @@ class _ChooseStudentState extends State<ChooseStudent> {
       ),
     );
   }
-
   Container StudentCard(BuildContext context) {
     return Container(
       height: 400,
@@ -178,4 +174,38 @@ class _ChooseStudentState extends State<ChooseStudent> {
       ),
     );
   }
+  // Container StudentCard(BuildContext context, var childcode) {
+  //   print(childcode);
+  //   return Container(
+  //     height: 400,
+  //     width: 400,
+  //     //CARD AND AVATAR STACK
+  //     child: Stack(
+  //       children: [
+  //         FutureBuilder<Student>(
+  //             future: StudentData().SData(int.parse(childcode)),
+  //             builder: (context, snapshot) {
+  //               if (snapshot.hasData) {
+  //                 print("From card ${snapshot.data.sNameEN}");
+  //
+  //               } else if (snapshot.hasError) {
+  //                 return Text("error");
+  //               }
+  //               return Center(child: CircularProgressIndicator());
+  //             }),
+  //         FractionalTranslation(
+  //           translation: Offset(0.0, -0.0001),
+  //           child: Align(
+  //             child: CircleAvatar(
+  //               backgroundImage: AssetImage('assets/images/student.png'),
+  //               radius: 50.0,
+  //             ),
+  //             alignment: Alignment.topCenter,
+  //             // alignment: FractionalOffset(0.5, 0.39),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

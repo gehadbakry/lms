@@ -70,13 +70,19 @@ class _ScheduelState extends State<Scheduel> {
        automaticallyImplyLeading: false,
        bottom:TabBar(
          tabs: [
+           // Text("Sun",maxLines: 1,softWrap: true,),
+           // Text("Mon",maxLines: 1,softWrap: true,),
+           // Text("Tues",maxLines: 1,softWrap: true,),
+           // Text("Wedn",maxLines: 1,softWrap: true,),
+           // Text("Thur",maxLines: 1,softWrap: true,),
            DaysButton("Sun",context),
            DaysButton("Mon",context),
            DaysButton("Tues",context),
            DaysButton("Wed",context),
            DaysButton("Thur",context),
          ],
-         unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
+         labelColor: ColorSet.primaryColor,
+         unselectedLabelColor:Colors.grey  ,
          indicatorWeight: 0.005,
 
        ) ,
@@ -122,6 +128,7 @@ class _ScheduelState extends State<Scheduel> {
       ),
       // body:
       floatingActionButton: ChatButton(),
+
     );
   }
 //DAYS' NAMES CONTAINERS
@@ -141,8 +148,8 @@ class _ScheduelState extends State<Scheduel> {
         ],
       ),
       child: Center(child: FittedBox(
-        fit: BoxFit.fitWidth,
-          child: Text("$day",style: AppTextStyle.headerStyle2,maxLines: 1,softWrap: true,))),
+        fit: BoxFit.scaleDown,
+          child: Text("$day",maxLines: 1,softWrap: true,))),
     );
   }
 

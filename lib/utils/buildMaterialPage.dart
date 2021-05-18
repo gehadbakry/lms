@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:custom_dropdown/custom_dropdown.dart';
 
 import '../app_style.dart';
+import '../main.dart';
 import '../testpage.dart';
 
 class BuildMaterialPage extends StatefulWidget {
@@ -53,7 +54,7 @@ class FCustomDropDown extends StatefulWidget {
   _FCustomDropDownState createState() => _FCustomDropDownState();
 }
 
-class _FCustomDropDownState extends State<FCustomDropDown> {
+class _FCustomDropDownState extends State<FCustomDropDown> with RouteAware {
   GlobalKey actionKey;
   double height, width, xPosition, yPosition;
   bool isDropdownOpened = false;
@@ -74,15 +75,14 @@ class _FCustomDropDownState extends State<FCustomDropDown> {
     yPosition = offset.dy;
   }
 
-  OverlayEntry _createFloatingDropdown() {
+  OverlayEntry _createFloatingDropdown()  {
     return OverlayEntry(builder: (context) {
       return Positioned(
         left: xPosition,
         width: width,
         top: yPosition + height,
         //height: 4 * height + 40,
-        child:
-            subDropdown(
+        child: subDropdown(
               text: "try me",
             ),
 
@@ -90,21 +90,37 @@ class _FCustomDropDownState extends State<FCustomDropDown> {
       );
     });
   }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // routeObserver is the global variable we created before
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  // void didPush() {
+  //   floatingDropdown.remove();
+  // }
+  // void didPopNext() {
+  //   Overlay.of(context).insert(floatingDropdown);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       key: actionKey,
       onTap: () {
-        setState(() {
+        setState(()  {
           if (isDropdownOpened) {
             floatingDropdown.remove();
+            //floatingDropdown.dispose();
           } else {
             findDropdownData();
             floatingDropdown = _createFloatingDropdown();
             Overlay.of(context).insert(floatingDropdown);
           }
-
           isDropdownOpened = !isDropdownOpened;
         });
       },

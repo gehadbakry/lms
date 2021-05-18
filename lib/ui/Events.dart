@@ -1,38 +1,47 @@
+import 'package:carousel_slider/carousel_options.dart';
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/api_services/calender_info.dart';
+import 'package:lms_pro/models/calender_data.dart';
 import 'package:lms_pro/ui/Home.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../app_style.dart';
 class Events extends StatefulWidget {
-  final BuildContext menuScreenContext;
-  final Function onScreenHideButtonPressed;
-  final bool hideStatus;
-  const Events(
-      {Key key,
-        this.menuScreenContext,
-        this.onScreenHideButtonPressed,
-        this.hideStatus = false})
-      : super(key: key);
   @override
   _EventsState createState() => _EventsState();
 }
 
-class _EventsState extends State<Events> {
+class _EventsState extends State<Events> with TickerProviderStateMixin {
 
   CalendarController controller;
+  var code;
+  Map<DateTime, List> events;
+  AnimationController _animationController;
+  DateTime current = DateTime.now();
+
 
   @override
   void initState() {
     super.initState();
     controller = CalendarController();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _animationController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     var newheight = (MediaQuery.of(context).size.height - AppBar().preferredSize.height-MediaQuery.of(context).padding.top );
-
+    setState(() {
+      code = Provider.of<APIService>(context, listen: false).code;
+    });
+    print(CalendarInfo().events);
 
     //CUSTOM APP BAR
     Widget myAppBar = AppBar(
@@ -65,7 +74,6 @@ class _EventsState extends State<Events> {
       floatingActionButton: ChatButton(),
       backgroundColor: ColorSet.primaryColor,
       appBar: myAppBar,
-      //SETTING THE CALANDAR AND CALENDAR STYLE
       body:ListView(
         children: [
           Center(
@@ -81,6 +89,7 @@ class _EventsState extends State<Events> {
                   holidayStyle: TextStyle(color: ColorSet.primaryColor),
                   outsideHolidayStyle: TextStyle(color: ColorSet.primaryColor),
                 ),
+                events: CalendarInfo().events,
               ),
               decoration: BoxDecoration(
                 color: ColorSet.whiteColor,
@@ -98,47 +107,11 @@ class _EventsState extends State<Events> {
           ),
           SizedBox(height: 10,),
           //SHOW EVENTS CONTAINER
-          Container(
-            width: double.infinity,
-            child: Column(
-              children: [
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-                ListTile(title: Text("hello",style: TextStyle(fontSize: 55),),),
-
-              ],
-            ),
-            decoration: BoxDecoration(
-                color: ColorSet.whiteColor,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
-            ),
-          ),
         ],
       ),
     );
-
   }
-//   //FUNCTION THT CHANGES THE EVENTS MAP TO STRING
-//    Map<String, dynamic> encodeMap(Map<DateTime, dynamic> map) {
-//      Map<String, dynamic> newMap = {};
-//      map.forEach((key, value) {
-//        newMap[key.toString()] = map[key];
-//      });
-//      return newMap;
-//    }
-// //FUNCTION CHANGES STRING INTO MAP
-//    Map<DateTime, dynamic> decodeMap(Map<String, dynamic> map) {
-//      Map<DateTime, dynamic> newMap = {};
-//      map.forEach((key, value) {
-//        newMap[DateTime.parse(key)] = map[key];
-//      });
-//      return newMap;
-//    }
+//   //FUNCTION THAT CONVERT RESPONCE TO A MAP
+
 }
 

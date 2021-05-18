@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grouped_list/grouped_list.dart';
-import 'package:intl/intl.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/recents_info.dart';
 import 'package:lms_pro/api_services/subjects_info.dart';
@@ -11,41 +9,43 @@ import '../app_style.dart';
 import 'NotifiPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'dart:convert';
-class RecentAssignment extends StatefulWidget {
+import 'package:intl/intl.dart';
+
+class RExams extends StatefulWidget {
   @override
-  _RecentAssignmentState createState() => _RecentAssignmentState();
+  _RExamsState createState() => _RExamsState();
 }
 
-class _RecentAssignmentState extends State<RecentAssignment> {
+class _RExamsState extends State<RExams> {
   var assignmentCode;
   var countAssign;
   var code;
   var userCode;
-  Future <List<Recents>> gRecent;
-  @override
-  void initState() {
-   // gRecent = RecentsInfo().getRecents(int.parse(userCode));
-    super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
-    Widget MyAppBar = AppBar (
+    Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.9,
-      leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
+      leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: ColorSet.whiteColor,
           iconSize: 25,
-          onPressed: (){
+          onPressed: () {
             Navigator.pop(
-              context,);
-          }) ,
+              context,
+            );
+          }),
       centerTitle: true,
-      title: Text("Recent Assignments", style:AppTextStyle.headerStyle),
+      title: Text("Recent Exams", style: AppTextStyle.headerStyle),
       actions: [
-        IconButton(icon: Icon(Icons.notifications),
+        IconButton(
+            icon: Icon(Icons.notifications),
             color: ColorSet.whiteColor,
             iconSize: 25,
-            onPressed: (){
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Notifi()),
@@ -53,28 +53,6 @@ class _RecentAssignmentState extends State<RecentAssignment> {
             })
       ],
     );
-    Widget bottomAppBar = PreferredSize(
-      preferredSize: Size.fromHeight(40.0),
-      child: AppBar(
-      automaticallyImplyLeading: false,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(24),
-          topLeft: Radius.circular(24),
-        ),
-      ),
-      backgroundColor: ColorSet.whiteColor,
-      elevation: 0.0,
-      bottom: TabBar(
-        tabs: [
-          Text("Yesterday",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-          Text("Today",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-          Text("Tomorrow",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-        ],
-        indicatorWeight: 0.005,
-        unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
-      ) ,
-    ),) ;
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
       userCode = Provider.of<APIService>(context, listen: false).usercode;
@@ -96,57 +74,57 @@ class _RecentAssignmentState extends State<RecentAssignment> {
               if (snapshot.hasData) {
                 return GroupedListView<Recents, int>(
                   elements: snapshot.data.toList(),
-                  groupBy: (Recents e) => e.assignmentCode,
+                  groupBy: (Recents e) => e.examCode,
                   groupHeaderBuilder: (Recents e) {
-                    return e.typeRecent == 2
+                    return e.typeRecent == 1
                         ? Padding(
-                      padding:EdgeInsets.only(right: 20 ,left:20,bottom:10 ),
-                      child: GestureDetector(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: ColorSet.whiteColor,
-                              borderRadius:BorderRadius.all(Radius.circular(15)),
-                              boxShadow:[ BoxShadow(
-                                color: ColorSet.shadowcolour,
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(4, 3),
-                              ),]
-                          ),
-                          child: ListTile(
-                            title:  Container(
-                              width: 130,
-                              height: 80,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text('${e.assignsubjectNameAr} ',style: AppTextStyle.headerStyle2,maxLines: 1,)),
-                                  SizedBox(height: 5,),
-                                  FittedBox(
-                                      fit: BoxFit.fitWidth,
-                                      child: Text('${e.assignmentName} ',style: TextStyle(fontSize: 14 , fontWeight: FontWeight.w500 , color: ColorSet.inactiveColor),maxLines: 2,)),
-                                  SizedBox(height: 5,),
-                                  Text('Result: ${e.assignmentMark} / ${e.totalAssignmentGrade}',style: AppTextStyle.complaint,),
-                                ],
+                          padding:EdgeInsets.only(right: 20 ,left:20,bottom:10 ),
+                          child: GestureDetector(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: ColorSet.whiteColor,
+                                    borderRadius:BorderRadius.all(Radius.circular(15)),
+                                    boxShadow:[ BoxShadow(
+                                      color: ColorSet.shadowcolour,
+                                      spreadRadius: 1,
+                                      blurRadius: 5,
+                                      offset: Offset(4, 3),
+                                    ),]
+                                ),
+                                child: ListTile(
+                                  title:  Container(
+                                    width: 130,
+                                    height: 80,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text('${e.subjectNameAr} ',style: AppTextStyle.headerStyle2,maxLines: 1,)),
+                                        SizedBox(height: 5,),
+                                        FittedBox(
+                                            fit: BoxFit.fitWidth,
+                                            child: Text('${e.examName} ',style: TextStyle(fontSize: 14 , fontWeight: FontWeight.w500 , color: ColorSet.inactiveColor),maxLines: 2,)),
+                                        SizedBox(height: 5,),
+                                        Text('Result: ${e.studentExamMark} / ${e.totalExamMark}',style: AppTextStyle.complaint,),
+                                      ],
+                                    ),
+                                  ),
+                                  trailing: Column(
+                                    children: [
+                                      Text('${DateFormat.yMd().format(DateTime.now())}',
+                                        style: TextStyle(fontSize: 12 , fontWeight: FontWeight.w500 , color: ColorSet.SecondaryColor),maxLines: 1,),
+                                      SizedBox(height: 5,),
+                                      Icon(Icons.arrow_forward_ios,color: ColorSet.inactiveColor,),
+                                    ],
+                                  ),
+                                ),
                               ),
+                              onTap: () => alertDialog(e.examCode, e.examName , e.subjectNameAr ,e.studentExamMark),
                             ),
-                            trailing: Column(
-                              children: [
-                                Text('${DateFormat.yMd().format(DateTime.now())}',
-                                  style: TextStyle(fontSize: 12 , fontWeight: FontWeight.w500 , color: ColorSet.SecondaryColor),maxLines: 1,),
-                                SizedBox(height: 5,),
-                                Icon(Icons.arrow_forward_ios,color: ColorSet.inactiveColor,),
-                              ],
-                            ),
-                          ),
-                        ),
-                        onTap: () => alertDialog(e.assignmentCode, e.assignmentName , e.assignsubjectNameAr ,e.assignmentMark),
-                      ),
-                    )
-                        : null;
+                        )
+                        : Text("I am here");
                   },
                   itemBuilder: (context, Recents e) {
                     return null;
@@ -166,6 +144,7 @@ class _RecentAssignmentState extends State<RecentAssignment> {
       floatingActionButton: ChatButton(),
     );
   }
+
   void alertDialog(var NewCode, var NewName ,var newSubName ,var mark) {
     var alert = FutureBuilder<List<Recents>>(
         future: RecentsInfo().getRecents(int.parse(userCode)),
@@ -180,8 +159,8 @@ class _RecentAssignmentState extends State<RecentAssignment> {
                       fit: BoxFit.scaleDown,
                       child: Text(newSubName, style: AppTextStyle.headerStyle2,maxLines: 2,)),
                   Text(
-                    NewName,
-                    style: TextStyle(fontSize: 14,color: ColorSet.SecondaryColor),maxLines: 3,
+                      NewName,
+                      style: TextStyle(fontSize: 14,color: ColorSet.SecondaryColor),maxLines: 3,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10 ,right: 5 ,left:5),
@@ -197,10 +176,10 @@ class _RecentAssignmentState extends State<RecentAssignment> {
                     SizedBox(height: 5,),
                     Expanded(
                       child: ListView.builder(
-                          itemCount: snapshot.data.length,
+                         itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
-                            if (snapshot.data[index].assignmentCode == NewCode) {
-                              if(snapshot.data[index].assignLessonNameAr!=null){
+                            if (snapshot.data[index].examCode == NewCode) {
+                              if(snapshot.data[index].examLessonNameAr!=null){
                                 return Center(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -209,14 +188,14 @@ class _RecentAssignmentState extends State<RecentAssignment> {
                                       Icon(Icons.circle,size: 5,color: ColorSet.primaryColor,),
                                       SizedBox(width: 5,),
                                       Text(
-                                        '${snapshot.data[index].assignLessonNameAr}',
+                                        '${snapshot.data[index].examLessonNameAr}',
                                         style: AppTextStyle.textstyle15,
                                       ),
                                     ],
                                   ),
                                 );
                               }
-                              else if(snapshot.data[index].assignLessonNameAr==null){
+                              else if(snapshot.data[index].examLessonNameAr==null){
                                 return Center(
                                   child: Text("No lessons to show",style: TextStyle(fontSize: 15 ,color: ColorSet.inactiveColor , fontWeight: FontWeight.bold),),
                                 );
