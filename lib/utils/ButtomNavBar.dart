@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
@@ -19,6 +20,7 @@ class BNV extends StatefulWidget {
 class _BNVState extends State<BNV> {
   int _selectedIndex = 0;
   LoginResponseModel logInInfo;
+  Student student;
    var usercode;
   var usertype;
   var schoolyear;
@@ -111,7 +113,7 @@ class _BNVState extends State<BNV> {
   ];
   @override
   Widget build(BuildContext context) {
-    logInInfo = ModalRoute.of(context).settings.arguments;
+    student = ModalRoute.of(context).settings.arguments;
     return Container(
 
       child: Scaffold(

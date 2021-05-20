@@ -99,7 +99,14 @@ class _ScheduelState extends State<Scheduel> {
             future: AllDaysScheduelInfo().getAllDays(int.parse(Scode), yearCode),
             builder: (context,snapshot){
               if(snapshot.hasData){
-                return  Scaffold(
+                return snapshot.data.length==0?
+                    Scaffold(appBar: bottomAppBar,
+                      backgroundColor: ColorSet.whiteColor,
+                    body: Center(
+                      child:Text("No scheduel was found",style: AppTextStyle.headerStyle2,),
+                    ),
+                    )
+                    : Scaffold(
                   appBar: bottomAppBar,
                   backgroundColor: ColorSet.primaryColor,
                   body: TabBarView(

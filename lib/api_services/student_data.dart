@@ -20,7 +20,6 @@ class StudentData with ChangeNotifier{
      print("student data ${response.body}");
       NameAr = Student.fromJson(json.decode(response.body),).sNameAR;
       NameEn = Student.fromJson(json.decode(response.body),).sNameEN;
-      print("From student Data $NameEn");
       studentcode = Student.fromJson(json.decode(response.body),).studentCode;
       notifyListeners();
       return  Student.fromJson(
@@ -32,9 +31,3 @@ class StudentData with ChangeNotifier{
     }
   }
 }
-// List<Student>StudentListData = [];
-// void add({ String sNameAR,String sNameEN, String stageNameAR, String stageNameEN, String classNameAR, String classNameEN,}){
-//   StudentListData.add(Student(
-//       sNameAR:Student.fromJson(json.decode(response.body),).sNameAR;
-//   ));
-//}

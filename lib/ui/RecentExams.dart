@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/recents_info.dart';
 import 'package:lms_pro/api_services/subjects_info.dart';
+import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/recents.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
 
@@ -23,6 +24,7 @@ class _RExamsState extends State<RExams> {
   var countAssign;
   var code;
   var userCode;
+  Student student;
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +55,18 @@ class _RExamsState extends State<RExams> {
             })
       ],
     );
+    student = ModalRoute.of(context).settings.arguments;
     setState(() {
-      code = Provider.of<APIService>(context, listen: false).code;
-      userCode = Provider.of<APIService>(context, listen: false).usercode;
-    });
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        userCode = Provider.of<APIService>(context, listen: false).usercode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (student.studentCode).toString();
+        userCode = (student.userCode).toString();
+      }
+    }
+    );
     countAssign = 0;
     return Scaffold(
       backgroundColor: ColorSet.primaryColor,

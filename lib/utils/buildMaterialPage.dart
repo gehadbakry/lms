@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/api_services/material_info.dart';
+import 'package:lms_pro/models/material_data.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_dropdown/custom_dropdown.dart';
@@ -17,9 +20,8 @@ class BuildMaterialPage extends StatefulWidget {
 class _BuildMaterialPageState extends State<BuildMaterialPage> {
   int currentPage = 0;
   Subject subject;
-  var code;
-  int _checkboxValue;
-
+  static var subjectCode;
+  static var code;
   void initState() {
     subject = Subject();
     super.initState();
@@ -31,16 +33,34 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
     subject = ModalRoute.of(context).settings.arguments;
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
+      subjectCode = subject.subjectCode;
     });
-    return Column(
-      children: [
-        FCustomDropDown(
-          text: "try new List",
-        ),
-
-      ],
-    );
-
+    return FutureBuilder<List<Materials>>(
+        future: MaterialInfo().getMaterial(int.parse(code), subjectCode),
+        builder: (context , snapshot){
+          if(snapshot.hasData){
+            return snapshot.data.length==0?Center(child: Text("No Material was found",style: AppTextStyle.headerStyle2,)):Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: GroupedListView<Materials, int>(
+                elements: snapshot.data.toList(),
+                groupBy: (Materials e) => e.subjectChapterCode,
+                  groupHeaderBuilder: (Materials e)=> FCustomDropDown(
+                    text: e.chapterNameAr,
+                  ),
+                itemBuilder: (context, Materials e){
+                  return null;
+                },
+                order: GroupedListOrder.ASC,
+              ),
+            );
+          }
+          else if(snapshot.hasError){
+            return Center(child: Text("Error"));
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
   }
 
 }
@@ -55,96 +75,139 @@ class FCustomDropDown extends StatefulWidget {
 }
 
 class _FCustomDropDownState extends State<FCustomDropDown> with RouteAware {
-  GlobalKey actionKey;
-  double height, width, xPosition, yPosition;
-  bool isDropdownOpened = false;
-  OverlayEntry floatingDropdown;
+  //static GlobalKey actionKey;
+  static double height, width, xPosition, yPosition;
+  static bool isDropdownOpened = false;
+  static OverlayEntry floatingDropdown;
 
   @override
   void initState() {
-    actionKey = LabeledGlobalKey(widget.text);
+   // actionKey = LabeledGlobalKey(widget.text);
     super.initState();
   }
 
   void findDropdownData() {
-    RenderBox renderBox = actionKey.currentContext.findRenderObject();
+    RenderBox renderBox = context.findRenderObject();
     height = renderBox.size.height;
     width = renderBox.size.width;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     xPosition = offset.dx;
     yPosition = offset.dy;
+    print("first $xPosition");
+    print("first $yPosition");
   }
 
-  OverlayEntry _createFloatingDropdown()  {
+ static OverlayEntry _createFloatingDropdown()  {
     return OverlayEntry(builder: (context) {
       return Positioned(
         left: xPosition,
         width: width,
         top: yPosition + height,
-        //height: 4 * height + 40,
-        child: subDropdown(
-              text: "try me",
-            ),
+        height: 4 * height + 40,
+        child: FutureBuilder<List<Materials>>(
+          future: MaterialInfo().getMaterial(int.parse(_BuildMaterialPageState.code), _BuildMaterialPageState.subjectCode),
+      builder: (context , snapshot){
+            if(snapshot.hasData){
+              return GroupedListView<Materials, int>(
+                elements: snapshot.data.toList(),
+                groupBy: (Materials e) => e.subjectChapterLessonCode,
+                  groupHeaderBuilder: (Materials e) => Padding(
+                    padding: EdgeInsets.only(top: 10 , left:25 ,right: 20,bottom: 10),
+                    child: subDropdown(
+                            text: e.lessonNameAr,
+                          ),
+                  ),
+                  itemBuilder: (context, Materials e){
+                  return null;
+                },
+                order: GroupedListOrder.ASC,
+              );
+            }
+            else if(snapshot.hasError){
+              return Center(
+                child: Text("Error"),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+      }
+      ),
+        // child: subDropdown(
+        //       text: "try me",
+        //     ),
 
         //child:Text("hi"),
       );
     });
   }
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // routeObserver is the global variable we created before
-    routeObserver.subscribe(this, ModalRoute.of(context));
+  Future<bool> _onWillPop() {
+    if(_subDropdownState.floatingDropdown != null ){
+      _subDropdownState.floatingDropdown.remove();
+      _subDropdownState.floatingDropdown = null;
+      _subDropdownState.isDropdownOpened = !(_subDropdownState.isDropdownOpened);
+      return Future.value(false);
+    }
+    if(_FCustomDropDownState.floatingDropdown != null ){
+      _FCustomDropDownState.floatingDropdown.remove();
+      _FCustomDropDownState.floatingDropdown = null;
+      _FCustomDropDownState.isDropdownOpened = !(_FCustomDropDownState.isDropdownOpened);
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
-  void dispose() {
-    routeObserver.unsubscribe(this);
-    super.dispose();
-  }
-
-  // void didPush() {
-  //   floatingDropdown.remove();
-  // }
-  // void didPopNext() {
-  //   Overlay.of(context).insert(floatingDropdown);
-  // }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      key: actionKey,
-      onTap: () {
-        setState(()  {
-          if (isDropdownOpened) {
-            floatingDropdown.remove();
-            //floatingDropdown.dispose();
-          } else {
-            findDropdownData();
-            floatingDropdown = _createFloatingDropdown();
-            Overlay.of(context).insert(floatingDropdown);
-          }
-          isDropdownOpened = !isDropdownOpened;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.red.shade600,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: <Widget>[
-            Text(
-              widget.text.toUpperCase(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: GestureDetector(
+        //key: actionKey,
+        onTap: () {
+          setState(()  {
+            if (isDropdownOpened) {
+              floatingDropdown.remove();
+              //floatingDropdown.dispose();
+            } else {
+              findDropdownData();
+              floatingDropdown = _createFloatingDropdown();
+              Overlay.of(context).insert(floatingDropdown);
+            }
+            isDropdownOpened = !isDropdownOpened;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(right: 20,left: 20,bottom: 10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: ColorSet.whiteColor,
+                borderRadius:BorderRadius.all(Radius.circular(15)),
+                boxShadow:[ BoxShadow(
+                  color: ColorSet.shadowcolour,
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(4, 3),
+                ),]
             ),
-            Spacer(),
-            Icon(
-              Icons.arrow_drop_down,
-              color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: <Widget>[
+                Material(
+                  child: Text(
+                    widget.text,
+                    style: TextStyle(
+                        color: ColorSet.primaryColor,
+                        fontSize: 18,),
+                  ),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: ColorSet.primaryColor,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -160,28 +223,29 @@ class subDropdown extends StatefulWidget {
 }
 
 class _subDropdownState extends State<subDropdown> {
-  GlobalKey NewKey;
-  double height, width, xPosition, yPosition;
-  bool isDropdownOpened = false;
-  OverlayEntry floatingDropdown;
+ // static GlobalKey NewKey;
+  static double height, width, xPosition, yPosition;
+  static bool isDropdownOpened = false;
+ static OverlayEntry floatingDropdown;
 
   @override
   void initState() {
-    NewKey = LabeledGlobalKey(widget.text);
+   // NewKey = LabeledGlobalKey(widget.text);
     super.initState();
   }
 
   void findDropdownData() {
-    RenderBox renderBox = NewKey.currentContext.findRenderObject();
+    RenderBox renderBox = context.findRenderObject();
     height = renderBox.size.height;
     width = renderBox.size.width;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     xPosition = offset.dx;
     yPosition = offset.dy;
-
+    print("sub $xPosition");
+    print("sub $yPosition");
   }
 
-  OverlayEntry _createFloatingDropdown() {
+ static OverlayEntry _createFloatingDropdown() {
     return OverlayEntry(builder: (context) {
       return Positioned(
         left: xPosition,
@@ -198,7 +262,7 @@ itemHeight: height,
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      key: NewKey,
+     // key: NewKey,
       onTap: () {
         setState(() {
           if (isDropdownOpened) {
@@ -214,23 +278,28 @@ itemHeight: height,
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.red.shade600,
+            color: ColorSet.whiteColor,
+            borderRadius:BorderRadius.all(Radius.circular(15)),
+            boxShadow:[ BoxShadow(
+              color: ColorSet.shadowcolour,
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(4, 3),
+            ),]
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: <Widget>[
             Text(
-              widget.text.toUpperCase(),
+              widget.text,
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600),
+                color: ColorSet.primaryColor,
+                fontSize: 18,),
             ),
             Spacer(),
             Icon(
               Icons.arrow_drop_down,
-              color: Colors.white,
+              color: ColorSet.primaryColor,
             ),
           ],
         ),
@@ -239,12 +308,16 @@ itemHeight: height,
   }
 }
 
-
-class DropDown extends StatelessWidget {
+class DropDown extends StatefulWidget {
   final double itemHeight;
 
   const DropDown({Key key, this.itemHeight}) : super(key: key);
 
+  @override
+  _DropDownState createState() => _DropDownState();
+}
+
+class _DropDownState extends State<DropDown> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -253,7 +326,7 @@ class DropDown extends StatelessWidget {
           height: 5,
         ),
         Container(
-          height: 4 * itemHeight,
+          height: 4 * widget.itemHeight,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -287,7 +360,7 @@ class DropDown extends StatelessWidget {
   }
 }
 
-class DropDownItem extends StatelessWidget {
+class DropDownItem extends StatefulWidget {
   final String text;
   final IconData iconData;
   final bool isSelected;
@@ -316,20 +389,37 @@ class DropDownItem extends StatelessWidget {
   }
 
   @override
+  _DropDownItemState createState() => _DropDownItemState();
+}
+
+class _DropDownItemState extends State<DropDownItem> with RouteAware{
+  Future<bool> _onWillPop() {
+    if(_FCustomDropDownState.floatingDropdown != null ||_subDropdownState.floatingDropdown != null ){
+      _FCustomDropDownState.floatingDropdown.remove();
+      _FCustomDropDownState.floatingDropdown = null;
+      _subDropdownState.floatingDropdown.remove();
+      _subDropdownState.floatingDropdown = null;
+      _FCustomDropDownState.isDropdownOpened = !(_FCustomDropDownState.isDropdownOpened);
+      _subDropdownState.isDropdownOpened = !(_subDropdownState.isDropdownOpened);
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(
-          top: isFirstItem ? Radius.circular(8) : Radius.zero,
-          bottom: isLastItem ? Radius.circular(8) : Radius.zero,
+          top: widget.isFirstItem ? Radius.circular(8) : Radius.zero,
+          bottom: widget.isLastItem ? Radius.circular(8) : Radius.zero,
         ),
-        color: isSelected ? Colors.red.shade900 : Colors.red.shade600,
+        color: widget.isSelected ? Colors.red.shade900 : Colors.red.shade600,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: <Widget>[
           GestureDetector(
-            child:Text(text.toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w600),),
+            child:Text(widget.text.toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w600),),
           onTap: (){
             Navigator.push(
               context,
@@ -337,12 +427,15 @@ class DropDownItem extends StatelessWidget {
                 maintainState: true,
                 builder: (context) => Test(),
               ),
-            );
+             );
+            _onWillPop();
+            // _FCustomDropDownState.isDropdownOpened = !(_FCustomDropDownState.isDropdownOpened);
+            // _subDropdownState.isDropdownOpened = !(_subDropdownState.isDropdownOpened);
           },
           ),
           Spacer(),
           Icon(
-            iconData,
+            widget.iconData,
             color: Colors.white,
           ),
         ],

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/app_style.dart';
+import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/models/bus_data.dart';
 import 'package:lms_pro/api_services/bus_info.dart';
+import 'package:provider/provider.dart';
 
 
 class Bus extends StatefulWidget {
@@ -18,14 +21,24 @@ class _BusState extends State<Bus> {
   var schoolyear;
   var code;
   LoginResponseModel logInInfo;
-
+  Student student;
 
   @override
   Widget build(BuildContext context) {
-    logInInfo = ModalRoute.of(context).settings.arguments;
-    code = int.parse(logInInfo.code);
-    schoolyear = logInInfo.schoolYearCode;
-
+    // logInInfo = ModalRoute.of(context).settings.arguments;
+    // schoolyear = logInInfo.schoolYearCode;
+    student = ModalRoute.of(context).settings.arguments;
+    setState(() {
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        schoolyear =Provider.of<APIService>(context, listen: false).schoolYear;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (student.studentCode).toString();
+        schoolyear =Provider.of<APIService>(context, listen: false).schoolYear;
+      }
+    }
+    );
     return Center(
        child: Container(
          height: MediaQuery.of(context).size.height*0.70,
@@ -69,10 +82,10 @@ class _BusState extends State<Bus> {
                     ),
                     //THE INFO IN THE CARD
                     FutureBuilder<BusData>(
-                        future: BusInfo().getBus(code, schoolyear),
+                        future: BusInfo().getBus(int.parse(code), schoolyear),
                         builder: (context , snapshot){
                           if(snapshot.hasData){
-                            return  Column(
+                            return snapshot.data.busId==null?Center(child: Text("No bus Info",style: AppTextStyle.headerStyle2,)): Column(
                               children: <Widget>[
                                 IntrinsicHeight(
                                   child: Row(

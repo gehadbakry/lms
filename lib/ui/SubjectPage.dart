@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:lms_pro/ui/subjectDetails.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
+import 'package:provider/provider.dart';
 import '../app_style.dart';
 import 'package:lms_pro/api_services/subjects_info.dart';
 
@@ -16,6 +19,7 @@ class SubjectPage extends StatefulWidget {
 class _SubjectPageState extends State<SubjectPage> {
   LoginResponseModel logInInfo;
   Subject subject;
+  Student student;
   var code;
 
 
@@ -23,8 +27,16 @@ class _SubjectPageState extends State<SubjectPage> {
   @override
 
   Widget build(BuildContext context) {
-    logInInfo = ModalRoute.of(context).settings.arguments;
-    code = logInInfo.code;
+     student = ModalRoute.of(context).settings.arguments;
+     setState(() {
+       if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+         code = Provider.of<APIService>(context, listen: false).code;
+       }
+       else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+         code = (student.studentCode).toString();
+       }
+     }
+     );
     return Scaffold(
       backgroundColor: ColorSet.primaryColor,
       appBar: AppBar(
@@ -36,7 +48,9 @@ class _SubjectPageState extends State<SubjectPage> {
             color: ColorSet.whiteColor,
             iconSize: 25,
             onPressed: () {
-                Navigator.popAndPushNamed(context,'/BNV',arguments: LoginResponseModel(code: code));
+                Navigator.popAndPushNamed(context,'/BNV',arguments: Student(
+                  studentCode: int.parse(code),
+                ));
               // else if(usertype=='4'|| usertype=='3'){
               //   Navigator.popAndPushNamed(
               //     context,'/choose');
@@ -104,7 +118,8 @@ class _SubjectPageState extends State<SubjectPage> {
                                             color: ColorSet.primaryColor,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold),maxLines: 2,),
-                                        subtitle: Text(snapshot.data[index].teacherNameEn , style: TextStyle(
+                                        subtitle: snapshot.data[index].teacherNameEn == null?Text(""):
+                                        Text(snapshot.data[index].teacherNameEn , style: TextStyle(
                                               color: ColorSet.inactiveColor,
                                               fontSize: 8,
                                         fontWeight: FontWeight.bold,

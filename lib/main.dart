@@ -7,6 +7,7 @@ import 'package:lms_pro/ui/Home.dart';
 import 'package:lms_pro/ui/LogInPage.dart';
 import 'package:http/http.dart'as http;
 import 'package:lms_pro/ui/Rassignments.dart';
+import 'package:lms_pro/ui/RecentExams.dart';
 import 'package:lms_pro/ui/Scheduel.dart';
 import 'package:lms_pro/ui/SubjectPage.dart';
 import 'package:lms_pro/ui/choose_student.dart';
@@ -19,8 +20,9 @@ import 'package:provider/provider.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() {
   runApp(MultiProvider(providers: [
-      ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
     ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),),
+      ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
+
   ],
   child: MyApp(),
   ));
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
         '/subjectdetils':(context) =>SubjectDetails(),
         '/quizdetils':(context) => QuizPageDetails(),
         '/recentassignment':(context) => RecentAssignment(),
+        '/recentexam':(context) => RExams(),
       },
       navigatorObservers: [routeObserver],
     );

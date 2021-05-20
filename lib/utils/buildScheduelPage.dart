@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/day_scheduel_info.dart';
+import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/day_scheduel.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -18,15 +19,28 @@ class ScheduelPage extends StatefulWidget {
 class _ScheduelPageState extends State<ScheduelPage> {
   var Scode;
   var yearCode;
+  var userCode;
   var DayCode;
+  Student student;
   @override
   Widget build(BuildContext context) {
     //print(widget.dayCode);
+    student = ModalRoute.of(context).settings.arguments;
     setState(() {
-      Scode = Provider.of<APIService>(context, listen: false).code;
-      yearCode =Provider.of<APIService>(context, listen: false).schoolYear;
-      DayCode = widget.dayCode;
-    });
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        Scode = Provider.of<APIService>(context, listen: false).code;
+        userCode = Provider.of<APIService>(context, listen: false).usercode;
+        yearCode =Provider.of<APIService>(context, listen: false).schoolYear;
+        DayCode = widget.dayCode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        Scode = (student.studentCode).toString();
+        userCode = (student.userCode).toString();
+        yearCode =Provider.of<APIService>(context, listen: false).schoolYear;
+        DayCode = widget.dayCode;
+      }
+    }
+    );
     return Container(
       color: ColorSet.whiteColor,
       padding: EdgeInsets.only(top: 20),

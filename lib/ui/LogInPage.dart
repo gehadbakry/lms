@@ -259,25 +259,11 @@ class _LogInState extends State<LogIn> {
                                       duration:Toast.LENGTH_LONG,);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children!= "") ){
-                                      Navigator.pushNamed(context, '/choose',
-                                        arguments: LoginResponseModel(
-                                          userType: Provider.of<APIService>(context, listen: false).usertype,
-                                          userCode: Provider.of<APIService>(context, listen: false).usercode,
-                                          childrenCode: Provider.of<APIService>(context, listen: false).children,
-                                          code: Provider.of<APIService>(context, listen: false).code,
-                                        ),
-                                      );
+                                      Navigator.pushNamed(context, '/choose',);
                                   }
 
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '2'&& Provider.of<APIService>(context,listen: false).children == ""){
-                                    Navigator.pushNamed(context, '/BNV',
-                                      arguments: LoginResponseModel(
-                                        userCode: Provider.of<APIService>(context, listen: false).usercode,
-                                        userType: Provider.of<APIService>(context, listen: false).usertype,
-                                        code: Provider.of<APIService>(context, listen: false).code,
-                                        schoolYearCode: Provider.of<APIService>(context, listen: false).schoolYear,
-                                      ),
-                                    );
+                                    Navigator.pushNamed(context, '/BNV');
                                   }
                                   else{
                                     Navigator.push(

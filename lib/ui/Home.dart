@@ -25,22 +25,27 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   LoginResponseModel logInInfo;
+  Student student;
   var usercode;
   var usertype;
-  var code;
+  static var code;
 
   @override
   @override
   Widget build(BuildContext context) {
-    logInInfo = ModalRoute.of(context).settings.arguments;
-    usercode = (logInInfo.userCode);
-    usertype = (logInInfo.userType);
-    //code =int.parse(logInInfo.code) ;
+    student = ModalRoute.of(context).settings.arguments;
     setState(() {
-      code = Provider.of<APIService>(context, listen: false).code;
-    });
-    Provider.of<StudentData>(context,listen: false).SData(int.parse(code)).then((value) {
-    });
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+      }
+        else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (student.studentCode).toString();
+        usercode = student.userCode;
+        }
+      }
+    );
+
+        // print("From home ${student.studentCode}");
     //Coustume mde app bar
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.whiteColor,
@@ -282,8 +287,9 @@ class _HomeState extends State<Home> {
                   //COURSES CARD
                   GestureDetector(
                     onTap: () {
-                     Navigator.pushNamed(context, '/subjects', arguments: LoginResponseModel(code: logInInfo.code)
-                     );
+                     Navigator.pushNamed(context, '/subjects',arguments: Student(
+                       studentCode: int.parse(code),
+                     ));
                     },
                     child: Container(
                       height: constraints.maxHeight * 0.25,
@@ -323,11 +329,17 @@ class _HomeState extends State<Home> {
                   //RECENT ASSIGNMENT
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RecentAssignment()),
-                      );
+                      if(Provider.of<APIService>(context, listen: false).usertype == "3"||Provider.of<APIService>(context, listen: false).usertype == "4"){
+                        Navigator.pushNamed(context, '/recentassignment',arguments: Student(
+                          studentCode: int.parse(code),
+                          userCode: student.userCode,
+                        ));
+                      }
+                      else if(Provider.of<APIService>(context, listen: false).usertype == "2"){
+                        Navigator.pushNamed(context, '/recentassignment',arguments: Student(
+                          studentCode: int.parse(code),
+                        ));
+                      }
                     },
                     child: Container(
                       height: constraints.maxHeight * 0.25,
@@ -366,11 +378,17 @@ class _HomeState extends State<Home> {
                   //RECENT EXAMS
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RExams()),
-                      );
+                      if(Provider.of<APIService>(context, listen: false).usertype == "3"||Provider.of<APIService>(context, listen: false).usertype == "4"){
+                        Navigator.pushNamed(context, '/recentexam',arguments: Student(
+                          studentCode: int.parse(code),
+                          userCode: student.userCode,
+                        ));
+                      }
+                      else if(Provider.of<APIService>(context, listen: false).usertype == "2"){
+                        Navigator.pushNamed(context, '/recentexam',arguments: Student(
+                          studentCode: int.parse(code),
+                        ));
+                      }
                     },
                     child: Container(
                       height: constraints.maxHeight * 0.25,

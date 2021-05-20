@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/app_style.dart';
@@ -22,11 +23,10 @@ class ChooseStudent extends StatefulWidget {
 class _ChooseStudentState extends State<ChooseStudent> {
   static final route = '/choose';
   LoginResponseModel logInInfo;
-  List<String> ChildrenCodes = new List<String>();
+  List<dynamic> ChildrenCodes = new List<dynamic>();
   var studentInfo;
   var code;
   List codeList = [];
-  List<dynamic> studentListData = List<dynamic>();
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _ChooseStudentState extends State<ChooseStudent> {
   @override
   Widget build(BuildContext context) {
     logInInfo = ModalRoute.of(context).settings.arguments;
-    ChildrenCodes = (logInInfo.childrenCode).split(",");
+    ChildrenCodes = (Provider.of<APIService>(context, listen: false).children).split(",");
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
     });
@@ -68,16 +68,9 @@ class _ChooseStudentState extends State<ChooseStudent> {
           ),
           Center(
             child: CarouselSlider.builder(
-                itemCount: ChildrenCodes.length,
+                itemCount:ChildrenCodes.length,
                 itemBuilder: (_, int index, int realIndex) {
-                  // for(int i = 0;i<ChildrenCodes.length ;i++){
-                  //   return StudentCard(context ,ChildrenCodes[i]);
-                  // }
-                  // ChildrenCodes.forEach((element) {
-                  //   return StudentCard(context, element);
-                  // });
-                  // return Text("something went wrong");
-                  return StudentCard(context);
+                  return StudentCard(context, ChildrenCodes[index]);
                 },
                 options: CarouselOptions(
                   height: 310,
@@ -90,8 +83,9 @@ class _ChooseStudentState extends State<ChooseStudent> {
       ),
     );
   }
-  Container StudentCard(BuildContext context) {
-    return Container(
+
+  Container StudentCard(BuildContext context, var childcode) {
+    return  Container(
       height: 400,
       width: 400,
       //CARD AND AVATAR STACK
@@ -108,52 +102,68 @@ class _ChooseStudentState extends State<ChooseStudent> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Container(
-                height: 190,
+                height: 200,
                 width: 400,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 60),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          "Student Name",
-                          style: AppTextStyle.headerStyle2,
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            "Stage : prim \nClass: A",
-                            style: AppTextStyle.textstyle15,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => BNV()),
-                                // );
-                              },
-                              child: Text(
-                                "Go",
-                                style: TextStyle(color: ColorSet.primaryColor),
+                  child: FutureBuilder<Student>(
+                    future: StudentData().SData(int.parse(childcode)),
+                    builder: (context,snapshot){
+                      if(snapshot.hasData){
+                        //print("from home ${Provider.of<StudentData>(context,listen: true).studentcode}");
+                        return Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: Text(
+                                "${snapshot.data.sNameAR}",
+                                style: AppTextStyle.headerStyle2,
                               ),
-                              style: ElevatedButton.styleFrom(
-                                primary: ColorSet.SecondaryColor,
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  "Stage : ${snapshot.data.stageNameAR} \nClass: ${snapshot.data.classNameAR}",
+                                  style: AppTextStyle.textstyle15,
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, '/BNV',
+                                        arguments: Student(
+                                          studentCode: snapshot.data.studentCode,
+                                          userCode: snapshot.data.userCode,
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "Go",
+                                      style: TextStyle(color: ColorSet.primaryColor),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: ColorSet.SecondaryColor,
+                                      shape: new RoundedRectangleBorder(
+                                        borderRadius: new BorderRadius.circular(30.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      }
+                      else if(snapshot.hasError){
+                        return Text("error");
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -173,39 +183,5 @@ class _ChooseStudentState extends State<ChooseStudent> {
         ],
       ),
     );
-  }
-  // Container StudentCard(BuildContext context, var childcode) {
-  //   print(childcode);
-  //   return Container(
-  //     height: 400,
-  //     width: 400,
-  //     //CARD AND AVATAR STACK
-  //     child: Stack(
-  //       children: [
-  //         FutureBuilder<Student>(
-  //             future: StudentData().SData(int.parse(childcode)),
-  //             builder: (context, snapshot) {
-  //               if (snapshot.hasData) {
-  //                 print("From card ${snapshot.data.sNameEN}");
-  //
-  //               } else if (snapshot.hasError) {
-  //                 return Text("error");
-  //               }
-  //               return Center(child: CircularProgressIndicator());
-  //             }),
-  //         FractionalTranslation(
-  //           translation: Offset(0.0, -0.0001),
-  //           child: Align(
-  //             child: CircleAvatar(
-  //               backgroundImage: AssetImage('assets/images/student.png'),
-  //               radius: 50.0,
-  //             ),
-  //             alignment: Alignment.topCenter,
-  //             // alignment: FractionalOffset(0.5, 0.39),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+   }
 }

@@ -13,6 +13,7 @@ import 'package:lms_pro/utils/buildSubjectDetails.dart';
 import 'package:lms_pro/utils/build_online_exam.dart';
 import 'package:lms_pro/utils/subjectAssignDetails.dart';
 import 'package:provider/provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import '../app_style.dart';
 import 'NotifiPage.dart';
@@ -50,7 +51,6 @@ class _SubjectDetailsState extends State<SubjectDetails> {
         padding: const EdgeInsets.only(top: 25),
         child: Container(
           //Row has avatar as leading and the card as trailing
-          width: MediaQuery.of(context).size.width*0.7,
           child: Row(
             children: [
               //Student's avatar
@@ -70,7 +70,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
                     children: [
                       FittedBox(
                         fit: BoxFit.scaleDown,
-                          child: Text("${subject.teacherNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 16,fontWeight: FontWeight.w700),maxLines: 1,)
+                          child: Text("${subject.teacherNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 10,fontWeight: FontWeight.bold),maxLines: 2,)
                       ),
                       Text("${subject.subjectNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13)),
                     ],
