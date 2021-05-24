@@ -62,13 +62,20 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
           );
         });
   }
-
+  tryGroup() async{
+    List<Materials>_items = await MaterialInfo().getMaterial(int.parse(code), subjectCode) ;
+    Map<String, Materials> groups = {};
+    for (Materials item in _items) {
+  if(groups[(item.subjectChapterCode).toString() +" "+(item.subjectChapterLessonCode).toString()]==null){}
+    }
+  }
 }
 
 class FCustomDropDown extends StatefulWidget {
   final String text;
 
-  const FCustomDropDown({Key key, this.text}) : super(key: key);
+
+  const FCustomDropDown({Key key, this.text }) : super(key: key);
 
   @override
   _FCustomDropDownState createState() => _FCustomDropDownState();
@@ -110,13 +117,14 @@ class _FCustomDropDownState extends State<FCustomDropDown> with RouteAware {
             if(snapshot.hasData){
               return GroupedListView<Materials, int>(
                 elements: snapshot.data.toList(),
-                groupBy: (Materials e) => e.subjectChapterLessonCode,
+                groupBy: (Materials e) => e.subjectChapterCode,
                   groupHeaderBuilder: (Materials e) => Padding(
                     padding: EdgeInsets.only(top: 10 , left:25 ,right: 20,bottom: 10),
-                    child: subDropdown(
-                            text: e.lessonNameAr,
-                          ),
-                  ),
+                    child:  subDropdown(
+                      text: e.lessonNameAr,
+                      ChapterCode: e.subjectChapterCode,
+                    ),
+                 ),
                   itemBuilder: (context, Materials e){
                   return null;
                 },
@@ -216,8 +224,8 @@ class _FCustomDropDownState extends State<FCustomDropDown> with RouteAware {
 
 class subDropdown extends StatefulWidget {
   final String text;
-
-  const subDropdown({Key key, this.text}) : super(key: key);
+  final int ChapterCode;
+  const subDropdown({Key key, this.text ,this.ChapterCode}) : super(key: key);
   @override
   _subDropdownState createState() => _subDropdownState();
 }

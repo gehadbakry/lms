@@ -38,7 +38,6 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
     subject = ModalRoute.of(context).settings.arguments;
     setState(() {
       code = Provider.of<APIService>(context, listen: false).code;
-      studentN = Provider.of<StudentData>(context ,listen: false).NameEn;
       subjectCode = subject.subjectCode;
     });
     return FutureBuilder<List<Quiz>>(
@@ -102,7 +101,6 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                               snapshot.data[index].grade,
                                 snapshot.data[index].totalQuizGrade,
                                 snapshot.data[index].quizName,
-                                studentN
                               ),
                             ),
                       ),
@@ -125,7 +123,7 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
     );
   }
 
-   alertDialog(BuildContext context , var quizc , var studentrank,var studentMark , var total , var quizName , String studentname) {
+   alertDialog(BuildContext context , var quizc , var studentrank,var studentMark , var total , var quizName ) {
    var Srank;
     var alert = FutureBuilder<List<Rank>>(
         future: RankInfo().getRank(quizc, int.parse(code)),
@@ -136,17 +134,7 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              studentname,
-                              style: AppTextStyle.textstyle20,
-                              maxLines: 1,
-                            )),
-                      ),
-                      subtitle: Row(
+                     title: Row(
                         children: [
                           FittedBox(
                               fit: BoxFit.scaleDown,
