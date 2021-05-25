@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +28,105 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
   static Map<DateTime, List> events;
   AnimationController _animationController;
   DateTime selectedDay;
+  //Map<DateTime, List<CalenderDateTime>> datetimeGroups;
 
-  int _counter = 0;
   List<CalenderDateTime> convertedToDatetimeList = [];
 
   @override
+
+
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+  //FUNCTION CONVERTS THE API RESPONCE TO A MAP TO BE ABLE TO SHOW IT IN THE CALENDAR
+  eventsToMap() async {
+    List<Calender> calendar =
+    await CalendarInfo().getEventsCalendar(int.parse(Provider.of<APIService>(context, listen: false).code));
+    for (Calender calendarResponse in calendar) {
+      if (calendarResponse.type == 1) {
+        CalenderDateTime calenderDateTime = CalenderDateTime(
+            journeyName: calendarResponse.journeyName,
+            cost: calendarResponse.cost,
+            maxStudent: calendarResponse.maxStudent,
+            companionAllowed: calendarResponse.companionAllowed,
+            maxCompanion: calendarResponse.maxCompanion,
+            dateTo: DateTime.parse(calendarResponse.dateTo),
+            dateFrom: DateTime.parse(calendarResponse.dateFrom),
+            finalDate: DateTime.parse(calendarResponse.finalDate),
+            notes: calendarResponse.notes,
+            type: calendarResponse.type);
+        convertedToDatetimeList.add(calenderDateTime);
+      }
+      else if (calendarResponse.type == 2) {
+        CalenderDateTime calenderDateTime = CalenderDateTime(
+          absenceDate: DateTime.parse(calendarResponse.absenceDate),
+          absenceReasonAr: calendarResponse.absenceReasonAr,
+          absenceReasonEn: calendarResponse.absenceReasonEn,
+          absenceNote: calendarResponse.absenceNote,
+          type: calendarResponse.type,
+        );
+        convertedToDatetimeList.add(calenderDateTime);
+      }
+      else if (calendarResponse.type == 3) {
+        CalenderDateTime calenderDateTime = CalenderDateTime(
+          stageVaccDate: DateTime.parse(calendarResponse.stageVaccDate),
+          vaccNote: calendarResponse.vaccNote,
+          vaccNameAr: calendarResponse.vaccNameAr,
+          vaccNameEn: calendarResponse.vaccNameEn,
+          type: calendarResponse.type,
+        );
+        convertedToDatetimeList.add(calenderDateTime);
+      }
+      else if (calendarResponse.type == 4) {
+        CalenderDateTime calenderDateTime = CalenderDateTime(
+          eventNameAr: calendarResponse.eventNameAr,
+          eventNameEn: calendarResponse.eventNameEn,
+          eventDescAr: calendarResponse.eventDescAr,
+          eventDescEn: calendarResponse.eventDescEn,
+          eventTime: calendarResponse.eventTime,
+          eventCost: calendarResponse.eventCost,
+          eventLocation: calendarResponse.eventLocation,
+          eventDate: DateTime.parse(calendarResponse.eventDate),
+          type: calendarResponse.type,
+        );
+        convertedToDatetimeList.add(calenderDateTime);
+      }
+      else if (calendarResponse.type == 5) {
+        CalenderDateTime calenderDateTime = CalenderDateTime(
+          violationNote: calendarResponse.violationNote,
+          violationNameAr: calendarResponse.violationNameAr,
+          violationNameEn: calendarResponse.violationNameEn,
+          violationDate: DateTime.parse(calendarResponse.violationDate),
+          type: calendarResponse.type,
+        );
+        convertedToDatetimeList.add(calenderDateTime);
+      }
+    }
+    Map<DateTime, List<CalenderDateTime>> datetimeGroups = groupBy(convertedToDatetimeList, (calenderdatetime) {
+      if (calenderdatetime.type == 1) {
+        return calenderdatetime.finalDate;
+      } else if (calenderdatetime.type == 2) {
+        return calenderdatetime.absenceDate;
+      } else if (calenderdatetime.type == 3) {
+        return calenderdatetime.stageVaccDate;
+      } else if (calenderdatetime.type == 4) {
+        return calenderdatetime.eventDate;
+      } else {
+        return calenderdatetime.violationDate;
+      }
+    });
+    // events.clear();
+    // events.addAll(datetimeGroups);
+    setState(() {
+      events.clear();
+      events.addAll(datetimeGroups);
+    });
+  }
+
   void initState() {
     super.initState();
+    eventsToMap();
     selectedDay = DateTime.now();
     selectedEvents = [];
     events = {};
@@ -50,11 +144,6 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
     // });
   }
 
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     var newheight = (MediaQuery.of(context).size.height -
@@ -64,91 +153,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
       code = Provider.of<APIService>(context, listen: false).code;
     });
 
-    //FUNCTION CONVERTS THE API RESPONCE TO A MAP TO BE ABLE TO SHOW IT IN THE CALENDAR
-    eventsToMap() async {
-      List<Calender> calendar =
-          await CalendarInfo().getEventsCalendar(int.parse(code));
-      for (Calender calendarResponse in calendar) {
-        if (calendarResponse.type == 1) {
-          CalenderDateTime calenderDateTime = CalenderDateTime(
-              journeyName: calendarResponse.journeyName,
-              cost: calendarResponse.cost,
-              maxStudent: calendarResponse.maxStudent,
-              companionAllowed: calendarResponse.companionAllowed,
-              maxCompanion: calendarResponse.maxCompanion,
-              dateTo: DateTime.parse(calendarResponse.dateTo),
-              dateFrom: DateTime.parse(calendarResponse.dateFrom),
-              finalDate: DateTime.parse(calendarResponse.finalDate),
-              notes: calendarResponse.notes,
-              type: calendarResponse.type);
-          convertedToDatetimeList.add(calenderDateTime);
-        }
-        else if (calendarResponse.type == 2) {
-          CalenderDateTime calenderDateTime = CalenderDateTime(
-            absenceDate: DateTime.parse(calendarResponse.absenceDate),
-            absenceReasonAr: calendarResponse.absenceReasonAr,
-            absenceReasonEn: calendarResponse.absenceReasonEn,
-            absenceNote: calendarResponse.absenceNote,
-            type: calendarResponse.type,
-          );
-          convertedToDatetimeList.add(calenderDateTime);
-        }
-        else if (calendarResponse.type == 3) {
-          CalenderDateTime calenderDateTime = CalenderDateTime(
-            stageVaccDate: DateTime.parse(calendarResponse.stageVaccDate),
-            vaccNote: calendarResponse.vaccNote,
-            vaccNameAr: calendarResponse.vaccNameAr,
-            vaccNameEn: calendarResponse.vaccNameEn,
-            type: calendarResponse.type,
-          );
-          convertedToDatetimeList.add(calenderDateTime);
-        }
-        else if (calendarResponse.type == 4) {
-          CalenderDateTime calenderDateTime = CalenderDateTime(
-            eventNameAr: calendarResponse.eventNameAr,
-            eventNameEn: calendarResponse.eventNameEn,
-            eventDescAr: calendarResponse.eventDescAr,
-            eventDescEn: calendarResponse.eventDescEn,
-            eventTime: calendarResponse.eventTime,
-            eventCost: calendarResponse.eventCost,
-            eventLocation: calendarResponse.eventLocation,
-            eventDate: DateTime.parse(calendarResponse.eventDate),
-            type: calendarResponse.type,
-          );
-          convertedToDatetimeList.add(calenderDateTime);
-        }
-        else if (calendarResponse.type == 5) {
-          CalenderDateTime calenderDateTime = CalenderDateTime(
-            violationNote: calendarResponse.violationNote,
-            violationNameAr: calendarResponse.violationNameAr,
-            violationNameEn: calendarResponse.violationNameEn,
-            violationDate: DateTime.parse(calendarResponse.violationDate),
-            type: calendarResponse.type,
-          );
-          convertedToDatetimeList.add(calenderDateTime);
-        }
-      }
-      Map<DateTime, List<CalenderDateTime>> datetimeGroups =
-          groupBy(convertedToDatetimeList, (calenderdatetime) {
-        if (calenderdatetime.type == 1) {
-          return calenderdatetime.finalDate;
-        } else if (calenderdatetime.type == 2) {
-          return calenderdatetime.absenceDate;
-        } else if (calenderdatetime.type == 3) {
-          return calenderdatetime.stageVaccDate;
-        } else if (calenderdatetime.type == 4) {
-          return calenderdatetime.eventDate;
-        } else {
-          return calenderdatetime.violationDate;
-        }
-      });
-      //events.clear();
-      events.addAll(datetimeGroups);
-
-    }
-    print("from body ${eventsToMap()}");
-    print( "from function $events");
-
+    print( "from build body $events");
     //CUSTOM APP BAR
     Widget myAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
@@ -212,6 +217,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
     );
   }
   Widget _buildTableCalendarWithBuilders() {
+    print( "from build calendar $events");
    return TableCalendar(
       calendarController: controller,
       headerStyle: HeaderStyle(formatButtonVisible: false),
@@ -287,11 +293,6 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
         _animationController.forward(from: 0.0);
       } ,
       onVisibleDaysChanged: _onVisibleDaysChanged,
-      // onDaySelected:  (date, events) {
-      //   _onDaySelected(date, events);
-      //   _animationController.forward(from: 0.0);
-      // },
-      // onVisibleDaysChanged: _onVisibleDaysChanged,
     );
 
   }
@@ -339,9 +340,9 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
   }
 
   Widget _buildEventList() {
+      print("selected events ${selectedEvents}");
     return ListView(
-      children: selectedEvents
-          .map((event) => Container(
+      children: selectedEvents.map((event) => Container(
                 decoration: BoxDecoration(
                   border: Border.all(width: 0.8),
                   borderRadius: BorderRadius.circular(12.0),
@@ -350,6 +351,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: ListTile(
                   title: Text(event.toString()),
+                  //title: Text(selectedEvents),
                   onTap: () => print('$event tapped!'),
                 ),
               ))

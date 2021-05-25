@@ -1,4 +1,4 @@
-class CalenderDateTime {
+ class CalenderDateTime {
   String journeyName, notes;
   var cost;
   bool companionAllowed;
@@ -43,5 +43,4 @@ class CalenderDateTime {
     this.companionAllowed,
     this.eventLocation
   });
-
-}
+  }

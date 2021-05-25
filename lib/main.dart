@@ -13,9 +13,11 @@ import 'package:lms_pro/ui/SubjectPage.dart';
 import 'package:lms_pro/ui/choose_student.dart';
 import 'package:lms_pro/ui/subjectDetails.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
+import 'package:lms_pro/utils/buildMaterialPage.dart';
 import 'package:lms_pro/utils/buildQuizPage.dart';
 import 'package:lms_pro/utils/subjectAssignDetails.dart';
 import 'package:provider/provider.dart';
+
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() {
@@ -54,6 +56,8 @@ class MyApp extends StatelessWidget {
         '/quizdetils':(context) => QuizPageDetails(),
         '/recentassignment':(context) => RecentAssignment(),
         '/recentexam':(context) => RExams(),
+        '/materialpage':(context) =>  BuildMaterialPage(),
+
       },
       navigatorObservers: [routeObserver],
     );
