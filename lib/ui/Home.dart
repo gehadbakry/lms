@@ -1,21 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/api_services/saveUserToken.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
+import 'package:lms_pro/models/userTokenInfo.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
-import 'package:lms_pro/ui/Rassignments.dart';
-import 'package:lms_pro/ui/RecentExams.dart';
-import 'package:lms_pro/ui/SubjectPage.dart';
-import 'package:lms_pro/ui/choose_student.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../app_style.dart';
 
 class Home extends StatefulWidget {
@@ -27,35 +27,44 @@ class _HomeState extends State<Home> {
   LoginResponseModel logInInfo;
   Student student;
   var usercode;
+  var tryCode;
   var usertype;
   static var code;
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   @override
   @override
   Widget build(BuildContext context) {
     student = ModalRoute.of(context).settings.arguments;
     setState(() {
-      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+      if (Provider.of<APIService>(context, listen: false).usertype == "2") {
         code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
       }
-        else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+      else if (Provider.of<APIService>(context, listen: false).usertype == "3" || Provider.of<APIService>(context, listen: false).usertype == "4") {
         code = (student.studentCode).toString();
-        usercode = student.userCode;
-        }
+        usercode = (student.userCode).toString();
       }
-    );
+    });
 
-        // print("From home ${student.studentCode}");
+    // firebaseMessaging.getToken().then((value) async{
+    //   await SaveUserToken().Usertoken(UserToken(
+    //     userCode: usercode,
+    //     userToken: value,
+    //     language: 'en',));
+    // });
+
+
     //Coustume mde app bar
     Widget MyAppBar = AppBar(
-      backgroundColor: ColorSet.whiteColor,
+      backgroundColor: ColorSet.primaryColor,
       elevation: 0.0,
       leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          color: ColorSet.primaryColor,
+          color: ColorSet.whiteColor,
           iconSize: 25,
           onPressed: () {
-            if(usertype == '2'){
+            if (usertype == '2') {
               Navigator.pop(context);
             }
             // else if(usertype=='4'|| usertype=='3'){
@@ -66,12 +75,12 @@ class _HomeState extends State<Home> {
       actions: [
         IconButton(
             icon: Icon(Icons.notifications),
-            color: ColorSet.primaryColor,
+            color: ColorSet.whiteColor,
             iconSize: 25,
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi()),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: int.parse(usercode),)),
               );
             })
       ],
@@ -86,346 +95,336 @@ class _HomeState extends State<Home> {
       backgroundColor: ColorSet.whiteColor,
       appBar: MyAppBar,
       //Main widget in the page
-      body: ListView(
-        children: [
-          //Top container that contains the avatar and the card
-          Container(
-            height: newheight * 0.20,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: ColorSet.whiteColor,
-              borderRadius: BorderRadiusDirectional.only(
-                  topEnd: Radius.circular(25), topStart: Radius.circular(25)),
-            ),
-            //Row has avatar as leading and the card as trailing
-            child: Row(
-              children: [
-                //Student's avatar
-                Padding(
-                  padding: const EdgeInsets.only(left: 25),
-                  child: FutureBuilder<Student>(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 120,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 90,
+                    color: Colors.transparent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: ColorSet.primaryColor,
+                        borderRadius: new BorderRadius.only(
+                          bottomLeft: const Radius.circular(180.0),
+                          bottomRight: const Radius.circular(180.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  FutureBuilder<Student>(
                       future: StudentData().SData(int.parse(code)),
                       builder: (context, snapshot) {
-                        if(snapshot.hasData) {
-                          return FittedBox(
-                            child: CircleAvatar(
-                              backgroundImage:HttpStatus.internalServerError != 500?
-                              NetworkImage('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}'):
-                              AssetImage('assets/images/student.png'),
-                              radius: 35.0,
+                        if (snapshot.hasData) {
+                          return Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: FittedBox(
+                                child: CircleAvatar(
+                                  backgroundImage: HttpStatus
+                                              .internalServerError !=
+                                          500
+                                      ? NetworkImage(
+                                          'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}')
+                                      : AssetImage('assets/images/student.png'),
+                                  radius: 40.0,
+                                ),
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                            fit: BoxFit.fill,
                           );
-                        }
-                        else if(snapshot.hasError){
+                        } else if (snapshot.hasError) {
                           return Text("error");
                         }
                         return CircularProgressIndicator();
                       }),
-                ),
-                SizedBox(
-                  width: 40,
-                ),
-                //Container that contains the identifiction card
-                Container(
-                  height: 250,
-                  width: 220,
-                  child: Card(
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 20, bottom: 10, right: 30, left: 30),
+              child: Container(
+                decoration: BoxDecoration(
                     color: ColorSet.whiteColor,
-                    shadowColor: ColorSet.shadowcolour,
-                    elevation: 9.0,
-                    borderOnForeground: true,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: ColorSet.borderColor, width: 0.3),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    //Column that contains the data of the student
-                    child: Center(
-                        child: FutureBuilder<Student>(
-                            future: StudentData().SData(int.parse(code)),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Column(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: ColorSet.shadowcolour,
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: Offset(4, 3),
+                      ),
+                    ]),
+                child: Center(
+                    child: FutureBuilder<Student>(
+                        future: StudentData().SData(int.parse(code)),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8, left: 8, top: 5),
+                                  child: FittedBox(
+                                    child: Text(
+                                      snapshot.data.sNameEN,
+                                      style: AppTextStyle.headerStyle2,
+                                    ),
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                                Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 8, left: 8, top: 5),
-                                      child: FittedBox(
-                                        child: Text(
-                                          snapshot.data.sNameEN,
-                                          style: AppTextStyle.headerStyle2,
-                                        ),
-                                        fit: BoxFit.fitWidth,
-                                      ),
+                                    Text(
+                                      "Stage: ${snapshot.data.stageNameEN}",
+                                      style: AppTextStyle.textstyle15,
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Stage: ${snapshot.data.stageNameEN}",
-                                          style: AppTextStyle.textstyle15,
-                                        ),
-                                        Text(
-                                          "Class:${snapshot.data.classNameEN}",
-                                          style: AppTextStyle.textstyle15,
-                                        ),
-                                      ],
-                                    ),
-
-                                    //SOCIAL MEDIA CONTAINER
-                                    Container(
-                                      height: 35,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          IconButton(
-                                            icon: FaIcon(
-                                              FontAwesomeIcons.facebook,
-                                              color: ColorSet.SecondaryColor,
-                                            ),
-                                            onPressed: () async{
-                                              print(snapshot.data.facebook);
-                                            String url = snapshot.data.facebook;
-                                              try{
-                                                await canLaunch(url)?await launch(url ):throw 'error';
-                                              }
-                                              catch(e){
-                                                  Toast.show("No account was found", context,
-                                                  duration:Toast.LENGTH_LONG,);
-                                              }
-                                            },
-                                          ),
-                                          IconButton(
-                                              icon: FaIcon(
-                                                FontAwesomeIcons.twitter,
-                                                color: ColorSet.SecondaryColor,
-                                              ),
-                                              onPressed: () async{
-                                                print(snapshot.data.twitter);
-                                                String url = snapshot.data.twitter;
-                                                try{
-                                                  await canLaunch(url)?await launch(url ):throw 'error';
-                                                }
-                                                catch(e){
-                                                Toast.show("No account was found", context,
-                                                duration:Toast.LENGTH_LONG,);
-                                                }
-                                              }),
-                                          IconButton(
-                                              icon: FaIcon(
-                                                FontAwesomeIcons.linkedinIn,
-                                                color: ColorSet.SecondaryColor,
-                                              ),
-                                              onPressed: () async{
-                                                print(snapshot.data.linkedIn);
-                                                String url = snapshot.data.linkedIn;
-                                                try{
-                                                  await canLaunch(url)?await launch(url ):throw 'error';
-                                                }
-                                                catch(e){
-                                                  Toast.show("No account was found", context,
-                                                    duration:Toast.LENGTH_LONG,);
-                                                }
-                                              }),
-                                          IconButton(
-                                              icon: FaIcon(
-                                                FontAwesomeIcons.instagram,
-                                                color: ColorSet.SecondaryColor,
-                                              ),
-                                              onPressed: () async{
-                                                print(snapshot.data.instgram);
-                                                String url = snapshot.data.instgram;
-                                                try{
-                                                  await canLaunch(url)?await launch(url ):throw 'error';
-                                                }
-                                                catch(e){
-                                                  Toast.show("No account was found", context,
-                                                    duration:Toast.LENGTH_LONG,);
-                                                }
-                                              }),
-                                        ],
-                                      ),
+                                    Text(
+                                      "Class:${snapshot.data.classNameEN}",
+                                      style: AppTextStyle.textstyle15,
                                     ),
                                   ],
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text("error");
-                              }
-                              return CircularProgressIndicator();
-                            })),
+                                ),
+                                //SOCIAL MEDIA CONTAINER
+                                Container(
+                                  height: 35,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: FaIcon(
+                                          FontAwesomeIcons.facebook,
+                                          color: ColorSet.SecondaryColor,
+                                        ),
+                                        onPressed: () async {
+                                          print(snapshot.data.facebook);
+                                          String url = snapshot.data.facebook;
+                                          try {
+                                            await canLaunch(url)
+                                                ? await launch(url)
+                                                : throw 'error';
+                                          } catch (e) {
+                                            Toast.show(
+                                              "No account was found",
+                                              context,
+                                              duration: Toast.LENGTH_LONG,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                      IconButton(
+                                          icon: FaIcon(
+                                            FontAwesomeIcons.twitter,
+                                            color: ColorSet.SecondaryColor,
+                                          ),
+                                          onPressed: () async {
+                                            print(snapshot.data.twitter);
+                                            String url = snapshot.data.twitter;
+                                            try {
+                                              await canLaunch(url)
+                                                  ? await launch(url)
+                                                  : throw 'error';
+                                            } catch (e) {
+                                              Toast.show(
+                                                "No account was found",
+                                                context,
+                                                duration: Toast.LENGTH_LONG,
+                                              );
+                                            }
+                                          }),
+                                      IconButton(
+                                          icon: FaIcon(
+                                            FontAwesomeIcons.linkedinIn,
+                                            color: ColorSet.SecondaryColor,
+                                          ),
+                                          onPressed: () async {
+                                            print(snapshot.data.linkedIn);
+                                            String url = snapshot.data.linkedIn;
+                                            try {
+                                              await canLaunch(url)
+                                                  ? await launch(url)
+                                                  : throw 'error';
+                                            } catch (e) {
+                                              Toast.show(
+                                                "No account was found",
+                                                context,
+                                                duration: Toast.LENGTH_LONG,
+                                              );
+                                            }
+                                          }),
+                                      IconButton(
+                                          icon: FaIcon(
+                                            FontAwesomeIcons.instagram,
+                                            color: ColorSet.SecondaryColor,
+                                          ),
+                                          onPressed: () async {
+                                            print(snapshot.data.instgram);
+                                            String url = snapshot.data.instgram;
+                                            try {
+                                              await canLaunch(url)
+                                                  ? await launch(url)
+                                                  : throw 'error';
+                                            } catch (e) {
+                                              Toast.show(
+                                                "No account was found",
+                                                context,
+                                                duration: Toast.LENGTH_LONG,
+                                              );
+                                            }
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 6,top: 10),
+                                  child: InkWell(
+                                    child: Text("Change password?",style: TextStyle(fontSize: 12,color: ColorSet.primaryColor),),
+                                    onTap: (){},
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text("error");
+                          }
+                          return Center(child: CircularProgressIndicator());
+                        })),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if (Provider.of<APIService>(context, listen: false)
+                        .usertype ==
+                        "3" ||
+                        Provider.of<APIService>(context, listen: false)
+                            .usertype ==
+                            "4") {
+                      Navigator.pushNamed(context, '/subjects',
+                          arguments: Student(
+                            studentCode: int.parse(code),
+                            userCode: student.userCode,
+                          ));
+                    } else if (Provider.of<APIService>(context, listen: false)
+                        .usertype ==
+                        "2") {
+                      Navigator.pushNamed(context, '/subjects',
+                          arguments: Student(
+                            studentCode: int.parse(code),
+                            userCode: int.parse(usercode),
+                          ));
+                    }
+                  },
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          child: Image(
+                              image:
+                                  AssetImage('assets/images/science-book.png')),
+                        ),
+                        Text(
+                          "Courses",
+                          style: AppTextStyle.headerStyle2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (Provider.of<APIService>(context, listen: false)
+                                .usertype ==
+                            "3" ||
+                        Provider.of<APIService>(context, listen: false)
+                                .usertype ==
+                            "4") {
+                      Navigator.pushNamed(context, '/recentassignment',
+                          arguments: Student(
+                            studentCode: int.parse(code),
+                            userCode: student.userCode,
+                          ));
+                    } else if (Provider.of<APIService>(context, listen: false)
+                            .usertype ==
+                        "2") {
+                      Navigator.pushNamed(context, '/recentassignment',
+                          arguments: Student(
+                            studentCode: int.parse(code),
+                            userCode: int.parse(usercode),
+                          ));
+                    }
+                  },
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          child: Image(
+                              image: AssetImage('assets/images/recntassi.png')),
+                        ),
+                        Text(
+                          "Recent\nAssignment",
+                          style: AppTextStyle.headerStyle2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if(Provider.of<APIService>(context, listen: false).usertype == "3"||Provider.of<APIService>(context, listen: false).usertype == "4"){
+                      Navigator.pushNamed(context, '/recentexam',arguments: Student(
+                        studentCode: int.parse(code),
+                        userCode: student.userCode,
+                      ));
+                    }
+                    else if(Provider.of<APIService>(context, listen: false).usertype == "2"){
+                      Navigator.pushNamed(context, '/recentexam',arguments: Student(
+                        studentCode: int.parse(code),
+                        userCode:int.parse(usercode) ,
+                      ));
+                    }
+                  },
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          child: Image(image: AssetImage('assets/images/courses.png')),
+                        ),
+                        Text(
+                          "Recent\nExams",
+                          style: AppTextStyle.headerStyle2,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
-            ),
-          ),
-          //MAIN CONTAINER IN THE PAGE
-          SizedBox(
-            height: newheight * 0.007,
-          ),
-          Container(
-            height: newheight * 0.68,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: ColorSet.primaryColor,
-              borderRadius: BorderRadiusDirectional.only(
-                  topEnd: Radius.circular(25), topStart: Radius.circular(25)),
-            ),
-            child: LayoutBuilder(
-                builder: (BuildContext ctx, BoxConstraints constraints) {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: constraints.maxHeight * 0.07,
-                  ),
-                  //COURSES CARD
-                  GestureDetector(
-                    onTap: () {
-                     Navigator.pushNamed(context, '/subjects',arguments: Student(
-                       studentCode: int.parse(code),
-                     ));
-                    },
-                    child: Container(
-                      height: constraints.maxHeight * 0.25,
-                      width: constraints.maxWidth * 0.65,
-                      child: Row(
-                        children: [
-                          Image(
-                              image:
-                                  AssetImage('assets/images/science-book.png')),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "Courses",
-                            style: AppTextStyle.headerStyle2,
-                          ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.center,
-                      ),
-                      decoration: BoxDecoration(
-                          color: ColorSet.whiteColor,
-                          borderRadius:
-                              BorderRadiusDirectional.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: ColorSet.shadowcolour,
-                              spreadRadius: 5,
-                              blurRadius: 5,
-                              offset: Offset(4, 3),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight * 0.05,
-                  ),
-                  //RECENT ASSIGNMENT
-                  GestureDetector(
-                    onTap: () {
-                      if(Provider.of<APIService>(context, listen: false).usertype == "3"||Provider.of<APIService>(context, listen: false).usertype == "4"){
-                        Navigator.pushNamed(context, '/recentassignment',arguments: Student(
-                          studentCode: int.parse(code),
-                          userCode: student.userCode,
-                        ));
-                      }
-                      else if(Provider.of<APIService>(context, listen: false).usertype == "2"){
-                        Navigator.pushNamed(context, '/recentassignment',arguments: Student(
-                          studentCode: int.parse(code),
-                        ));
-                      }
-                    },
-                    child: Container(
-                      height: constraints.maxHeight * 0.25,
-                      width: constraints.maxWidth * 0.65,
-                      child: Row(
-                        children: [
-                          Image(
-                              image: AssetImage('assets/images/recntassi.png')),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "Recent\nAssignment",
-                            style: AppTextStyle.headerStyle2,
-                          ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.center,
-                      ),
-                      decoration: BoxDecoration(
-                          color: ColorSet.whiteColor,
-                          borderRadius:
-                              BorderRadiusDirectional.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: ColorSet.shadowcolour,
-                              spreadRadius: 5,
-                              blurRadius: 5,
-                              offset: Offset(4, 3),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight * 0.05,
-                  ),
-                  //RECENT EXAMS
-                  GestureDetector(
-                    onTap: () {
-                      if(Provider.of<APIService>(context, listen: false).usertype == "3"||Provider.of<APIService>(context, listen: false).usertype == "4"){
-                        Navigator.pushNamed(context, '/recentexam',arguments: Student(
-                          studentCode: int.parse(code),
-                          userCode: student.userCode,
-                        ));
-                      }
-                      else if(Provider.of<APIService>(context, listen: false).usertype == "2"){
-                        Navigator.pushNamed(context, '/recentexam',arguments: Student(
-                          studentCode: int.parse(code),
-                        ));
-                      }
-                    },
-                    child: Container(
-                      height: constraints.maxHeight * 0.25,
-                      width: constraints.maxWidth * 0.65,
-                      child: Row(
-                        children: [
-                          Image(image: AssetImage('assets/images/courses.png')),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "Recent\nExams",
-                            style: AppTextStyle.headerStyle2,
-                          ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.center,
-                      ),
-                      decoration: BoxDecoration(
-                          color: ColorSet.whiteColor,
-                          borderRadius:
-                              BorderRadiusDirectional.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: ColorSet.shadowcolour,
-                              spreadRadius: 5,
-                              blurRadius: 5,
-                              offset: Offset(4, 3),
-                            ),
-                          ]),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
+     // bottomNavigationBar: MyBottomBar(),
     );
   }
+  // configureCallBacks(){
+  //     firebaseMessaging.configure(
+  //
+  //     );
+  // }
 }

@@ -5,7 +5,7 @@ class AllDaysScheduelInfo {
   var response;
   var quizCode;
   Future<List<AllDaysScheduel>>getAllDays(int SCode , int schoolYear ) async {
-    Uri url = Uri.parse("http://169.239.39.105/lms_api2/API/StudentApi/GetSchoolScheduelDays?student_code=$SCode&sy=$schoolYear");
+    Uri url = Uri.parse("http://169.239.39.105/lms_api2/api/StudentApi/GetSchoolScheduelDays?student_code=$SCode&sy=$schoolYear");
     response = await http.get(url);
     if (response.statusCode == 200 || response.statusCode == 400) {
       print("AllDays data ${response.body}");

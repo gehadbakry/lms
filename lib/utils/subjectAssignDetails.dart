@@ -22,7 +22,9 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
   LoginResponseModel logInInfo;
   LoginRequestModel loginRequestModel;
   Subject subject;
+  var args;
   var code;
+  var usercode;
   var subjectCode;
 
   @override
@@ -34,11 +36,20 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
 
   @override
   Widget build(BuildContext context) {
-    subject = ModalRoute.of(context).settings.arguments;
+    args = ModalRoute.of(context).settings.arguments;
     setState(() {
-      code = Provider.of<APIService>(context, listen: false).code;
-      subjectCode = subject.subjectCode;
-    });
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
+        subjectCode = args[0].subjectCode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (args[1].studentCode).toString();
+        usercode = args[1].userCode;
+        subjectCode = args[0].subjectCode;
+      }
+    }
+    );
     //AssignmentInfo().getAssignment(int.parse(code),subject.subjectCode );
     //print("from Assignme ${Provider.of<StudentData>(context ,listen: false).NameEn}");
     return Container(

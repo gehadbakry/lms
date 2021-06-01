@@ -23,11 +23,23 @@ class _RExamsState extends State<RExams> {
   var assignmentCode;
   var countAssign;
   var code;
-  var userCode;
+  var usercode;
   Student student;
 
   @override
   Widget build(BuildContext context) {
+    student = ModalRoute.of(context).settings.arguments;
+    setState(() {
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (student.studentCode).toString();
+        usercode = student.userCode.toString();
+      }
+    }
+    );
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.9,
@@ -50,22 +62,10 @@ class _RExamsState extends State<RExams> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi()),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
               );
             })
       ],
-    );
-    student = ModalRoute.of(context).settings.arguments;
-    setState(() {
-      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
-        code = Provider.of<APIService>(context, listen: false).code;
-        userCode = Provider.of<APIService>(context, listen: false).usercode;
-      }
-      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
-        code = (student.studentCode).toString();
-        userCode = (student.userCode).toString();
-      }
-    }
     );
     countAssign = 0;
     return Scaffold(
@@ -79,7 +79,7 @@ class _RExamsState extends State<RExams> {
           ),
           padding: EdgeInsets.only(top: 10),
           child: FutureBuilder<List<Recents>>(
-            future: RecentsInfo().getRecents(int.parse(userCode)),
+            future: RecentsInfo().getRecents(int.parse(usercode)),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return GroupedListView<Recents, int>(
@@ -134,7 +134,7 @@ class _RExamsState extends State<RExams> {
                               onTap: () => alertDialog(e.examCode, e.examName , e.subjectNameAr ,e.studentExamMark),
                             ),
                         )
-                        : Text("I am here");
+                        : Text("here");
                   },
                   itemBuilder: (context, Recents e) {
                     return null;
@@ -157,7 +157,7 @@ class _RExamsState extends State<RExams> {
 
   void alertDialog(var NewCode, var NewName ,var newSubName ,var mark) {
     var alert = FutureBuilder<List<Recents>>(
-        future: RecentsInfo().getRecents(int.parse(userCode)),
+        future: RecentsInfo().getRecents(int.parse(usercode)),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return AlertDialog(

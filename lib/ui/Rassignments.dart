@@ -22,10 +22,22 @@ class _RecentAssignmentState extends State<RecentAssignment> {
   var assignmentCode;
   var countAssign;
   var code;
-  var userCode;
+  var usercode;
   Student student;
   @override
   Widget build(BuildContext context) {
+    student = ModalRoute.of(context).settings.arguments;
+    setState(() {
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (student.studentCode).toString();
+        usercode = student.userCode.toString();
+      }
+    }
+    );
     Widget MyAppBar = AppBar (
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.9,
@@ -44,45 +56,33 @@ class _RecentAssignmentState extends State<RecentAssignment> {
             onPressed: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi()),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
               );
             })
       ],
     );
-    Widget bottomAppBar = PreferredSize(
-      preferredSize: Size.fromHeight(40.0),
-      child: AppBar(
-      automaticallyImplyLeading: false,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(24),
-          topLeft: Radius.circular(24),
-        ),
-      ),
-      backgroundColor: ColorSet.whiteColor,
-      elevation: 0.0,
-      bottom: TabBar(
-        tabs: [
-          Text("Yesterday",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-          Text("Today",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-          Text("Tomorrow",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-        ],
-        indicatorWeight: 0.005,
-        unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
-      ) ,
-    ),) ;
-    student = ModalRoute.of(context).settings.arguments;
-    setState(() {
-      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
-        code = Provider.of<APIService>(context, listen: false).code;
-        userCode = Provider.of<APIService>(context, listen: false).usercode;
-      }
-      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
-        code = (student.studentCode).toString();
-        userCode = (student.userCode).toString();
-      }
-    }
-    );
+    // Widget bottomAppBar = PreferredSize(
+    //   preferredSize: Size.fromHeight(40.0),
+    //   child: AppBar(
+    //   automaticallyImplyLeading: false,
+    //   shape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.only(
+    //       topRight: Radius.circular(24),
+    //       topLeft: Radius.circular(24),
+    //     ),
+    //   ),
+    //   backgroundColor: ColorSet.whiteColor,
+    //   elevation: 0.0,
+    //   bottom: TabBar(
+    //     tabs: [
+    //       Text("Yesterday",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
+    //       Text("Today",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
+    //       Text("Tomorrow",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
+    //     ],
+    //     indicatorWeight: 0.005,
+    //     unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
+    //   ) ,
+    // ),) ;
 
     countAssign = 0;
     return Scaffold(
@@ -96,7 +96,7 @@ class _RecentAssignmentState extends State<RecentAssignment> {
           ),
           padding: EdgeInsets.only(top: 10),
           child: FutureBuilder<List<Recents>>(
-            future: RecentsInfo().getRecents(int.parse(userCode)),
+            future: RecentsInfo().getRecents(int.parse(usercode)),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return GroupedListView<Recents, int>(
@@ -151,7 +151,7 @@ class _RecentAssignmentState extends State<RecentAssignment> {
                         onTap: () => alertDialog(e.assignmentCode, e.assignmentName , e.assignsubjectNameAr ,e.assignmentMark),
                       ),
                     )
-                        : null;
+                        : Text("here");
                   },
                   itemBuilder: (context, Recents e) {
                     return null;
@@ -173,7 +173,7 @@ class _RecentAssignmentState extends State<RecentAssignment> {
   }
   void alertDialog(var NewCode, var NewName ,var newSubName ,var mark) {
     var alert = FutureBuilder<List<Recents>>(
-        future: RecentsInfo().getRecents(int.parse(userCode)),
+        future: RecentsInfo().getRecents(int.parse(usercode)),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return AlertDialog(

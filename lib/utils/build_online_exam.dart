@@ -25,7 +25,8 @@ class _OnlineExamState extends State<OnlineExam> {
   Subject subject;
   var examCode;
   var setExamCode;
-
+  var args;
+  var usercode;
   void initState() {
     subject = Subject();
     super.initState();
@@ -33,11 +34,25 @@ class _OnlineExamState extends State<OnlineExam> {
 
   @override
   Widget build(BuildContext context) {
-    subject = ModalRoute.of(context).settings.arguments;
+    args = ModalRoute.of(context).settings.arguments;
     setState(() {
-      code = Provider.of<APIService>(context, listen: false).code;
-      subjectCode = subject.subjectCode;
-    });
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
+        subjectCode = args[0].subjectCode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (args[1].studentCode).toString();
+        usercode = args[1].userCode;
+        subjectCode = args[0].subjectCode;
+      }
+    }
+    );
+    // subject = ModalRoute.of(context).settings.arguments;
+    // setState(() {
+    //   code = Provider.of<APIService>(context, listen: false).code;
+    //   subjectCode = subject.subjectCode;
+    // });
     return FutureBuilder<List<OnlineExams>>(
        future: OnlineExamInfo().getOnlineExam(int.parse(code), subjectCode),
         builder: (context, snapshot) {
@@ -63,7 +78,6 @@ class _OnlineExamState extends State<OnlineExam> {
                             offset: Offset(4, 3),
                           ),]
                         ),
-
                         child: ListTile(
                           leading:
                               Text('${e.examName} ',style: AppTextStyle.headerStyle2,),

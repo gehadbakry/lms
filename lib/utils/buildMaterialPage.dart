@@ -22,6 +22,8 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
   Subject subject;
   static var subjectCode;
   static var code;
+  var usercode;
+  var args;
   void initState() {
     subject = Subject();
     super.initState();
@@ -30,11 +32,24 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
 
   @override
   Widget build(BuildContext context) {
-    subject = ModalRoute.of(context).settings.arguments;
+    args = ModalRoute.of(context).settings.arguments;
+    // setState(() {
+    //   code = Provider.of<APIService>(context, listen: false).code;
+    //   subjectCode = subject.subjectCode;
+    // });
     setState(() {
-      code = Provider.of<APIService>(context, listen: false).code;
-      subjectCode = subject.subjectCode;
-    });
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
+        subjectCode = args[0].subjectCode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (args[1].studentCode).toString();
+        usercode = (args[1].userCode).toString();
+        subjectCode = args[0].subjectCode;
+      }
+    }
+    );
     return FutureBuilder<List<Materials>>(
         future: MaterialInfo().getMaterial(int.parse(code), subjectCode),
         builder: (context , snapshot){

@@ -21,8 +21,7 @@ class _SubjectPageState extends State<SubjectPage> {
   Subject subject;
   Student student;
   var code;
-
-
+  var usercode;
 
   @override
 
@@ -31,9 +30,11 @@ class _SubjectPageState extends State<SubjectPage> {
      setState(() {
        if (Provider.of<APIService>(context, listen: false).usertype == "2"){
          code = Provider.of<APIService>(context, listen: false).code;
+         usercode = Provider.of<APIService>(context, listen: false).usercode;
        }
        else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
          code = (student.studentCode).toString();
+         usercode = (student.userCode).toString();
        }
      }
      );
@@ -63,7 +64,7 @@ class _SubjectPageState extends State<SubjectPage> {
               onPressed: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Notifi()),
+                  MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
                 );
               })
         ],
@@ -136,13 +137,22 @@ class _SubjectPageState extends State<SubjectPage> {
                                   ],
                                 ) ,
                                 onTap: (){
-                                  Navigator.pushNamed(context, '/subjectdetils',arguments:Subject(
-                                    subjectCode: snapshot.data[index].subjectCode,
-                                    subjectNameEn: snapshot.data[index].subjectNameEn,
-                                    teacherNameEn: snapshot.data[index].teacherNameEn,
-                                    teacherImg: snapshot.data[index].teacherImg,
-                                  ) );
-                                  //Navigator.pushNamed(context, '/subjectdetils',arguments:LoginResponseModel(code: code) );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(builder: (context) => SubjectDetails(usercode: usercode,studentCode:code,)),
+                                  // );
+                                  Navigator.pushNamed(context, '/subjectdetils',arguments:[
+                                    Subject(
+                                      subjectCode: snapshot.data[index].subjectCode,
+                                      subjectNameEn: snapshot.data[index].subjectNameEn,
+                                      teacherNameEn: snapshot.data[index].teacherNameEn,
+                                      teacherImg: snapshot.data[index].teacherImg,
+                                    ),
+                                    Student(
+                                      studentCode: int.parse(code),
+                                      userCode: int.parse(usercode),
+                                    )
+                                  ] );
                                 },
                               );
                       });

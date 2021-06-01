@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/calender_info.dart';
+import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/calendar_dateTime.dart';
 import 'package:lms_pro/models/calender_data.dart';
 import 'package:lms_pro/ui/Home.dart';
@@ -14,6 +15,7 @@ import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:lms_pro/utils/customDrawer.dart';
+import 'package:lms_pro/utils/myBottomBar.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../app_style.dart';
@@ -32,10 +34,9 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
   static Map<DateTime, List> events;
   AnimationController _animationController;
   DateTime selectedDay;
-
-  //Map<DateTime, List<CalenderDateTime>> datetimeGroups;
-
   List<CalenderDateTime> convertedToDatetimeList = [];
+  Student student;
+  var usercode;
 
   @override
   void dispose() {
@@ -138,7 +139,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
     );
     _animationController.forward();
     // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   events.then((val) => setState(() {
+    //   eventstToMap.then((val) => setState(() {
     //     events = val;
     //   }));
     //   //print( ' ${_events.toString()} ');
@@ -150,8 +151,17 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
     var newheight = (MediaQuery.of(context).size.height -
         AppBar().preferredSize.height -
         MediaQuery.of(context).padding.top);
+    student = ModalRoute.of(context).settings.arguments;
     setState(() {
-      code = Provider.of<APIService>(context, listen: false).code;
+      if (Provider.of<APIService>(context, listen: false).usertype == "2") {
+        code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
+      } else if (Provider.of<APIService>(context, listen: false).usertype ==
+          "3" ||
+          Provider.of<APIService>(context, listen: false).usertype == "4") {
+        code = (student.studentCode).toString();
+        usercode = student.userCode;
+      }
     });
 
     print("from build body $events");
@@ -164,10 +174,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
           color: ColorSet.whiteColor,
           iconSize: 25,
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => BNV()),
-            );
+            MaterialPageRoute(builder: (context) => BNV());
           }),
       centerTitle: true,
       title: Text(
@@ -182,7 +189,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi()),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
               );
             })
       ],
@@ -215,12 +222,14 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 8.0),
             const SizedBox(height: 8.0),
-            Expanded(
+            Expanded(child: Padding(
+              padding: const EdgeInsets.only(bottom: 5),
               child: _buildEventList(),
-            ),
+            )),
           ],
         ),
       ),
+      //bottomNavigationBar: MyBottomBar(),
     );
   }
 
@@ -349,7 +358,31 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
   }
 
   Widget _buildEventList() {
-    return ListView(
+    return  selectedEvents.length==0?
+    Padding(
+      padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+      child: Container(
+        decoration: BoxDecoration(
+            color: ColorSet.whiteColor,
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            boxShadow: [
+              BoxShadow(
+                color: ColorSet.shadowcolour,
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(4, 3),
+              ),
+            ]),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Container(
+            child: Center(
+             child: Text("No events today",style: AppTextStyle.headerStyle2,),
+            ),
+          ),
+        ),
+      ),
+    )      : ListView(
       children: selectedEvents.map((event) {
         if ((event as CalenderDateTime).type == 1){
           return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
@@ -428,6 +461,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                     (event as CalenderDateTime).companionAllowed,
                     (event as CalenderDateTime).maxStudent,
                     (event as CalenderDateTime).finalDate,
+                  (event as CalenderDateTime).maxCompanion,
                 ),
               ),
             ),
@@ -504,6 +538,11 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                     ),
                   ),
                   trailing:  Icon(Icons.arrow_forward_ios,color: Colors.green,size: 20,),
+                  onTap: ()=> EventFunction().AbsenceFunction(context,(event as CalenderDateTime).absenceDate,
+                    (event as CalenderDateTime).absenceNote,
+                    (event as CalenderDateTime).absenceReasonEn,
+                    (event as CalenderDateTime).absenceReasonAr,
+                  ),
                 ),
               ),
             ),
@@ -545,7 +584,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                             )),
                         SizedBox(height: 2,),
                         Text(
-                          ((DateFormat.yMd().format((event as CalenderDateTime).stageVaccDate))).toString().substring(0, 9),
+                          ((DateFormat.yMd().format((event as CalenderDateTime).stageVaccDate))).toString().substring(0, 10),
                           style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
@@ -579,6 +618,11 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                     ),
                   ),
                   trailing:  Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 20,),
+                  onTap: ()=> EventFunction().VaccineFunction(context,(event as CalenderDateTime).stageVaccDate,
+                    (event as CalenderDateTime).vaccNote,
+                    (event as CalenderDateTime).vaccNameEn,
+                    (event as CalenderDateTime).vaccNameAr,
+                  ),
                 ),
               ),
             ),
@@ -652,6 +696,16 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                   ),
                 ),
                 trailing:  Icon(Icons.arrow_forward_ios,color: Colors.brown,size: 20,),
+                onTap: ()=> EventFunction().EventsFunction(context,
+                  (event as CalenderDateTime).eventDate,
+                  (event as CalenderDateTime).eventNameEn,
+                  (event as CalenderDateTime).eventNameAr,
+                  (event as CalenderDateTime).eventDescEn,
+                  (event as CalenderDateTime).eventDescAr,
+                  (event as CalenderDateTime).eventCost,
+                  (event as CalenderDateTime).eventTime,
+                  (event as CalenderDateTime).eventLocation,
+                ),
               ),
             ),
           ) ;
@@ -724,6 +778,12 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                       ),
                     ),
                     trailing:  Icon(Icons.arrow_forward_ios,color: Colors.red,size: 20,),
+                    onTap: ()=> EventFunction().ViolationFunction(context,
+                      (event as CalenderDateTime).violationDate,
+                      (event as CalenderDateTime).violationNote,
+                      (event as CalenderDateTime).violationNameAr,
+                      (event as CalenderDateTime).violationNameEn,
+                       ),
                     ),
                 ),
                 ),

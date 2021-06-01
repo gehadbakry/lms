@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
@@ -9,6 +11,7 @@ import 'package:lms_pro/ui/Bus.dart';
 import 'package:lms_pro/ui/Events.dart';
 import 'package:lms_pro/ui/Home.dart';
 import 'package:lms_pro/ui/Scheduel.dart';
+import 'package:provider/provider.dart';
 class BNV extends StatefulWidget {
   // final BuildContext menuScreenContext;
   // BNV({Key key, this.menuScreenContext}) : super(key: key);
@@ -117,26 +120,6 @@ class _BNVState extends State<BNV> {
     return Container(
 
       child: Scaffold(
-        // body: PersistentTabView.custom(
-        //   context,
-        //   controller: _controller,
-        //   screens: pages,
-        //   itemCount: 4,
-        //   confineInSafeArea: true,
-        //   handleAndroidBackButtonPress: true,
-        //   stateManagement: true,
-        //   hideNavigationBar: _hideNavBar,
-        //   customWidget: CustomNavBarWidget(
-        //     items: _navBarsItems(),
-        //     onItemSelected: (index) {
-        //       setState(() {
-        //         _controller.index = index; // THIS IS CRITICAL!! Don't miss it!
-        //       });
-        //     },
-        //     selectedIndex: _controller.index,
-        //   ),
-        //
-        // ),
         body: page[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
               items: [

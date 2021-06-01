@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "957460753713",
+    "project_id": "prolms",
+    "storage_bucket": "prolms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957460753713:android:98b62c6aacc3d781259410",
+        "android_client_info": {
+          "package_name": "com.elkhalil.lms_pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "957460753713-a1eq2ujek2oqenvmo3736qinp3qf31b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU6qqA6xx-B70ei2cCCEPbhUhtFJSzXmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "957460753713-a1eq2ujek2oqenvmo3736qinp3qf31b3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
