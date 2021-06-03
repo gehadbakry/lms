@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/student_data.dart';
@@ -28,6 +30,7 @@ class _BNVState extends State<BNV> {
   var usertype;
   var schoolyear;
   var code;
+
   // PersistentTabController _controller;
   // bool _hideNavBar;
 
@@ -114,6 +117,10 @@ class _BNVState extends State<BNV> {
     Scheduel(),
     Bus(),
   ];
+  bool _initialized = false;
+  bool _error = false;
+
+  // Define an async function to initialize FlutterFire
   @override
   Widget build(BuildContext context) {
     student = ModalRoute.of(context).settings.arguments;

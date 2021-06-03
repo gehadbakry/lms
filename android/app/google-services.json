@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "957460753713",
-    "project_id": "prolms",
-    "storage_bucket": "prolms.appspot.com"
+    "project_number": "265408500567",
+    "project_id": "el-khalil",
+    "storage_bucket": "el-khalil.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:957460753713:android:98b62c6aacc3d781259410",
+        "mobilesdk_app_id": "1:265408500567:android:c5deaef7bfb0d85669e412",
         "android_client_info": {
-          "package_name": "com.elkhalil.lms_pro"
+          "package_name": "com.example.lms_pro"
         }
       },
       "oauth_client": [
         {
-          "client_id": "957460753713-a1eq2ujek2oqenvmo3736qinp3qf31b3.apps.googleusercontent.com",
+          "client_id": "265408500567-c226p47j23dkld7bq79r1bnoqnldsh83.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBU6qqA6xx-B70ei2cCCEPbhUhtFJSzXmA"
+          "current_key": "AIzaSyBMTnnElCw85Ou4r80ECwhbEcTLYY3p9o8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "957460753713-a1eq2ujek2oqenvmo3736qinp3qf31b3.apps.googleusercontent.com",
+              "client_id": "265408500567-c226p47j23dkld7bq79r1bnoqnldsh83.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

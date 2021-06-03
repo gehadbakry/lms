@@ -15,8 +15,10 @@ import 'package:lms_pro/utils/ChatButton.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../app_style.dart';
+import '../localNotifi.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -30,11 +32,33 @@ class _HomeState extends State<Home> {
   var tryCode;
   var usertype;
   static var code;
+  var token;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  @override
+  // void initState() {
+  //   super.initState();
+  //   firebaseMessaging.configure(
+  //     onMessage: (Map<String, dynamic> message) async {
+  //       // print("onMessage: $message");
+  //       await PushNotificationService
+  //           .showNotificationWithDefaultSoundWithDefaultChannel(message);
+  //     },
+  //     onLaunch: (Map<String, dynamic> message) async {
+  //       // print("onLaunch: $message");
+  //       await PushNotificationService
+  //           .showNotificationWithDefaultSoundWithDefaultChannel(message);
+  //     },
+  //     onResume: (Map<String, dynamic> message) async {
+  //       // print("onResume: $message");
+  //       await PushNotificationService
+  //           .showNotificationWithDefaultSoundWithDefaultChannel(message);
+  //     },
+  //   );
+  // }
 
   @override
-  @override
   Widget build(BuildContext context) {
+    PushNotificationService.initializePlugin(context);
     student = ModalRoute.of(context).settings.arguments;
     setState(() {
       if (Provider.of<APIService>(context, listen: false).usertype == "2") {
@@ -46,12 +70,13 @@ class _HomeState extends State<Home> {
         usercode = (student.userCode).toString();
       }
     });
-
-    // firebaseMessaging.getToken().then((value) async{
+    // firebaseMessaging.getToken().then((value) async {
+    //   print('fcm token : ' + value);
+    //   print('user code : ' + usercode);
     //   await SaveUserToken().Usertoken(UserToken(
     //     userCode: usercode,
-    //     userToken: value,
-    //     language: 'en',));
+    //      userToken: value,
+    //      language: 'en',));
     // });
 
 

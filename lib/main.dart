@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/student_data.dart';
@@ -20,7 +21,9 @@ import 'package:provider/provider.dart';
 
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),),
       ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
@@ -30,7 +33,13 @@ void main() {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -61,6 +70,5 @@ class MyApp extends StatelessWidget {
       },
       navigatorObservers: [routeObserver],
     );
-  }////13186F,123
-}
+  }}
 
