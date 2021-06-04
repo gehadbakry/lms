@@ -23,7 +23,6 @@ import 'package:provider/provider.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),),
       ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
