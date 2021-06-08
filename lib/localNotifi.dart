@@ -37,7 +37,7 @@ class PushNotificationService {
     }
 
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    new AndroidInitializationSettings('@drawable/getimg');
     var initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings = InitializationSettings(
@@ -61,7 +61,7 @@ class PushNotificationService {
       '',
       enableLights: true,
       enableVibration: true,
-      icon: '@mipmap/ic_launcher',
+      icon: '@drawable/getimg',
       importance: Importance.max,
       priority: Priority.high,
     );

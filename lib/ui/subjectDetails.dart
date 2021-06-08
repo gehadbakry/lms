@@ -97,34 +97,31 @@ class _SubjectDetailsState extends State<SubjectDetails> {
         unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
       ),
     ));
-      Widget myAppBar =AppBar(
-     // toolbarHeight: MediaQuery.of(context).size.height*0.2,
-      automaticallyImplyLeading: false,
+    Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.0,
-      leading: Padding(
-        padding: const EdgeInsets.only(bottom: 55),
-        child: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
-            iconSize: 25,
-            onPressed: (){
-              Navigator.pop(
-                context,
-              );
-            }),
-      ) ,
+      leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: ColorSet.whiteColor,
+          iconSize: 25,
+          onPressed: () {
+              Navigator.pop(context);
+            // else if(usertype=='4'|| usertype=='3'){
+            //   Navigator.popAndPushNamed(
+            //     context,'/choose');
+            // }
+          }),
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 55),
-          child: IconButton(icon: Icon(Icons.notifications),
-              color: ColorSet.whiteColor,
-              // iconSize: 25,
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
-                );
-              }),
-        ),
+        IconButton(
+            icon: Icon(Icons.notifications),
+            color: ColorSet.whiteColor,
+            iconSize: 25,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Notifi(userCode: int.parse(usercode),)),
+              );
+            })
       ],
     );
 
@@ -132,7 +129,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
       length: 4,
       child: Scaffold(
         backgroundColor: ColorSet.primaryColor,
-          appBar: myAppBar,
+          appBar: MyAppBar,
           body: Column(
             children: [
           Padding(

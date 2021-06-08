@@ -7,6 +7,8 @@ import 'package:lms_pro/models/material_data.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_dropdown/custom_dropdown.dart';
+import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../app_style.dart';
 import '../main.dart';
@@ -127,7 +129,7 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
                   child: ListTile(
                     leading: Text(e.lessonNameAr,style: AppTextStyle.subtextgrey,),
                     trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
-                    //onTap: () => lessonDialog(e.subjectChapterCode,e.chapterNameAr),
+                    onTap: () => chooseMaterial(e.lessonNameAr , e.subjectChapterLessonCode ,ChapterCode),
                   ),
                 ),
               ):Container(height: 0.0,width: 0.0,),
@@ -166,6 +168,107 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
     );
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
+  chooseMaterial(var lessonName,var lessonCode,var ChapterCode){
+    var alert = AlertDialog(
+      title: Center(child: Text(lessonName,style: AppTextStyle.complaint,)),
+      content:  Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          color: Colors.grey.shade50,
+        ),
+        child: FutureBuilder<List<Materials>>(
+            future: MaterialInfo().getMaterial(int.parse(code), subjectCode),
+            builder: (context , snapshot){
+              if(snapshot.hasData){
+                return Container(
+                  height: MediaQuery.of(context).size.height*0.3,
+                  child: Center(
+                    child: GroupedListView<Materials, int>(
+                      elements: snapshot.data.toList(),
+                      groupBy: (Materials e) =>e.subjectChapterLessonMaterialCode ,
+                      groupHeaderBuilder: (Materials e) => e.subjectChapterCode==ChapterCode && e.subjectChapterLessonCode == lessonCode?
+                      Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Column(
+                          children: [
+                            Text(e.materialName,style: AppTextStyle.textstyle15,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(onPressed: ()async{
+                                  String url = e.materialPath;
+                                  e.materilCode==2?
+                                    await canLaunch(url) ? await launch(url) : throw 'error'
+                                  :
+                                  Toast.show(
+                                  "No Material was found",
+                                  context,
+                                  duration: Toast.LENGTH_LONG,
+                                  );
 
+                                }, icon: Icon(Icons.insert_drive_file,color: ColorSet.inactiveColor,)),
+                                IconButton(onPressed: ()async{
+                                  String url = e.materialPath;
+                                  e.materilCode==3?
+                                  await canLaunch(url) ? await launch(url) : throw 'error'
+                                      :
+                                  Toast.show(
+                                  "No video was found",
+                                  context,
+                                  duration: Toast.LENGTH_LONG,
+                                  );
+                                }, icon: Icon(Icons.video_call,color: ColorSet.inactiveColor,)),
+                                IconButton(onPressed: ()async{
+                                  String url = e.materialPath;
+                                  e.materilCode==1?
+                                  await canLaunch(url) ? await launch(url) : throw 'error'
+                                      :
+                                  Toast.show(
+                                  "No link was found",
+                                  context,
+                                  duration: Toast.LENGTH_LONG,
+                                  );
+                                }, icon: Icon(Icons.link,color: ColorSet.inactiveColor,)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ):Container(height: 0.0,width: 0.0,),
+                      itemBuilder: (context, Materials e) =>null,
+                      order: GroupedListOrder.ASC,
+                    ),
+                  ),
+                );
+              }
+              else if(snapshot.hasError){
+                return Center(
+                  child: Text("Error"),
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+        ),
+      ) ,
+      actions: [
+        FlatButton(
+          child: Text(
+            "Back",
+            style: TextStyle(color: ColorSet.SecondaryColor),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => alert);
+  }
 }
 
