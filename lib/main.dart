@@ -19,14 +19,17 @@ import 'package:lms_pro/utils/buildQuizPage.dart';
 import 'package:lms_pro/utils/subjectAssignDetails.dart';
 import 'package:provider/provider.dart';
 
+import 'models/materialComtainerProvider.dart';
+
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),),
-      ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
-
+    ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
+    ChangeNotifierProvider<ProvOne>(create: (context) => ProvOne(),),
+    ChangeNotifierProvider<ProvTwo>(create: (context) => ProvTwo(),),
   ],
   child: MyApp(),
   ));

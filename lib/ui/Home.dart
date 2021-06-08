@@ -73,7 +73,6 @@ class _HomeState extends State<Home> {
 
     firebaseMessaging.getToken().then((value) async {
       print('fcm token : ' + value);
-      print('user code : ' + usercode);
       await SaveUserToken().Usertoken(UserToken(
         userCode: usercode,
          userToken: value,

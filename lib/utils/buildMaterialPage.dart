@@ -54,20 +54,40 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
         future: MaterialInfo().getMaterial(int.parse(code), subjectCode),
         builder: (context , snapshot){
           if(snapshot.hasData){
-            return snapshot.data.length==0?Center(child: Text("No Material was found",style: AppTextStyle.headerStyle2,)):Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: GroupedListView<Materials, int>(
-                elements: snapshot.data.toList(),
-                groupBy: (Materials e) => e.subjectChapterCode,
-                  groupHeaderBuilder: (Materials e)=> FCustomDropDown(
-                    text: e.chapterNameAr,
-                  ),
-                itemBuilder: (context, Materials e){
-                  return null;
-                },
-                order: GroupedListOrder.ASC,
-              ),
-            );
+           return snapshot.data.length==0?Center(child: Text("No Material was found",style: AppTextStyle.headerStyle2,)):Padding(
+             padding: const EdgeInsets.only(top: 10),
+             child: GroupedListView<Materials, int>(
+                 elements: snapshot.data.toList(),
+                 groupBy: (Materials e) => e.subjectChapterCode,
+                 groupHeaderBuilder: (Materials e) {
+                   return Padding(
+                     padding: const EdgeInsets.only(right: 20 , left :20 , top: 7 , bottom: 10),
+                     child: Container(
+                       width: MediaQuery.of(context).size.width*0.8,
+                       decoration: BoxDecoration(
+                         borderRadius: BorderRadius.all(Radius.circular(8)),
+                         color: ColorSet.whiteColor,
+                         boxShadow: [ BoxShadow(
+                           color: Colors.grey.withOpacity(0.4),
+                           spreadRadius: 3,
+                           blurRadius: 5,
+                           offset: Offset(4, 2), // changes position of shadow
+                         ),],
+                       ),
+                       child: ListTile(
+                         leading: Text(e.chapterNameAr,style: AppTextStyle.headerStyle2,),
+                         trailing: Icon(Icons.arrow_forward_ios_outlined,color: ColorSet.primaryColor,),
+                         onTap: () => lessonDialog(e.subjectChapterCode,e.chapterNameAr),
+                       ),
+                     ),
+                   );
+                 },
+               itemBuilder: (context, Materials e){
+                 return null;
+               },
+               order: GroupedListOrder.ASC,
+             ),
+           );
           }
           else if(snapshot.hasError){
             return Center(child: Text("Error"));
@@ -77,392 +97,75 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
           );
         });
   }
-  tryGroup() async{
-    List<Materials>_items = await MaterialInfo().getMaterial(int.parse(code), subjectCode) ;
-    Map<String, Materials> groups = {};
-    for (Materials item in _items) {
-  if(groups[(item.subjectChapterCode).toString() +" "+(item.subjectChapterLessonCode).toString()]==null){}
-    }
-  }
-}
-
-class FCustomDropDown extends StatefulWidget {
-  final String text;
-
-
-  const FCustomDropDown({Key key, this.text }) : super(key: key);
-
-  @override
-  _FCustomDropDownState createState() => _FCustomDropDownState();
-}
-
-class _FCustomDropDownState extends State<FCustomDropDown> with RouteAware {
-  //static GlobalKey actionKey;
-  static double height, width, xPosition, yPosition;
-  static bool isDropdownOpened = false;
-  static OverlayEntry floatingDropdown;
-
-  @override
-  void initState() {
-   // actionKey = LabeledGlobalKey(widget.text);
-    super.initState();
-  }
-
-  void findDropdownData() {
-    RenderBox renderBox = context.findRenderObject();
-    height = renderBox.size.height;
-    width = renderBox.size.width;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    xPosition = offset.dx;
-    yPosition = offset.dy;
-    print("first $xPosition");
-    print("first $yPosition");
-  }
-
- static OverlayEntry _createFloatingDropdown()  {
-    return OverlayEntry(builder: (context) {
-      return Positioned(
-        left: xPosition,
-        width: width,
-        top: yPosition + height,
-        height: 4 * height + 40,
-        child: FutureBuilder<List<Materials>>(
-          future: MaterialInfo().getMaterial(int.parse(_BuildMaterialPageState.code), _BuildMaterialPageState.subjectCode),
-      builder: (context , snapshot){
-            if(snapshot.hasData){
-              return GroupedListView<Materials, int>(
-                elements: snapshot.data.toList(),
-                groupBy: (Materials e) => e.subjectChapterCode,
-                  groupHeaderBuilder: (Materials e) => Padding(
-                    padding: EdgeInsets.only(top: 10 , left:25 ,right: 20,bottom: 10),
-                    child:  subDropdown(
-                      text: e.lessonNameAr,
-                      ChapterCode: e.subjectChapterCode,
-                    ),
-                 ),
-                  itemBuilder: (context, Materials e){
-                  return null;
-                },
-                order: GroupedListOrder.ASC,
-              );
-            }
-            else if(snapshot.hasError){
-              return Center(
-                child: Text("Error"),
-              );
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-      }
-      ),
-        // child: subDropdown(
-        //       text: "try me",
-        //     ),
-
-        //child:Text("hi"),
-      );
-    });
-  }
-  Future<bool> _onWillPop() {
-    if(_subDropdownState.floatingDropdown != null ){
-      _subDropdownState.floatingDropdown.remove();
-      _subDropdownState.floatingDropdown = null;
-      _subDropdownState.isDropdownOpened = !(_subDropdownState.isDropdownOpened);
-      return Future.value(false);
-    }
-    if(_FCustomDropDownState.floatingDropdown != null ){
-      _FCustomDropDownState.floatingDropdown.remove();
-      _FCustomDropDownState.floatingDropdown = null;
-      _FCustomDropDownState.isDropdownOpened = !(_FCustomDropDownState.isDropdownOpened);
-      return Future.value(false);
-    }
-    return Future.value(true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: GestureDetector(
-        //key: actionKey,
-        onTap: () {
-          setState(()  {
-            if (isDropdownOpened) {
-              floatingDropdown.remove();
-              //floatingDropdown.dispose();
-            } else {
-              findDropdownData();
-              floatingDropdown = _createFloatingDropdown();
-              Overlay.of(context).insert(floatingDropdown);
-            }
-            isDropdownOpened = !isDropdownOpened;
-          });
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(right: 20,left: 20,bottom: 10),
-          child: Container(
-            decoration: BoxDecoration(
-                color: ColorSet.whiteColor,
-                borderRadius:BorderRadius.all(Radius.circular(15)),
-                boxShadow:[ BoxShadow(
-                  color: ColorSet.shadowcolour,
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(4, 3),
-                ),]
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: <Widget>[
-                Material(
-                  child: Text(
-                    widget.text,
-                    style: TextStyle(
-                        color: ColorSet.primaryColor,
-                        fontSize: 18,),
+  lessonDialog(var ChapterCode , var ChapterName){
+    var alert = AlertDialog(
+      title: Center(child: Text(ChapterName,style: AppTextStyle.headerStyle2,)),
+      content:  FutureBuilder<List<Materials>>(
+    future: MaterialInfo().getMaterial(int.parse(code), subjectCode),
+    builder: (context , snapshot){
+      if(snapshot.hasData){
+        return Container(
+          height: MediaQuery.of(context).size.height*0.4,
+          child: Center(
+            child: GroupedListView<Materials, int>(
+              elements: snapshot.data.toList(),
+              groupBy: (Materials e) =>e.subjectChapterLessonCode ,
+              groupHeaderBuilder: (Materials e) => e.subjectChapterCode==ChapterCode?
+              Padding(
+                  padding: EdgeInsets.only(top: 10 , left:10 ,right:10 ,bottom: 5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    color: ColorSet.whiteColor,
+                    boxShadow: [ BoxShadow(
+                      color: Colors.grey.withOpacity(0.4),
+                      spreadRadius: 3,
+                      blurRadius: 5,
+                      offset: Offset(4, 2), // changes position of shadow
+                    ),],
+                  ),
+                  child: ListTile(
+                    leading: Text(e.lessonNameAr,style: AppTextStyle.subtextgrey,),
+                    trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
+                    //onTap: () => lessonDialog(e.subjectChapterCode,e.chapterNameAr),
                   ),
                 ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_drop_down,
-                  color: ColorSet.primaryColor,
-                ),
-              ],
+              ):Container(height: 0.0,width: 0.0,),
+              itemBuilder: (context, Materials e) =>null,
+              order: GroupedListOrder.ASC,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class subDropdown extends StatefulWidget {
-  final String text;
-  final int ChapterCode;
-  const subDropdown({Key key, this.text ,this.ChapterCode}) : super(key: key);
-  @override
-  _subDropdownState createState() => _subDropdownState();
-}
-
-class _subDropdownState extends State<subDropdown> {
- // static GlobalKey NewKey;
-  static double height, width, xPosition, yPosition;
-  static bool isDropdownOpened = false;
- static OverlayEntry floatingDropdown;
-
-  @override
-  void initState() {
-   // NewKey = LabeledGlobalKey(widget.text);
-    super.initState();
-  }
-
-  void findDropdownData() {
-    RenderBox renderBox = context.findRenderObject();
-    height = renderBox.size.height;
-    width = renderBox.size.width;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    xPosition = offset.dx;
-    yPosition = offset.dy;
-    print("sub $xPosition");
-    print("sub $yPosition");
-  }
-
- static OverlayEntry _createFloatingDropdown() {
-    return OverlayEntry(builder: (context) {
-      return Positioned(
-        left: xPosition,
-        width: width,
-        top: yPosition + height,
-        //height: 4 * height + 40,
-        child: DropDown(
-itemHeight: height,
-        ),
-        //child:Text("hi"),
+        );
+      }
+      else if(snapshot.hasError){
+        return Center(
+          child: Text("Error"),
+        );
+      }
+      return Center(
+        child: CircularProgressIndicator(),
       );
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-     // key: NewKey,
-      onTap: () {
-        setState(() {
-          if (isDropdownOpened) {
-            floatingDropdown.remove();
-          } else {
-            findDropdownData();
-            floatingDropdown = _createFloatingDropdown();
-            Overlay.of(context).insert(floatingDropdown);
-          }
-
-          isDropdownOpened = !isDropdownOpened;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            color: ColorSet.whiteColor,
-            borderRadius:BorderRadius.all(Radius.circular(15)),
-            boxShadow:[ BoxShadow(
-              color: ColorSet.shadowcolour,
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: Offset(4, 3),
-            ),]
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: <Widget>[
-            Text(
-              widget.text,
-              style: TextStyle(
-                color: ColorSet.primaryColor,
-                fontSize: 18,),
-            ),
-            Spacer(),
-            Icon(
-              Icons.arrow_drop_down,
-              color: ColorSet.primaryColor,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DropDown extends StatefulWidget {
-  final double itemHeight;
-
-  const DropDown({Key key, this.itemHeight}) : super(key: key);
-
-  @override
-  _DropDownState createState() => _DropDownState();
-}
-
-class _DropDownState extends State<DropDown> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: 5,
-        ),
-        Container(
-          height: 4 * widget.itemHeight,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            children: <Widget>[
-              DropDownItem.first(
-                text: "Add new",
-                iconData: Icons.add_circle_outline,
-                isSelected: false,
-              ),
-              DropDownItem(
-                text: "View Profile",
-                iconData: Icons.person_outline,
-                isSelected: false,
-              ),
-              DropDownItem(
-                text: "Settings",
-                iconData: Icons.settings,
-                isSelected: false,
-              ),
-              DropDownItem.last(
-                text: "Logout",
-                iconData: Icons.exit_to_app,
-                isSelected: true,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class DropDownItem extends StatefulWidget {
-  final String text;
-  final IconData iconData;
-  final bool isSelected;
-  final bool isFirstItem;
-  final bool isLastItem;
-
-  const DropDownItem({Key key, this.text, this.iconData, this.isSelected = false, this.isFirstItem = false, this.isLastItem = false})
-      : super(key: key);
-
-  factory DropDownItem.first({String text, IconData iconData, bool isSelected}) {
-    return DropDownItem(
-      text: text,
-      iconData: iconData,
-      isSelected: isSelected,
-      isFirstItem: true,
-    );
-  }
-
-  factory DropDownItem.last({String text, IconData iconData, bool isSelected}) {
-    return DropDownItem(
-      text: text,
-      iconData: iconData,
-      isSelected: isSelected,
-      isLastItem: true,
-    );
-  }
-
-  @override
-  _DropDownItemState createState() => _DropDownItemState();
-}
-
-class _DropDownItemState extends State<DropDownItem> with RouteAware{
-  Future<bool> _onWillPop() {
-    if(_FCustomDropDownState.floatingDropdown != null ||_subDropdownState.floatingDropdown != null ){
-      _FCustomDropDownState.floatingDropdown.remove();
-      _FCustomDropDownState.floatingDropdown = null;
-      _subDropdownState.floatingDropdown.remove();
-      _subDropdownState.floatingDropdown = null;
-      _FCustomDropDownState.isDropdownOpened = !(_FCustomDropDownState.isDropdownOpened);
-      _subDropdownState.isDropdownOpened = !(_subDropdownState.isDropdownOpened);
-      return Future.value(false);
     }
-    return Future.value(true);
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(
-          top: widget.isFirstItem ? Radius.circular(8) : Radius.zero,
-          bottom: widget.isLastItem ? Radius.circular(8) : Radius.zero,
-        ),
-        color: widget.isSelected ? Colors.red.shade900 : Colors.red.shade600,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: <Widget>[
-          GestureDetector(
-            child:Text(widget.text.toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w600),),
-          onTap: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                maintainState: true,
-                builder: (context) => Test(),
-              ),
-             );
-            _onWillPop();
-            // _FCustomDropDownState.isDropdownOpened = !(_FCustomDropDownState.isDropdownOpened);
-            // _subDropdownState.isDropdownOpened = !(_subDropdownState.isDropdownOpened);
+      ) ,
+      actions: [
+        FlatButton(
+          child: Text(
+            "Okay",
+            style: TextStyle(color: ColorSet.SecondaryColor),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
           },
-          ),
-          Spacer(),
-          Icon(
-            widget.iconData,
-            color: Colors.white,
-          ),
-        ],
+        )
+      ],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
       ),
     );
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
 }
+

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/notification_info.dart';
 import 'package:lms_pro/api_services/student_data.dart';
@@ -50,59 +51,64 @@ class _NotifiNextState extends State<NotifiNext> {
     return Scaffold(
         appBar: MyAppBar,
         body: FutureBuilder<List<Notifications>>(
-          //future: NotificationInfo().getNotifications(9132),
+          //future: NotificationInfo().getNotifications(5654),
           future: NotificationInfo().getNotifications(int.parse(widget.userCode)),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListView.builder(itemBuilder: (context, index) {
-                if (snapshot.data[index].type == widget.notifiType) {
-                  return Padding(
-                      padding:
-                          const EdgeInsets.only(left: 15, right: 15, top: 10),
-                      child: Card(
-                        shadowColor: ColorSet.shadowcolour,
-                        elevation: 9.0,
-                        borderOnForeground: true,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                              color: ColorSet.borderColor, width: 0.5),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            snapshot.data[index].notificationnameEn,
-                            style: AppTextStyle.textstyle20,
-                          ),
-                          trailing: Column(
-                            children: [
-                              Text(
-                                (snapshot.data[index].date).toString().substring(0,10),
-                                style: AppTextStyle.subText,
+              return GroupedListView<Notifications, int>(
+                  elements: snapshot.data.toList(),
+                  groupBy:  (Notifications e) => e.type,
+                itemComparator: (item1, item2) => (DateTime.parse(item1.date)).compareTo(DateTime.parse(item2.date)),
+                  groupHeaderBuilder:(Notifications e) => Container(height: 0.0,width:0.0),
+                  itemBuilder: (context, Notifications e) => e.type==widget.notifiType?
+                  Padding(
+                            padding:
+                                const EdgeInsets.only(left: 15, right: 15, top: 10),
+                            child: Card(
+                              shadowColor: ColorSet.shadowcolour,
+                              elevation: 9.0,
+                              borderOnForeground: true,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: ColorSet.borderColor, width: 0.5),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                              SizedBox(
-                                height: 20,
+                              child: ListTile(
+                                title: Text(
+                                  e.notificationnameEn,
+                                  style: AppTextStyle.textstyle20,
+                                ),
+                                trailing: Column(
+                                  children: [
+                                    Text(
+                                      e.date.toString().substring(0,10),
+                                      style: AppTextStyle.subText,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      "See more",
+                                      style: AppTextStyle.subText,
+                                    ),
+                                  ],
+                                ),
+                                subtitle: Padding(
+                                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                  child: Text(
+                                    e.notificationBodyEn,
+                                    style: AppTextStyle.textstyle15,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                onTap: () => alertDialog(context,e.notificationBodyEn,e.notificationnameEn),
                               ),
-                              Text(
-                                "See more",
-                                style: AppTextStyle.subText,
-                              ),
-                            ],
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 10, bottom: 10),
-                            child: Text(
-                              snapshot.data[index].notificationBodyEn,
-                              style: AppTextStyle.textstyle15,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          onTap: () => alertDialog(context,snapshot.data[index].notificationBodyEn,snapshot.data[index].notificationnameEn),
-                        ),
-                      ));
-                }
-                return Text('');
-              });
+                            ))
+                      :null ,
+                order: GroupedListOrder.DESC,
+              );
+
             } else if (snapshot.hasError) {
               return Center(
                 child: Text("error"),
@@ -114,7 +120,6 @@ class _NotifiNextState extends State<NotifiNext> {
           },
         ));
   }
-
   void alertDialog(BuildContext context, String body,String name) {
     var alert = AlertDialog(
       title: ListTile(
@@ -144,4 +149,5 @@ class _NotifiNextState extends State<NotifiNext> {
 
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
 }

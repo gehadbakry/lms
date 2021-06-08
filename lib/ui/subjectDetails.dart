@@ -50,8 +50,19 @@ class _SubjectDetailsState extends State<SubjectDetails> {
     // subject = ModalRoute.of(context).settings.arguments;
     // student = ModalRoute.of(context).settings.arguments;
     //CUSTOM APP BAR
-
-
+    setState(() {
+      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
+        code = Provider.of<APIService>(context, listen: false).code;
+        usercode = Provider.of<APIService>(context, listen: false).usercode;
+        subjectcode = args[0].subjectCode;
+      }
+      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
+        code = (args[1].studentCode).toString();
+        usercode = (args[1].userCode).toString();
+        subjectcode = args[0].subjectCode;
+      }
+    }
+    );
 
     Widget bottomAppBar = PreferredSize(
         preferredSize:  Size.fromHeight(35),
@@ -86,56 +97,9 @@ class _SubjectDetailsState extends State<SubjectDetails> {
         unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
       ),
     ));
-    setState(() {
-      if (Provider.of<APIService>(context, listen: false).usertype == "2"){
-        code = Provider.of<APIService>(context, listen: false).code;
-        usercode = Provider.of<APIService>(context, listen: false).usercode;
-        subjectcode = args[0].subjectCode;
-      }
-      else if(Provider.of<APIService>(context, listen: false).usertype == "3" ||Provider.of<APIService>(context, listen: false).usertype == "4" ){
-        code = (args[1].studentCode).toString();
-        usercode = (args[1].userCode).toString();
-        subjectcode = args[0].subjectCode;
-      }
-    }
-    );
-    Widget myAppBar =PreferredSize(child: AppBar(
-      toolbarHeight: MediaQuery.of(context).size.height*0.2,
+      Widget myAppBar =AppBar(
+     // toolbarHeight: MediaQuery.of(context).size.height*0.2,
       automaticallyImplyLeading: false,
-      // centerTitle: true,
-      title: Padding(
-        padding: const EdgeInsets.only(top: 25),
-        child: Container(
-          //Row has avatar as leading and the card as trailing
-          child: Row(
-            children: [
-              //Student's avatar
-              CircleAvatar(
-                backgroundImage:HttpStatus.internalServerError != 500?
-                NetworkImage('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=F:/docs${subject.teacherImg}'):
-                AssetImage('assets/images/teacher.png'),
-                radius: 25.0,
-              ),
-              Spacer(),
-              //Container that contains the identifiction card
-              Container(
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text("${args[0].teacherNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 10,fontWeight: FontWeight.bold),maxLines: 2,)
-                      ),
-                      Text("${args[0].subjectNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13)),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),),
-      ),
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.0,
       leading: Padding(
@@ -151,18 +115,6 @@ class _SubjectDetailsState extends State<SubjectDetails> {
       actions: [
         Padding(
           padding: const EdgeInsets.only(bottom: 55),
-          child: IconButton(icon: Icon(Icons.search),
-              color: ColorSet.whiteColor,
-              // iconSize: 25,
-              onPressed: (){
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Notifi()),
-                // );
-              }),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 55),
           child: IconButton(icon: Icon(Icons.notifications),
               color: ColorSet.whiteColor,
               // iconSize: 25,
@@ -174,24 +126,69 @@ class _SubjectDetailsState extends State<SubjectDetails> {
               }),
         ),
       ],
-    ), preferredSize: Size.fromHeight(122));
+    );
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
+        backgroundColor: ColorSet.primaryColor,
           appBar: myAppBar,
-          body: Scaffold(
-            backgroundColor: ColorSet.primaryColor,
-            appBar: bottomAppBar,
-            body: TabBarView(
-              children: [
-                BuildSubjectDetails(BuildMaterialPage()),
-                BuildSubjectDetails(AssignmentDetails()),
-                BuildSubjectDetails(QuizPageDetails()),
-                BuildSubjectDetails(OnlineExam()),
-              ],
-
+          body: Column(
+            children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 5,bottom: 15),
+            child: Container(
+              color: ColorSet.primaryColor,
+              //Row has avatar as leading and the card as trailing
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //Student's avatar
+                  CircleAvatar(
+                    backgroundImage:HttpStatus.internalServerError != 500?
+                    NetworkImage('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=F:/docs${subject.teacherImg}'):
+                    AssetImage('assets/images/teacher.png'),
+                    radius: 27.0,
+                  ),
+                  //Container that contains the identifiction card
+                  SizedBox(width: 6,),
+                  Container(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text("${args[0].teacherNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 14,fontWeight: FontWeight.bold),maxLines: 2,)
+                          ),
+                          FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text("${args[0].subjectNameEn}" , style: TextStyle(color: ColorSet.whiteColor,fontSize: 13))),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            floatingActionButton: ChatButton(),
+          ),
+              Expanded(
+                child: Scaffold(
+                  backgroundColor: ColorSet.primaryColor,
+                  appBar: bottomAppBar,
+                  body: TabBarView(
+                    children: [
+                      BuildSubjectDetails(BuildMaterialPage()),
+                      BuildSubjectDetails(AssignmentDetails()),
+                      BuildSubjectDetails(QuizPageDetails()),
+                      BuildSubjectDetails(OnlineExam()),
+                    ],
+
+                  ),
+                  floatingActionButton: ChatButton(),
+                ),
+              ),
+            ],
           ),
         ),
 
