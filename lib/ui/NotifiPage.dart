@@ -5,7 +5,6 @@ import 'package:lms_pro/api_services/notification_info.dart';
 import 'package:lms_pro/models/notification_data.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
 import 'package:lms_pro/utils/ChatButton.dart';
-import 'package:lms_pro/utils/MyAppBar.dart';
 import 'package:provider/provider.dart';
 
 import '../app_style.dart';

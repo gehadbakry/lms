@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:lms_pro/testpage.dart';
 
 class PushNotificationService {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -48,6 +49,11 @@ class PushNotificationService {
   }
 
   static Future onSelectNotification(String payload) async {
+    BuildContext context;
+    showDialog(
+      context: context,
+      builder: (_) => Test(),
+    );
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
     }

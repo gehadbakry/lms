@@ -26,6 +26,7 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
   static var code;
   var usercode;
   var args;
+  Color iconColor = ColorSet.inactiveColor;
   void initState() {
     subject = Subject();
     super.initState();
@@ -206,7 +207,7 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
                                   duration: Toast.LENGTH_LONG,
                                   );
 
-                                }, icon: Icon(Icons.insert_drive_file,color: ColorSet.inactiveColor,)),
+                                }, icon: Icon(Icons.insert_drive_file,color:e.materilCode==2?ColorSet.primaryColor:ColorSet.inactiveColor,)),
                                 IconButton(onPressed: ()async{
                                   String url = e.materialPath;
                                   e.materilCode==3?
@@ -217,7 +218,7 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
                                   context,
                                   duration: Toast.LENGTH_LONG,
                                   );
-                                }, icon: Icon(Icons.video_call,color: ColorSet.inactiveColor,)),
+                                }, icon: Icon(Icons.video_call,color:e.materilCode==3?ColorSet.primaryColor:ColorSet.inactiveColor,)),
                                 IconButton(onPressed: ()async{
                                   String url = e.materialPath;
                                   e.materilCode==1?
@@ -228,7 +229,7 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
                                   context,
                                   duration: Toast.LENGTH_LONG,
                                   );
-                                }, icon: Icon(Icons.link,color: ColorSet.inactiveColor,)),
+                                }, icon: Icon(Icons.link,color:e.materilCode==1?ColorSet.primaryColor:ColorSet.inactiveColor,)),
                               ],
                             ),
                           ],

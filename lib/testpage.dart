@@ -9,10 +9,12 @@ class _TestState extends State<Test> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      child: Center(
-        child: Text("YOU'RE HERE!!!!!!!!!!!!!"),
+    return Scaffold(
+      body: Container(
+        color: Colors.blue,
+        child: Center(
+          child: Text("YOU'RE HERE!!!!!!!!!!!!!"),
+        ),
       ),
     );
   }

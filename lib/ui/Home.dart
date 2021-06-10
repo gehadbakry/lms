@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/api_services/editProfileData-info.dart';
 import 'package:lms_pro/api_services/saveUserToken.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/models/Student.dart';
+import 'package:lms_pro/models/editProfileData.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/userTokenInfo.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
@@ -25,31 +27,49 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with ChangeNotifier{
   LoginResponseModel logInInfo;
   Student student;
   var usercode;
   var tryCode;
   var usertype;
+  String EuserCode = '';
+  String Epassword = '';
+  String EfacebookUrl = '';
+  String EtwitterUrl = '';
+  String EinstgramUrl = '';
+  String ElinkedinUrl = '';
+  String Efile = '';
+  EditProfile editProfile;
   static var code;
   var token;
+  GlobalKey<FormState> FormKey = GlobalKey<FormState>();
+  ValueNotifier<int> notificationCounterValueNotifer = ValueNotifier(0);
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
   @override
   void initState() {
     super.initState();
+    editProfile = EditProfile();
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-         print("onMessage: $message");
+        print("onMessage: $message");
+        notificationCounterValueNotifer.value++;
+        notificationCounterValueNotifer.notifyListeners();
         await PushNotificationService
             .showNotificationWithDefaultSoundWithDefaultChannel(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
-         print("onLaunch: $message");
+        print("onLaunch: $message");
+        notificationCounterValueNotifer.value++;
+        notificationCounterValueNotifer.notifyListeners();
         await PushNotificationService
             .showNotificationWithDefaultSoundWithDefaultChannel(message);
       },
       onResume: (Map<String, dynamic> message) async {
-         print("onResume: $message");
+        print("onResume: $message");
+        notificationCounterValueNotifer.value++;
+        notificationCounterValueNotifer.notifyListeners();
         await PushNotificationService
             .showNotificationWithDefaultSoundWithDefaultChannel(message);
       },
@@ -64,8 +84,9 @@ class _HomeState extends State<Home> {
       if (Provider.of<APIService>(context, listen: false).usertype == "2") {
         code = Provider.of<APIService>(context, listen: false).code;
         usercode = Provider.of<APIService>(context, listen: false).usercode;
-      }
-      else if (Provider.of<APIService>(context, listen: false).usertype == "3" || Provider.of<APIService>(context, listen: false).usertype == "4") {
+      } else if (Provider.of<APIService>(context, listen: false).usertype ==
+              "3" ||
+          Provider.of<APIService>(context, listen: false).usertype == "4") {
         code = (student.studentCode).toString();
         usercode = (student.userCode).toString();
       }
@@ -75,10 +96,10 @@ class _HomeState extends State<Home> {
       print('fcm token : ' + value);
       await SaveUserToken().Usertoken(UserToken(
         userCode: usercode,
-         userToken: value,
-         language: 'en',));
+        userToken: value,
+        language: 'en',
+      ));
     });
-
 
     //Coustume mde app bar
     Widget MyAppBar = AppBar(
@@ -98,16 +119,52 @@ class _HomeState extends State<Home> {
             // }
           }),
       actions: [
-        IconButton(
-            icon: Icon(Icons.notifications),
-            color: ColorSet.whiteColor,
-            iconSize: 25,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Notifi(userCode: int.parse(usercode),)),
-              );
-            })
+        Stack(
+          children: [
+            IconButton(
+                icon: Icon(Icons.notifications),
+                color: ColorSet.whiteColor,
+                iconSize: 25,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Notifi(
+                              userCode: int.parse(usercode),
+                            )),
+                  );
+                  notificationCounterValueNotifer.value--;
+                }),
+            ValueListenableBuilder( valueListenable: notificationCounterValueNotifer,
+                builder: (BuildContext context, int newNotificationCounterValue,
+    Widget child) {
+             return newNotificationCounterValue == 0? Container():Positioned(
+                    right: 10,
+                    top: 10,
+                    child: new Container(
+                      padding: EdgeInsets.all(1),
+                      decoration: new BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 12,
+                        minHeight: 12,
+                      ),
+                      child: new Text(
+                        newNotificationCounterValue.toString(),
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                })
+
+          ],
+        )
       ],
     );
     //Allowed height to work with
@@ -170,8 +227,8 @@ class _HomeState extends State<Home> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.only(top: 20, bottom: 10, right: 30, left: 30),
+              padding: const EdgeInsets.only(
+                  top: 20, bottom: 10, right: 30, left: 30),
               child: Container(
                 decoration: BoxDecoration(
                     color: ColorSet.whiteColor,
@@ -222,7 +279,8 @@ class _HomeState extends State<Home> {
                                   height: 35,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       IconButton(
                                         icon: FaIcon(
@@ -309,10 +367,16 @@ class _HomeState extends State<Home> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 6,top: 10),
+                                  padding:
+                                      const EdgeInsets.only(bottom: 6, top: 10),
                                   child: InkWell(
-                                    child: Text("Change password?",style: TextStyle(fontSize: 12,color: ColorSet.primaryColor),),
-                                    onTap: (){},
+                                    child: Text(
+                                      "Change password?",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: ColorSet.primaryColor),
+                                    ),
+                                    onTap: () => ChangePasswordDialog(),
                                   ),
                                 ),
                               ],
@@ -330,10 +394,10 @@ class _HomeState extends State<Home> {
                 GestureDetector(
                   onTap: () {
                     if (Provider.of<APIService>(context, listen: false)
-                        .usertype ==
-                        "3" ||
+                                .usertype ==
+                            "3" ||
                         Provider.of<APIService>(context, listen: false)
-                            .usertype ==
+                                .usertype ==
                             "4") {
                       Navigator.pushNamed(context, '/subjects',
                           arguments: Student(
@@ -341,7 +405,7 @@ class _HomeState extends State<Home> {
                             userCode: student.userCode,
                           ));
                     } else if (Provider.of<APIService>(context, listen: false)
-                        .usertype ==
+                            .usertype ==
                         "2") {
                       Navigator.pushNamed(context, '/subjects',
                           arguments: Student(
@@ -410,17 +474,25 @@ class _HomeState extends State<Home> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if(Provider.of<APIService>(context, listen: false).usertype == "3"||Provider.of<APIService>(context, listen: false).usertype == "4"){
-                      Navigator.pushNamed(context, '/recentexam',arguments: Student(
-                        studentCode: int.parse(code),
-                        userCode: student.userCode,
-                      ));
-                    }
-                    else if(Provider.of<APIService>(context, listen: false).usertype == "2"){
-                      Navigator.pushNamed(context, '/recentexam',arguments: Student(
-                        studentCode: int.parse(code),
-                        userCode:int.parse(usercode) ,
-                      ));
+                    if (Provider.of<APIService>(context, listen: false)
+                                .usertype ==
+                            "3" ||
+                        Provider.of<APIService>(context, listen: false)
+                                .usertype ==
+                            "4") {
+                      Navigator.pushNamed(context, '/recentexam',
+                          arguments: Student(
+                            studentCode: int.parse(code),
+                            userCode: student.userCode,
+                          ));
+                    } else if (Provider.of<APIService>(context, listen: false)
+                            .usertype ==
+                        "2") {
+                      Navigator.pushNamed(context, '/recentexam',
+                          arguments: Student(
+                            studentCode: int.parse(code),
+                            userCode: int.parse(usercode),
+                          ));
                     }
                   },
                   child: Container(
@@ -429,7 +501,8 @@ class _HomeState extends State<Home> {
                         Container(
                           height: 50,
                           width: 50,
-                          child: Image(image: AssetImage('assets/images/courses.png')),
+                          child: Image(
+                              image: AssetImage('assets/images/courses.png')),
                         ),
                         Text(
                           "Recent\nExams",
@@ -444,12 +517,86 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-     // bottomNavigationBar: MyBottomBar(),
+      // bottomNavigationBar: MyBottomBar(),
     );
   }
-  // configureCallBacks(){
-  //     firebaseMessaging.configure(
-  //
-  //     );
-  // }
+
+  ChangePasswordDialog() {
+    var alert = AlertDialog(
+      title: Center(child: Text("Change password",style: AppTextStyle.headerStyle2,)),
+      content: Form(
+        key: FormKey,
+        child: TextFormField(
+          onSaved: (input) {
+            editProfile.password = input;
+            editProfile.userCode = usercode;
+            editProfile.facebookUrl = " ";
+            editProfile.twitterUrl = " ";
+            editProfile.linkedinUrl = " ";
+            editProfile.instgramUrl = " ";
+            editProfile.file = " ";
+            } ,
+          validator: (val) => val.isEmpty ? "Enter your New password" : null,
+          onChanged: (val) {
+            setState(() {
+              val = Epassword;
+            });
+          },
+          decoration: InputDecoration(
+            prefixIcon: Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Icon(
+                Icons.remove_red_eye,
+                color: ColorSet.primaryColor,
+                size: 35.0,
+              ),
+            ),
+            hintText: " New password",
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: ColorSet.borderColor),
+              borderRadius: BorderRadius.circular(24.0),
+            ),
+          ),
+        ),
+      ),
+      actions: [
+        FlatButton(
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: ColorSet.SecondaryColor),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        FlatButton(
+          child: Text(
+            "Okay",
+            style: TextStyle(color: ColorSet.SecondaryColor),
+          ),
+          onPressed: () {
+            if (validateAndSave()) {
+              print(editProfile.toJson());
+              EditMyProfile().EditProfileData(editProfile);
+            }
+          },
+        )
+      ],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => alert);
+  }
+
+  bool validateAndSave() {
+    final _formKey = FormKey.currentState;
+    if (FormKey.currentState.validate()) {
+      FormKey.currentState.save();
+      return true;
+    }
+    return false;
+  }
 }
