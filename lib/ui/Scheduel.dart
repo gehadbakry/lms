@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/NotifiCountAll.dart';
 import 'package:lms_pro/api_services/all_days_info.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/models/NotificationModels.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/all_days_scheduel.dart';
 import 'package:lms_pro/models/login_model.dart';
@@ -54,20 +56,69 @@ class _ScheduelState extends State<Scheduel> {
             Navigator.pushReplacementNamed(context, '/BNV');
           }),
       actions: [
-        IconButton(
-            icon: Icon(Icons.notifications),
-            color: ColorSet.whiteColor,
-            iconSize: 25,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Notifi(
-                          userCode: usercode,
-                      code: Scode,
+        Stack(
+          children: [
+            IconButton(
+                icon: Icon(Icons.notifications),
+                color: ColorSet.whiteColor,
+                iconSize: 25,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Notifi(
+                          userCode:  usercode.runtimeType == String
+                              ? int.parse( usercode)
+                              :  usercode,
+                          code: Scode,
                         )),
-              );
-            })
+                  );
+                }),
+            Positioned(
+              right: 10,
+              top: 10,
+              child: new Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: new BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 12,
+                    minHeight: 12,
+                  ),
+                  child: FutureBuilder<AllCount>(
+                    future: NotificationAllCount().getAllNotificationCount(
+                        usercode.runtimeType == String
+                            ? int.parse( usercode)
+                            :  usercode),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            snapshot.data.allNotification,
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text('error'),
+                        );
+                      }
+                      return FittedBox(
+                        fit: BoxFit.fill,
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  )),
+            )
+          ],
+        ),
       ],
       centerTitle: true,
       title: Text("Scheduel", style: AppTextStyle.headerStyle),

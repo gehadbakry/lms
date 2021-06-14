@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lms_pro/api_services/NotifiCountAll.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/editProfileData-info.dart';
 import 'package:lms_pro/api_services/saveUserToken.dart';
 import 'package:lms_pro/api_services/student_data.dart';
+import 'package:lms_pro/models/NotificationModels.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/editProfileData.dart';
 import 'package:lms_pro/models/login_model.dart';
@@ -27,7 +29,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with ChangeNotifier{
+class _HomeState extends State<Home> with ChangeNotifier {
   LoginResponseModel logInInfo;
   Student student;
   var usercode;
@@ -43,7 +45,7 @@ class _HomeState extends State<Home> with ChangeNotifier{
   EditProfile editProfile;
   static var code;
   var token;
-  int NotCount=0;
+  int NotCount = 0;
   GlobalKey<FormState> FormKey = GlobalKey<FormState>();
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
@@ -134,33 +136,52 @@ class _HomeState extends State<Home> with ChangeNotifier{
                     MaterialPageRoute(
                         builder: (context) => Notifi(
                               userCode: int.parse(usercode),
-                          code:code,
+                              code: code,
                             )),
                   );
                 }),
-           Positioned(
-                    right: 10,
-                    top: 10,
-                    child: new Container(
-                      padding: EdgeInsets.all(1),
-                      decoration: new BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 12,
-                        minHeight: 12,
-                      ),
-                      child: new Text(
-                        '${NotCount}',
-                        style: new TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
+            Positioned(
+              right: 10,
+              top: 10,
+              child: new Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: new BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 12,
+                    minHeight: 12,
+                  ),
+                  child: FutureBuilder<AllCount>(
+                    future: NotificationAllCount().getAllNotificationCount(
+                        usercode.runtimeType == String
+                            ? int.parse(usercode)
+                            : usercode),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            snapshot.data.allNotification,
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text('error'),
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  )),
+            )
           ],
         )
       ],
@@ -171,7 +192,10 @@ class _HomeState extends State<Home> with ChangeNotifier{
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom);
     return Scaffold(
-      floatingActionButton: ChatButton(userCode: usercode,code: code,),
+      floatingActionButton: ChatButton(
+        userCode: usercode,
+        code: code,
+      ),
       backgroundColor: ColorSet.whiteColor,
       appBar: MyAppBar,
       //Main widget in the page
@@ -521,7 +545,11 @@ class _HomeState extends State<Home> with ChangeNotifier{
 
   ChangePasswordDialog() {
     var alert = AlertDialog(
-      title: Center(child: Text("Change password",style: AppTextStyle.headerStyle2,)),
+      title: Center(
+          child: Text(
+        "Change password",
+        style: AppTextStyle.headerStyle2,
+      )),
       content: Form(
         key: FormKey,
         child: TextFormField(
@@ -533,7 +561,7 @@ class _HomeState extends State<Home> with ChangeNotifier{
             editProfile.linkedinUrl = " ";
             editProfile.instgramUrl = " ";
             editProfile.file = " ";
-            } ,
+          },
           validator: (val) => val.isEmpty ? "Enter your New password" : null,
           onChanged: (val) {
             setState(() {

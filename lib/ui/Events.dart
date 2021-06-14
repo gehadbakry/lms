@@ -5,8 +5,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:lms_pro/api_services/NotifiCountAll.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/calender_info.dart';
+import 'package:lms_pro/models/NotificationModels.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/calendar_dateTime.dart';
 import 'package:lms_pro/models/calender_data.dart';
@@ -182,16 +184,70 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
         style: AppTextStyle.headerStyle,
       ),
       actions: [
-        IconButton(
-            icon: Icon(Icons.notifications),
-            color: ColorSet.whiteColor,
-            iconSize: 25,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Notifi(userCode: int.parse(usercode),code: int.parse(code),)),
-              );
-            })
+        Stack(
+          children: [
+            IconButton(
+                icon: Icon(Icons.notifications),
+                color: ColorSet.whiteColor,
+                iconSize: 25,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Notifi(
+                          userCode:  usercode.runtimeType == String
+                              ? int.parse( usercode)
+                              :  usercode,
+                          code: code,
+                        )),
+                  );
+                }),
+            Positioned(
+              right: 10,
+              top: 10,
+              child: new Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: new BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 12,
+                    minHeight: 12,
+                  ),
+                  child: FutureBuilder<AllCount>(
+                    future: NotificationAllCount().getAllNotificationCount(
+                        usercode.runtimeType == String
+                            ? int.parse( usercode)
+                            :  usercode),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            snapshot.data.allNotification,
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text('error'),
+                        );
+                      }
+                      return FittedBox(
+                        fit: BoxFit.fill,
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  )),
+            )
+          ],
+        ),
+
       ],
     );
 

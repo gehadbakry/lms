@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lms_pro/Chat/messagesPage.dart';
 import 'package:lms_pro/api_services/ChatUser_info.dart';
+import 'package:lms_pro/api_services/NotifiCountAll.dart';
 import 'package:lms_pro/models/ChatUsers.dart';
+import 'package:lms_pro/models/NotificationModels.dart';
 import 'customDrawer.dart';
 
 import '../app_style.dart';
@@ -33,15 +35,69 @@ class _ChatPageState extends State<ChatPage> {
       centerTitle: true,
       title: Text("Chat" ,style: AppTextStyle.headerStyle,),
       actions: [
-        IconButton(icon: Icon(Icons.notifications),
-            color: ColorSet.whiteColor,
-            iconSize: 25,
-            onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Notifi( userCode: widget.userCode, code:widget.code,)),
-              );
-            })
+        Stack(
+          children: [
+            IconButton(
+                icon: Icon(Icons.notifications),
+                color: ColorSet.whiteColor,
+                iconSize: 25,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Notifi(
+                          userCode:  widget.userCode.runtimeType == String
+                              ? int.parse( widget.userCode)
+                              :  widget.userCode,
+                          code: widget.code,
+                        )),
+                  );
+                }),
+            Positioned(
+              right: 10,
+              top: 10,
+              child: new Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: new BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 12,
+                    minHeight: 12,
+                  ),
+                  child: FutureBuilder<AllCount>(
+                    future: NotificationAllCount().getAllNotificationCount(
+                        widget.userCode.runtimeType == String
+                            ? int.parse( widget.userCode)
+                            :  widget.userCode),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            snapshot.data.allNotification,
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text('error'),
+                        );
+                      }
+                      return FittedBox(
+                        fit: BoxFit.fill,
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  )),
+            )
+          ],
+        ),
       ],
     ) ;
 
