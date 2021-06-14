@@ -13,8 +13,8 @@ import 'package:lms_pro/models/calender_data.dart';
 import 'package:lms_pro/ui/Home.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
-import 'package:lms_pro/utils/customDrawer.dart';
+import '../Chat/ChatButton.dart';
+import '../Chat/customDrawer.dart';
 import 'package:lms_pro/utils/myBottomBar.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -160,7 +160,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
           "3" ||
           Provider.of<APIService>(context, listen: false).usertype == "4") {
         code = (student.studentCode).toString();
-        usercode = student.userCode;
+        usercode = (student.userCode).toString();
       }
     });
 
@@ -189,14 +189,14 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: int.parse(usercode),code: int.parse(code),)),
               );
             })
       ],
     );
 
     return Scaffold(
-      floatingActionButton: ChatButton(),
+      floatingActionButton: ChatButton(userCode: usercode,code: code,),
       backgroundColor: ColorSet.primaryColor,
       appBar: myAppBar,
       body: Center(

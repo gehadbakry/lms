@@ -4,7 +4,7 @@ import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/notification_info.dart';
 import 'package:lms_pro/models/notification_data.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
+import '../Chat/ChatButton.dart';
 import 'package:provider/provider.dart';
 
 import '../app_style.dart';
@@ -12,8 +12,9 @@ import 'NotifiNext.dart';
 
 class Notifi extends StatefulWidget {
   final userCode;
+  final code;
 
-  const Notifi({Key key, this.userCode}) : super(key: key);
+  const Notifi({Key key, this.userCode,this.code}) : super(key: key);
   @override
   _NotifiState createState() => _NotifiState();
 }
@@ -43,7 +44,7 @@ class _NotifiState extends State<Notifi> {
       ),
     );
     return Scaffold(
-      floatingActionButton: ChatButton(),
+      floatingActionButton: ChatButton(userCode: widget.userCode,code: widget.code,),
       appBar: MyAppBar,
       body: ListView(
         children: [

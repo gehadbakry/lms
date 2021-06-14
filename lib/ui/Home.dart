@@ -13,7 +13,7 @@ import 'package:lms_pro/models/userTokenInfo.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
+import '../Chat/ChatButton.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,8 +43,8 @@ class _HomeState extends State<Home> with ChangeNotifier{
   EditProfile editProfile;
   static var code;
   var token;
+  int NotCount=0;
   GlobalKey<FormState> FormKey = GlobalKey<FormState>();
-  ValueNotifier<int> notificationCounterValueNotifer = ValueNotifier(0);
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   @override
@@ -54,22 +54,25 @@ class _HomeState extends State<Home> with ChangeNotifier{
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        notificationCounterValueNotifer.value++;
-        notificationCounterValueNotifer.notifyListeners();
+        setState(() {
+          NotCount++;
+        });
         await PushNotificationService
             .showNotificationWithDefaultSoundWithDefaultChannel(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        notificationCounterValueNotifer.value++;
-        notificationCounterValueNotifer.notifyListeners();
+        setState(() {
+          NotCount++;
+        });
         await PushNotificationService
             .showNotificationWithDefaultSoundWithDefaultChannel(message);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        notificationCounterValueNotifer.value++;
-        notificationCounterValueNotifer.notifyListeners();
+        setState(() {
+          NotCount++;
+        });
         await PushNotificationService
             .showNotificationWithDefaultSoundWithDefaultChannel(message);
       },
@@ -131,14 +134,11 @@ class _HomeState extends State<Home> with ChangeNotifier{
                     MaterialPageRoute(
                         builder: (context) => Notifi(
                               userCode: int.parse(usercode),
+                          code:code,
                             )),
                   );
-                  notificationCounterValueNotifer.value--;
                 }),
-            ValueListenableBuilder( valueListenable: notificationCounterValueNotifer,
-                builder: (BuildContext context, int newNotificationCounterValue,
-    Widget child) {
-             return newNotificationCounterValue == 0? Container():Positioned(
+           Positioned(
                     right: 10,
                     top: 10,
                     child: new Container(
@@ -152,7 +152,7 @@ class _HomeState extends State<Home> with ChangeNotifier{
                         minHeight: 12,
                       ),
                       child: new Text(
-                        newNotificationCounterValue.toString(),
+                        '${NotCount}',
                         style: new TextStyle(
                           color: Colors.white,
                           fontSize: 8,
@@ -160,9 +160,7 @@ class _HomeState extends State<Home> with ChangeNotifier{
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  );
-                })
-
+                  )
           ],
         )
       ],
@@ -173,7 +171,7 @@ class _HomeState extends State<Home> with ChangeNotifier{
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom);
     return Scaffold(
-      floatingActionButton: ChatButton(),
+      floatingActionButton: ChatButton(userCode: usercode,code: code,),
       backgroundColor: ColorSet.whiteColor,
       appBar: MyAppBar,
       //Main widget in the page

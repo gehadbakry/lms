@@ -7,7 +7,7 @@ import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:lms_pro/testpage.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
+import '../Chat/ChatButton.dart';
 import 'package:lms_pro/utils/buildMaterialPage.dart';
 import 'package:lms_pro/utils/buildQuizPage.dart';
 import 'package:lms_pro/utils/buildSubjectDetails.dart';
@@ -119,7 +119,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi(userCode: int.parse(usercode),)),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: int.parse(usercode),code: code,)),
               );
             })
       ],
@@ -182,7 +182,7 @@ class _SubjectDetailsState extends State<SubjectDetails> {
                     ],
 
                   ),
-                  floatingActionButton: ChatButton(),
+                  floatingActionButton: ChatButton(userCode: usercode,code: code,),
                 ),
               ),
             ],

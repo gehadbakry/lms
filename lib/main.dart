@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lms_pro/Chat/messagesPage.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/ui/Bus.dart';
@@ -23,6 +24,7 @@ import 'package:provider/provider.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),),
     ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
@@ -64,6 +66,7 @@ class _MyAppState extends State<MyApp> {
         '/recentassignment':(context) => RecentAssignment(),
         '/recentexam':(context) => RExams(),
         '/materialpage':(context) =>  BuildMaterialPage(),
+        '/messagePage':(context)=>MessagePage(),
 
       },
       navigatorObservers: [routeObserver],

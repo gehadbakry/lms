@@ -19,11 +19,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
             itemBuilder: (context, index) {
           return Column(
             children: [
-          // Container(
-          //       color: ColorSet.primaryColor,
-          //       height: MediaQuery.of(context).size.height*0.05,
-          //       child: Center(child: Text("Your teachers",style: AppTextStyle.headerStyle,) ,),
-          //     ),
               ListTile(
                 leading: CircleAvatar(
                   backgroundImage: AssetImage('assets/images/teacher.png'),

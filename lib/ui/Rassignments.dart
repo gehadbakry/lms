@@ -6,7 +6,7 @@ import 'package:lms_pro/api_services/recents_info.dart';
 import 'package:lms_pro/api_services/subjects_info.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/recents.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
+import '../Chat/ChatButton.dart';
 
 import '../app_style.dart';
 import 'NotifiPage.dart';
@@ -56,34 +56,11 @@ class _RecentAssignmentState extends State<RecentAssignment> {
             onPressed: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,code: code,)),
               );
             })
       ],
     );
-    // Widget bottomAppBar = PreferredSize(
-    //   preferredSize: Size.fromHeight(40.0),
-    //   child: AppBar(
-    //   automaticallyImplyLeading: false,
-    //   shape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.only(
-    //       topRight: Radius.circular(24),
-    //       topLeft: Radius.circular(24),
-    //     ),
-    //   ),
-    //   backgroundColor: ColorSet.whiteColor,
-    //   elevation: 0.0,
-    //   bottom: TabBar(
-    //     tabs: [
-    //       Text("Yesterday",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-    //       Text("Today",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-    //       Text("Tomorrow",style:TextStyle(color: ColorSet.primaryColor,fontSize: 16)),
-    //     ],
-    //     indicatorWeight: 0.005,
-    //     unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
-    //   ) ,
-    // ),) ;
-
     countAssign = 0;
     return Scaffold(
       backgroundColor: ColorSet.primaryColor,
@@ -151,7 +128,7 @@ class _RecentAssignmentState extends State<RecentAssignment> {
                         onTap: () => alertDialog(e.assignmentCode, e.assignmentName , e.assignsubjectNameAr ,e.assignmentMark),
                       ),
                     )
-                        : Text("here");
+                        : Container(height: 0,width: 0,);
                   },
                   itemBuilder: (context, Recents e) {
                     return null;
@@ -168,7 +145,7 @@ class _RecentAssignmentState extends State<RecentAssignment> {
               );
             },
           )),
-      floatingActionButton: ChatButton(),
+      floatingActionButton: ChatButton(userCode: usercode,code: code,),
     );
   }
   void alertDialog(var NewCode, var NewName ,var newSubName ,var mark) {

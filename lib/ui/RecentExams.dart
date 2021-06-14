@@ -4,7 +4,7 @@ import 'package:lms_pro/api_services/recents_info.dart';
 import 'package:lms_pro/api_services/subjects_info.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/recents.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
+import '../Chat/ChatButton.dart';
 
 import '../app_style.dart';
 import 'NotifiPage.dart';
@@ -62,7 +62,7 @@ class _RExamsState extends State<RExams> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,)),
+                MaterialPageRoute(builder: (context) => Notifi(userCode: usercode,code: code,)),
               );
             })
       ],
@@ -134,7 +134,7 @@ class _RExamsState extends State<RExams> {
                               onTap: () => alertDialog(e.examCode, e.examName , e.subjectNameAr ,e.studentExamMark),
                             ),
                         )
-                        : Text("here");
+                        : Container(height: 0,width: 0,);
                   },
                   itemBuilder: (context, Recents e) {
                     return null;
@@ -151,7 +151,7 @@ class _RExamsState extends State<RExams> {
               );
             },
           )),
-      floatingActionButton: ChatButton(),
+      floatingActionButton: ChatButton(userCode: usercode,code: code,),
     );
   }
 

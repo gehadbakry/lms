@@ -6,7 +6,7 @@ import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/models/subject.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 import 'package:lms_pro/ui/subjectDetails.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
+import '../Chat/ChatButton.dart';
 import 'package:provider/provider.dart';
 import '../app_style.dart';
 import 'package:lms_pro/api_services/subjects_info.dart';
@@ -165,7 +165,7 @@ class _SubjectPageState extends State<SubjectPage> {
             )
           )
       ),
-      floatingActionButton: ChatButton(),
+     // floatingActionButton: ChatButton(userCode: code,),
     );
   }
 

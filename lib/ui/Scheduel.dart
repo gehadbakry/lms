@@ -5,9 +5,9 @@ import 'package:lms_pro/models/Student.dart';
 import 'package:lms_pro/models/all_days_scheduel.dart';
 import 'package:lms_pro/models/login_model.dart';
 import 'package:lms_pro/utils/ButtomNavBar.dart';
-import 'package:lms_pro/utils/ChatButton.dart';
+import '../Chat/ChatButton.dart';
 import 'package:lms_pro/utils/buildScheduelPage.dart';
-import 'package:lms_pro/utils/customDrawer.dart';
+import '../Chat/customDrawer.dart';
 import 'package:lms_pro/utils/myBottomBar.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -64,6 +64,7 @@ class _ScheduelState extends State<Scheduel> {
                 MaterialPageRoute(
                     builder: (context) => Notifi(
                           userCode: usercode,
+                      code: Scode,
                         )),
               );
             })
@@ -152,7 +153,7 @@ class _ScheduelState extends State<Scheduel> {
 
 
           ),
-      floatingActionButton: ChatButton(),
+      floatingActionButton: ChatButton(userCode: usercode,code: Scode,),
     );
     //   Scaffold(
     //   appBar: MyAppBar,
