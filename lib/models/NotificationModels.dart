@@ -40,3 +40,14 @@ class updateNotification{
   }
 
 }
+
+class countByType{
+  var singleTypeCount;
+  countByType({
+    this.singleTypeCount
+});
+  factory countByType.fromJson(Map<String, dynamic> json){
+    return countByType(
+      singleTypeCount: json['notificationCount'],
+    );}
+}

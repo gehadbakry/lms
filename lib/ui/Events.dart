@@ -205,24 +205,29 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
             Positioned(
               right: 10,
               top: 10,
-              child: new Container(
-                  padding: EdgeInsets.all(1),
-                  decoration: new BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  constraints: BoxConstraints(
-                    minWidth: 12,
-                    minHeight: 12,
-                  ),
-                  child: FutureBuilder<AllCount>(
-                    future: NotificationAllCount().getAllNotificationCount(
-                        usercode.runtimeType == String
-                            ? int.parse( usercode)
-                            :  usercode),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return FittedBox(
+              child: FutureBuilder<AllCount>(
+                  future: NotificationAllCount().getAllNotificationCount(
+                      usercode.runtimeType == String
+                          ? int.parse(usercode)
+                          : usercode),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return snapshot.data.allNotification == '0'
+                          ? Container(
+                        height: 0,
+                        width: 0,
+                      )
+                          : Container(
+                        padding: EdgeInsets.all(1),
+                        decoration: new BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 12,
+                          minHeight: 12,
+                        ),
+                        child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
                             snapshot.data.allNotification,
@@ -232,18 +237,15 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('error'),
-                        );
-                      }
-                      return FittedBox(
-                        fit: BoxFit.fill,
-                        child: CircularProgressIndicator(),
+                        ),
                       );
-                    },
-                  )),
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("error"));
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }),
             )
           ],
         ),
