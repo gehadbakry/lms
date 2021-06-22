@@ -57,8 +57,8 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
     //   subjectCode = subject.subjectCode;
     // });
     return FutureBuilder<List<Quiz>>(
-      // future: QuizInfo().getQuiz(int.parse(code), subjectCode),
-        future: QuizInfo().getQuiz(969, 35),
+       future: QuizInfo().getQuiz(int.parse(code), subjectCode),
+      //  future: QuizInfo().getQuiz(969, 35),
         builder: (context , snapshot){
           if(snapshot.hasData){
             if(snapshot.data.length >0 ){
@@ -125,7 +125,7 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
             }
             else if(snapshot.data.length == 0){
               return Center(
-                child: Text("No quizzes was found"),
+                child: Text("No quizzes was found",style: AppTextStyle.headerStyle2,),
               );
             }
           }

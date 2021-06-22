@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart'as http;
 import 'package:lms_pro/api_services/NotifiCountAll.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/editProfileData-info.dart';
@@ -15,6 +17,7 @@ import 'package:lms_pro/models/userTokenInfo.dart';
 import 'package:lms_pro/ui/NotifiPage.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lms_pro/ui/editMyProfile.dart';
 import '../Chat/ChatButton.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -35,19 +38,13 @@ class _HomeState extends State<Home> with ChangeNotifier {
   var usercode;
   var tryCode;
   var usertype;
-  String EuserCode = '';
-  String Epassword = '';
-  String EfacebookUrl = '';
-  String EtwitterUrl = '';
-  String EinstgramUrl = '';
-  String ElinkedinUrl = '';
-  String Efile = '';
   EditProfile editProfile;
   static var code;
   var token;
   int NotCount = 0;
   GlobalKey<FormState> FormKey = GlobalKey<FormState>();
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  http.Response response ;
 
   @override
   void initState() {
@@ -89,7 +86,8 @@ class _HomeState extends State<Home> with ChangeNotifier {
       if (Provider.of<APIService>(context, listen: false).usertype == "2") {
         code = Provider.of<APIService>(context, listen: false).code;
         usercode = Provider.of<APIService>(context, listen: false).usercode;
-      } else if (Provider.of<APIService>(context, listen: false).usertype ==
+      }
+      else if (Provider.of<APIService>(context, listen: false).usertype ==
               "3" ||
           Provider.of<APIService>(context, listen: false).usertype == "4") {
         code = (student.studentCode).toString();
@@ -110,7 +108,7 @@ class _HomeState extends State<Home> with ChangeNotifier {
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.0,
-      leading: IconButton(
+      leading:usertype=='2'?IconButton(
           icon: Icon(Icons.arrow_back),
           color: ColorSet.whiteColor,
           iconSize: 25,
@@ -122,8 +120,11 @@ class _HomeState extends State<Home> with ChangeNotifier {
             //   Navigator.popAndPushNamed(
             //     context,'/choose');
             // }
-          }),
+          }):Container(height:0,width:0),
       actions: [
+        IconButton(onPressed:(){
+          Navigator.push(context,  MaterialPageRoute(builder: (context) => EditMyProfile(code: code,usercode: usercode,)));}
+          , icon:Icon(Icons.settings_outlined ,color: ColorSet.whiteColor,) ),
         Stack(
           children: [
             IconButton(
@@ -184,9 +185,9 @@ class _HomeState extends State<Home> with ChangeNotifier {
                       child: CircularProgressIndicator(),
                     );
                   }),
-            )
+            ),
           ],
-        )
+        ),
       ],
     );
     //Allowed height to work with
@@ -231,12 +232,14 @@ class _HomeState extends State<Home> with ChangeNotifier {
                               alignment: Alignment.bottomCenter,
                               child: FittedBox(
                                 child: CircleAvatar(
-                                  backgroundImage: HttpStatus
-                                              .internalServerError !=
-                                          500
-                                      ? NetworkImage(
-                                          'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}')
-                                      : AssetImage('assets/images/student.png'),
+                                  backgroundImage:
+                                  NetworkImage(
+                                         'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}'),
+                                  // backgroundImage: HttpStatus == 500
+                                  //     ?AssetImage('assets/images/student.png')
+                                  //     : NetworkImage(
+                                  //     'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}')
+                                  // ,
                                   radius: 40.0,
                                 ),
                                 fit: BoxFit.fill,
@@ -547,47 +550,32 @@ class _HomeState extends State<Home> with ChangeNotifier {
   }
 
   ChangePasswordDialog() {
+    TextEditingController Epassword = TextEditingController();
+    TextEditingController confirmEpassword = TextEditingController();
     var alert = AlertDialog(
       title: Center(
           child: Text(
         "Change password",
         style: AppTextStyle.headerStyle2,
       )),
-      content: Form(
-        key: FormKey,
-        child: TextFormField(
-          onSaved: (input) {
-            editProfile.password = input;
-            editProfile.userCode = usercode;
-            editProfile.facebookUrl = " ";
-            editProfile.twitterUrl = " ";
-            editProfile.linkedinUrl = " ";
-            editProfile.instgramUrl = " ";
-            editProfile.file = " ";
-          },
-          validator: (val) => val.isEmpty ? "Enter your New password" : null,
-          onChanged: (val) {
-            setState(() {
-              val = Epassword;
-            });
-          },
-          decoration: InputDecoration(
-            prefixIcon: Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Icon(
-                Icons.remove_red_eye,
-                color: ColorSet.primaryColor,
-                size: 35.0,
+      content: TextField(
+            controller: Epassword,
+            decoration: InputDecoration(
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Icon(
+                  Icons.remove_red_eye,
+                  color: ColorSet.primaryColor,
+                  size: 35.0,
+                ),
+              ),
+              hintText: " New password",
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: ColorSet.borderColor),
+                borderRadius: BorderRadius.circular(24.0),
               ),
             ),
-            hintText: " New password",
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: ColorSet.borderColor),
-              borderRadius: BorderRadius.circular(24.0),
-            ),
           ),
-        ),
-      ),
       actions: [
         FlatButton(
           child: Text(
@@ -603,12 +591,27 @@ class _HomeState extends State<Home> with ChangeNotifier {
             "Okay",
             style: TextStyle(color: ColorSet.SecondaryColor),
           ),
-          onPressed: () {
-            if (validateAndSave()) {
-              print(editProfile.toJson());
-              EditMyProfile().EditProfileData(editProfile);
-            }
-          },
+          onPressed: () async {
+              var uri =  Uri.parse("http://169.239.39.105/lms_api2/API/LoginApi/PostUserEditPeofile");
+
+              var request = http.MultipartRequest('POST', uri)
+                ..fields['user_code'] = usercode;
+            request.fields['password'] = Epassword.text;
+            request.fields['facebook_url']='';
+              request.fields['twitter_url']='';
+              request.fields['instagram_url']='';
+              request.fields['linkin_url']='';
+              request.fields['file']='';
+
+              request.headers.addAll({
+                'Content-Type': 'multipart/form-data',
+              });
+
+              var response = await request.send();
+              if (response.statusCode == 200) {
+                Toast.show("Your password was changed",context,duration:Toast.LENGTH_LONG);
+              };
+                },
         )
       ],
       shape: RoundedRectangleBorder(
@@ -620,12 +623,12 @@ class _HomeState extends State<Home> with ChangeNotifier {
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
 
-  bool validateAndSave() {
-    final _formKey = FormKey.currentState;
-    if (FormKey.currentState.validate()) {
-      FormKey.currentState.save();
-      return true;
-    }
-    return false;
-  }
+  // bool validateAndSave() {
+  //   final _formKey = FormKey.currentState;
+  //   if (FormKey.currentState.validate()) {
+  //     FormKey.currentState.save();
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }

@@ -38,7 +38,7 @@ class PushNotificationService {
     }
 
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('@drawable/getimg');
+    new AndroidInitializationSettings('getimg');
     var initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings = InitializationSettings(
@@ -67,7 +67,7 @@ class PushNotificationService {
       '',
       enableLights: true,
       enableVibration: true,
-      icon: '@drawable/getimg',
+      icon: 'getimg',
       importance: Importance.max,
       priority: Priority.high,
     );

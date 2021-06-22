@@ -13,12 +13,12 @@ class EditProfile{
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
-      'user_code':userCode == null?'':userCode.trim(),
-      'password':password == null?'':password.trim(),
-      'facebook_url':facebookUrl == null?'':facebookUrl.trim(),
-      'twitter_url':twitterUrl == null?'':twitterUrl.trim(),
-      'instagram_url':instgramUrl == null?'':instgramUrl.trim(),
-      'linkin_url':linkedinUrl == null?'':linkedinUrl.trim(),
+      'user_code':userCode == null?'':userCode,
+      'password':password == null?'':password,
+      'facebook_url':facebookUrl == null?'':facebookUrl,
+      'twitter_url':twitterUrl == null?'':twitterUrl,
+      'instagram_url':instgramUrl == null?'':instgramUrl,
+      'linkin_url':linkedinUrl == null?'':linkedinUrl,
       'file':file == null?'':file,
          };
 

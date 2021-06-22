@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/app_style.dart';
 
@@ -30,7 +33,7 @@ class ProgressHUD extends StatelessWidget {
             child: ModalBarrier(dismissible: false, color: color),
           ),
           new Center(
-              child: new CircularProgressIndicator()
+              child: Platform.isIOS?CupertinoActivityIndicator(): CircularProgressIndicator()
           ),
         ],
       );

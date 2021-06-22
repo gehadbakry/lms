@@ -83,7 +83,7 @@ class _LogInState extends State<LogIn> {
                 height: 709.0,
                 decoration: BoxDecoration(
                   borderRadius:
-                      BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                  BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
                   gradient: LinearGradient(
                     begin: Alignment(1.12, 1.37),
                     end: Alignment(-0.21, -0.95),
@@ -110,9 +110,9 @@ class _LogInState extends State<LogIn> {
                           width: 284,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                            image: AssetImage('assets/images/logo2.jpeg'),
-                            fit: BoxFit.cover,
-                          )),
+                                image: AssetImage('assets/images/logo2.jpeg'),
+                                fit: BoxFit.cover,
+                              )),
                         ),
                         SizedBox(
                           height: 25.0,
@@ -121,9 +121,9 @@ class _LogInState extends State<LogIn> {
                         //user name
                         TextFormField(
                           onSaved: (input) =>
-                              loginRequestModel.username = input,
+                          loginRequestModel.username = input,
                           validator: (val) =>
-                              val.isEmpty ? "Enter your user Name" : null,
+                          val.isEmpty ? "Enter your user Name" : null,
                           onChanged: (val) {
                             setState(() {
                               val = username;
@@ -141,7 +141,7 @@ class _LogInState extends State<LogIn> {
                             hintText: " User name",
                             border: OutlineInputBorder(
                               borderSide:
-                                  BorderSide(color: ColorSet.borderColor),
+                              BorderSide(color: ColorSet.borderColor),
                               borderRadius: BorderRadius.circular(24.0),
                             ),
                           ),
@@ -152,7 +152,7 @@ class _LogInState extends State<LogIn> {
                         //password
                         TextFormField(
                           onSaved: (input) =>
-                              loginRequestModel.password = input,
+                          loginRequestModel.password = input,
                           validator: (input) => input.length < 3
                               ? "Password should be more than 3 characters"
                               : null,
@@ -169,7 +169,7 @@ class _LogInState extends State<LogIn> {
                             hintText: " Password",
                             border: OutlineInputBorder(
                               borderSide:
-                                  BorderSide(color: ColorSet.borderColor),
+                              BorderSide(color: ColorSet.borderColor),
                               borderRadius: BorderRadius.circular(24.0),
                             ),
                             suffixIcon: IconButton(
@@ -236,7 +236,7 @@ class _LogInState extends State<LogIn> {
                               ),
                             ),
                             onPressed: () {
-                             // Provider.of<APIService>(context,listen: false).login(loginRequestModel);
+                              // Provider.of<APIService>(context,listen: false).login(loginRequestModel);
                               if (validateAndSave()) {
                                 print(loginRequestModel.toJson());
                                 setState(() {
@@ -244,14 +244,14 @@ class _LogInState extends State<LogIn> {
                                 });
                                 APIService apiService = new APIService();
                                 Provider.of<APIService>(context,listen: false).login(loginRequestModel).then((value) {
-                                //apiService.login(loginRequestModel).then((value) {
+                                  //apiService.login(loginRequestModel).then((value) {
                                   if (value != null) {
                                     setState(() {
                                       isApiCallProcess = false;
                                     });
                                   }
                                   if(Provider.of<APIService>(context,listen: false).usertype =='-1'){
-                                  //if(apiService.usertype =='-1'){
+                                    //if(apiService.usertype =='-1'){
                                     Toast.show("Account is invalid", context,
                                       duration:Toast.LENGTH_LONG,);
                                   }
@@ -260,7 +260,7 @@ class _LogInState extends State<LogIn> {
                                       duration:Toast.LENGTH_LONG,);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children!= "") ){
-                                      Navigator.pushNamed(context, '/choose',);
+                                    Navigator.pushNamed(context, '/choose',);
                                   }
 
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '2'&& Provider.of<APIService>(context,listen: false).children == ""){

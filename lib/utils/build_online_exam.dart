@@ -108,7 +108,7 @@ class _OnlineExamState extends State<OnlineExam> {
               );
             } else if (snapshot.data.length == 0) {
               return Center(
-                child: Text("No Exams was found"),
+                child: Text("No Exams was found",style: AppTextStyle.headerStyle2,),
               );
             }
           } else if (snapshot.hasError) {
