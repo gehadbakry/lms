@@ -253,16 +253,18 @@ class _LogInState extends State<LogIn> {
                                   if(Provider.of<APIService>(context,listen: false).usertype =='-1'){
                                     //if(apiService.usertype =='-1'){
                                     Toast.show("Account is invalid", context,
-                                      duration:Toast.LENGTH_LONG,);
+                                      duration:Toast.LENGTH_LONG,gravity: Toast.CENTER);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '0'){
                                     Toast.show("Account is inactive", context,
-                                      duration:Toast.LENGTH_LONG,);
+                                      duration:Toast.LENGTH_LONG,gravity: Toast.CENTER);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children!= "") ){
                                     Navigator.pushNamed(context, '/choose',);
                                   }
-
+                                  else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children== "") ){
+                                    Navigator.pushNamed(context, '/test',);
+                                  }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '2'&& Provider.of<APIService>(context,listen: false).children == ""){
                                     Navigator.pushNamed(context, '/BNV');
                                   }
@@ -279,7 +281,7 @@ class _LogInState extends State<LogIn> {
                               }
                               else if(validateAndSave() == false){
                                 Toast.show("Either user or password is wrong", context,
-                                  duration:Toast.LENGTH_LONG,);
+                                  duration:Toast.LENGTH_LONG,gravity: Toast.CENTER);
                               }
                             },
                           ),

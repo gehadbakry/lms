@@ -61,10 +61,10 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
 
     return Container(
       child: FutureBuilder<List<Assignment>>(
-          // future: AssignmentInfo().getAssignment(
-          //     int.parse(code), subjectCode),
           future: AssignmentInfo().getAssignment(
-              969, 169),
+              int.parse(code), subjectCode),
+          // future: AssignmentInfo().getAssignment(
+          //     969, 169),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data.length > 0) {

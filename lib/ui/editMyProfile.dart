@@ -4,10 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/models/Student.dart';
 import 'package:http/http.dart'as http;
 import 'package:camera/camera.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 import '../app_style.dart';
@@ -67,8 +70,8 @@ class _EditMyProfileState extends State<EditMyProfile> {
       ),
       body:Container(
         decoration: BoxDecoration(
-            color: ColorSet.whiteColor,
-            borderRadius:BorderRadius.only(topRight: Radius.circular(15),topLeft:Radius.circular(15) ),
+          color: ColorSet.whiteColor,
+          borderRadius:BorderRadius.only(topRight: Radius.circular(15),topLeft:Radius.circular(15) ),
         ),
         child: ListView(
           children: [
@@ -85,49 +88,49 @@ class _EditMyProfileState extends State<EditMyProfile> {
                             child: Stack(
                               children: [
                                 Container(
-                                child: _image == null
-                                ? Container(
-                                  decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey,
-                                    image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                      image: HttpStatus
-                                          .internalServerError !=
-                                          500
-                                          ?NetworkImage(
-                                          'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}')
-                                          :AssetImage(imagepath),
-                                    )
+                                  child: _image == null
+                                      ? Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey,
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: HttpStatus
+                                                .internalServerError !=
+                                                500
+                                                ?NetworkImage(
+                                                'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}')
+                                                :AssetImage(imagepath),
+                                          )
+                                      )
                                   )
-                                )
-                             : ClipOval(child: Image.file(_image)),
+                                      : ClipOval(child: Image.file(_image)),
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey
                                   ),
                                   height: 120,
                                   width: 120,
-                            ),
+                                ),
                                 Positioned(
                                   left: 85,
                                   top: 1,
                                   child: Container(
-                                            padding: EdgeInsets.all(1),
-                                            decoration: new BoxDecoration(
-                                              color: Colors.grey.shade400,
-                                             // borderRadius: BorderRadius.circular(10),
-                                              shape:BoxShape.circle,
-                                            ),
-                                            constraints: BoxConstraints(
-                                              minWidth: 12,
-                                              minHeight: 12,
-                                            ),
-                                            child:Padding(
-                                              padding: const EdgeInsets.all(3.0),
-                                              child: Icon(Icons.camera_alt_outlined,color: ColorSet.whiteColor,size: 25,),
-                                            )
-                                          ),
+                                      padding: EdgeInsets.all(1),
+                                      decoration: new BoxDecoration(
+                                        color: Colors.grey.shade400,
+                                        // borderRadius: BorderRadius.circular(10),
+                                        shape:BoxShape.circle,
+                                      ),
+                                      constraints: BoxConstraints(
+                                        minWidth: 12,
+                                        minHeight: 12,
+                                      ),
+                                      child:Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: Icon(Icons.camera_alt_outlined,color: ColorSet.whiteColor,size: 25,),
+                                      )
+                                  ),
                                 ),
                               ],
                             ),
@@ -141,61 +144,61 @@ class _EditMyProfileState extends State<EditMyProfile> {
                     return Center(child: CircularProgressIndicator());
                   }),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20,bottom: 5,right: 40,left: 40),
-              child: TextField(
-                obscureText: hidePassword,
-                controller: Epassword,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: ColorSet.primaryColor),
-                  ),
-                  prefixIcon: IconButton(
-                    iconSize: 30,
-                    onPressed: () {
-                      setState(() {
-                        hidePassword = !hidePassword;
-                      });
-                    },
-                    color: Colors.grey.shade400,
-                    icon: Icon(hidePassword
-                        ? Icons.visibility_off
-                        : Icons.visibility),
-                  ),
-                  hintText: " New password",
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10,bottom: 5,right: 40,left: 40),
-              child: TextField(
-                controller: EpasswordConfirm,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: ColorSet.primaryColor),
-                  ),
-                  prefixIcon: IconButton(
-                    iconSize: 30,
-                    onPressed: () {
-                      setState(() {
-                        hidePassword = !hidePassword;
-                      });
-                    },
-                    color: Colors.grey.shade400,
-                    icon: Icon(hidePassword
-                        ? Icons.check
-                        : Icons.check),
-                  ),
-                  hintText: " Confirm your new password",
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 20,bottom: 5,right: 40,left: 40),
+            //   child: TextField(
+            //     obscureText: hidePassword,
+            //     controller: Epassword,
+            //     decoration: InputDecoration(
+            //       enabledBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: Colors.grey.shade300),
+            //       ),
+            //       focusedBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: ColorSet.primaryColor),
+            //       ),
+            //       prefixIcon: IconButton(
+            //         iconSize: 30,
+            //         onPressed: () {
+            //           setState(() {
+            //             hidePassword = !hidePassword;
+            //           });
+            //         },
+            //         color: Colors.grey.shade400,
+            //         icon: Icon(hidePassword
+            //             ? Icons.visibility_off
+            //             : Icons.visibility),
+            //       ),
+            //       hintText: " New password",
+            //     ),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 10,bottom: 5,right: 40,left: 40),
+            //   child: TextField(
+            //     controller: EpasswordConfirm,
+            //     decoration: InputDecoration(
+            //       enabledBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: Colors.grey.shade300),
+            //       ),
+            //       focusedBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: ColorSet.primaryColor),
+            //       ),
+            //       prefixIcon: IconButton(
+            //         iconSize: 30,
+            //         onPressed: () {
+            //           setState(() {
+            //             hidePassword = !hidePassword;
+            //           });
+            //         },
+            //         color: Colors.grey.shade400,
+            //         icon: Icon(hidePassword
+            //             ? Icons.check
+            //             : Icons.check),
+            //       ),
+            //       hintText: " Confirm your new password",
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(top: 10,bottom: 5,right: 40,left: 40),
               child: TextField(
@@ -278,16 +281,29 @@ class _EditMyProfileState extends State<EditMyProfile> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 90, left: 90),
-              child: ElevatedButton(onPressed: (){
-                if(Epassword.text==EpasswordConfirm.text && (Epassword.text != null || Epassword.text != '') ){
-                  save(Epassword.text, Efacbook.text, Etwitter.text, Einstagram.text, Elinkedin.text, _image.path);
-                }
-                else  if(Epassword.text!=EpasswordConfirm.text){
-                  Toast.show("Passwords don't match", context,duration: Toast.LENGTH_LONG);
-                }
-              }, child: Text('Save'),style:ElevatedButton.styleFrom(
-                  primary:ColorSet.SecondaryColor
-              )),
+              child: Row(
+                children: [
+                  InkWell(
+                    child: Text('Log out?',style: AppTextStyle.subText,),
+                    onTap: () async {
+                      // SharedPreferences prefs = await SharedPreferences.getInstance();
+                      // prefs.remove('userName');
+                      // Navigator.pushReplacementNamed(context, '/LogIn');
+                    },
+                  ),
+                  SizedBox(width: 15,),
+                  ElevatedButton(onPressed: (){
+                    if(Epassword.text==EpasswordConfirm.text && (Epassword.text != null || Epassword.text != '') ){
+                      save(Epassword.text, Efacbook.text, Etwitter.text, Einstagram.text, Elinkedin.text, _image.path);
+                    }
+                    else  if(Epassword.text!=EpasswordConfirm.text){
+                      Toast.show("Passwords don't match", context,duration: Toast.LENGTH_LONG);
+                    }
+                  }, child: Text('Save'),style:ElevatedButton.styleFrom(
+                      primary:ColorSet.SecondaryColor
+                  )),
+                ],
+              ),
             ),
           ],
         ),
@@ -332,11 +348,12 @@ class _EditMyProfileState extends State<EditMyProfile> {
       ..fields['user_code'] = widget.usercode;
     request.fields['password'] = password;
     request.fields['facebook_url']= facebook;
-    request.fields['twitter_url']=twitter;
+        request.fields['twitter_url']=twitter;
     request.fields['instagram_url']=instagram;
     request.fields['linkin_url']=linkedin;
-   // request.fields['file']=
-        request.files.add(await http.MultipartFile.fromPath('file',_image.path));
+    // request.fields['file']=
+    //request.files.add(await http.MultipartFile.fromPath('file',_image.path));
+    request.files.add(await http.MultipartFile.fromPath('file',filepath));
 
     request.headers.addAll({
       'Content-Type': 'multipart/form-data',
@@ -345,6 +362,12 @@ class _EditMyProfileState extends State<EditMyProfile> {
     var response = await request.send();
     if (response.statusCode == 200) {
       Toast.show("Your password was changed",context,duration:Toast.LENGTH_LONG);
-    };
+      print("success");
+    }
+    else{
+      print(response.statusCode);
+      print("failed");
+    }
+    ;
   }
 }

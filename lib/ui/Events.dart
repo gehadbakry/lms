@@ -280,10 +280,7 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 8.0),
             const SizedBox(height: 8.0),
-            Expanded(child: Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: _buildEventList(),
-            )),
+            Expanded(child: _buildEventList()),
           ],
         ),
       ),
@@ -418,128 +415,23 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
   Widget _buildEventList() {
     return  selectedEvents.length==0?
     Padding(
-      padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+      padding:const EdgeInsets.only(right: 20, left: 20),
       child: Container(
-        decoration: BoxDecoration(
-            color: ColorSet.whiteColor,
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            boxShadow: [
-              BoxShadow(
-                color: ColorSet.shadowcolour,
-                spreadRadius: 1,
-                blurRadius: 5,
-                offset: Offset(4, 3),
-              ),
-            ]),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Container(
-            child: Center(
-             child: Text("No events today",style: AppTextStyle.headerStyle2,),
-            ),
+        child: Container(
+          child: Center(
+           child: Text("No events today",style: AppTextStyle.headerStyle,),
           ),
         ),
       ),
-    )      : ListView(
-      children: selectedEvents.map((event) {
-        if ((event as CalenderDateTime).type == 1){
-          return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
-          child: Container(
-            decoration: BoxDecoration(
-                color: ColorSet.whiteColor,
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorSet.shadowcolour,
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: Offset(4, 3),
-                  ),
-                ]),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: ListTile(
-                leading: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Column(
-                    children: [
-                      FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Row(
-                            children: [
-                              Icon(Icons.celebration,color: Colors.purple,size: 15),
-                              SizedBox(width: 2,),
-                              Text(
-                                'Journey',
-                                style: TextStyle(color: Colors.purple , fontSize: 15 , fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                              ),
-                            ],
-                          )),
-                      SizedBox(height: 2,),
-                    Text(
-                        ((DateFormat.yMd().format((event as CalenderDateTime).dateFrom))).toString().substring(0, 9),
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: ColorSet.inactiveColor),
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
-                ),
-                subtitle: Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 7 , bottom: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                         FittedBox(
-                           fit: BoxFit.scaleDown,
-                           child: Text(
-                            '${(event as CalenderDateTime).journeyName}',
-                            style: TextStyle(color: Colors.purple ,fontSize: 12,fontWeight: FontWeight.bold ),
-                            maxLines: 3,
-                        ),
-                         ),
-                        (event as CalenderDateTime).notes==null?Text(''):Text(
-                          '${(event as CalenderDateTime).notes}',
-                          style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
-                          maxLines: 3,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                trailing:  Icon(Icons.arrow_forward_ios,color: Colors.purple,size: 20,),
-                onTap: ()=> EventFunction().JourneyFunction(context,(event as CalenderDateTime).journeyName,
-                    (event as CalenderDateTime).cost, (event as CalenderDateTime).dateFrom,
-                    (event as CalenderDateTime).dateTo,
-                    (event as CalenderDateTime).notes,
-                    (event as CalenderDateTime).companionAllowed,
-                    (event as CalenderDateTime).maxStudent,
-                    (event as CalenderDateTime).finalDate,
-                  (event as CalenderDateTime).maxCompanion,
-                ),
-              ),
-            ),
-          ),
-          ) ;
-        }
-        else if((event as CalenderDateTime).type == 2){
-          return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+    )      : Container(
+      decoration: BoxDecoration(
+          color: ColorSet.whiteColor,
+          borderRadius: BorderRadius.only(topRight: Radius.circular(15),topLeft:Radius.circular(15) ),),
+      child: ListView(
+        children: selectedEvents.map((event) {
+          if ((event as CalenderDateTime).type == 1){
+            return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
             child: Container(
-              decoration: BoxDecoration(
-                  color: ColorSet.whiteColor,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ColorSet.shadowcolour,
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: Offset(4, 3),
-                    ),
-                  ]),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: ListTile(
@@ -551,18 +443,18 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                             fit: BoxFit.scaleDown,
                             child: Row(
                               children: [
-                                Icon(Icons.account_circle_outlined,color: Colors.green,size: 17),
+                                Icon(Icons.celebration,color: Colors.purple,size: 15),
                                 SizedBox(width: 2,),
                                 Text(
-                                  'Absence',
-                                  style: TextStyle(color: Colors.green , fontSize: 15 , fontWeight: FontWeight.bold),
+                                  'Journey',
+                                  style: TextStyle(color: Colors.purple , fontSize: 15 , fontWeight: FontWeight.bold),
                                   maxLines: 1,
                                 ),
                               ],
                             )),
                         SizedBox(height: 2,),
                       Text(
-                          ((DateFormat.yMd().format((event as CalenderDateTime).absenceDate))).toString().substring(0, 9),
+                          ((DateFormat.yMd().format((event as CalenderDateTime).dateFrom))).toString().substring(0, 9),
                           style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
@@ -574,20 +466,20 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                   ),
                   subtitle: Container(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 15 , bottom: 5),
+                      padding: EdgeInsets.only(top: 7 , bottom: 5),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              '${(event as CalenderDateTime).absenceReasonEn}',
-                              style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
+                           FittedBox(
+                             fit: BoxFit.scaleDown,
+                             child: Text(
+                              '${(event as CalenderDateTime).journeyName}',
+                              style: TextStyle(color: Colors.purple ,fontSize: 12,fontWeight: FontWeight.bold ),
                               maxLines: 3,
-                            ),
                           ),
-                          (event as CalenderDateTime).absenceNote==null?Text(""):Text(
-                            '${(event as CalenderDateTime).absenceNote}',
+                           ),
+                          (event as CalenderDateTime).notes==null?Text(''):Text(
+                            '${(event as CalenderDateTime).notes}',
                             style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
                             maxLines: 3,
                           ),
@@ -595,194 +487,24 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  trailing:  Icon(Icons.arrow_forward_ios,color: Colors.green,size: 20,),
-                  onTap: ()=> EventFunction().AbsenceFunction(context,(event as CalenderDateTime).absenceDate,
-                    (event as CalenderDateTime).absenceNote,
-                    (event as CalenderDateTime).absenceReasonEn,
-                    (event as CalenderDateTime).absenceReasonAr,
+                  trailing:  Icon(Icons.arrow_forward_ios,color: Colors.purple,size: 20,),
+                  onTap: ()=> EventFunction().JourneyFunction(context,(event as CalenderDateTime).journeyName,
+                      (event as CalenderDateTime).cost, (event as CalenderDateTime).dateFrom,
+                      (event as CalenderDateTime).dateTo,
+                      (event as CalenderDateTime).notes,
+                      (event as CalenderDateTime).companionAllowed,
+                      (event as CalenderDateTime).maxStudent,
+                      (event as CalenderDateTime).finalDate,
+                    (event as CalenderDateTime).maxCompanion,
                   ),
                 ),
               ),
             ),
-          ) ;
-        }
-        else if((event as CalenderDateTime).type == 3){
-          return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: ColorSet.whiteColor,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ColorSet.shadowcolour,
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: Offset(4, 3),
-                    ),
-                  ]),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: ListTile(
-                  leading: Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Column(
-                      children: [
-                        FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Row(
-                              children: [
-                                Icon(FontAwesomeIcons.syringe,color: Colors.blue,size: 17),
-                                SizedBox(width: 2,),
-                                Text(
-                                  'Vaccination',
-                                  style: TextStyle(color:  Colors.blue , fontSize: 15 , fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                ),
-                              ],
-                            )),
-                        SizedBox(height: 2,),
-                        Text(
-                          ((DateFormat.yMd().format((event as CalenderDateTime).stageVaccDate))).toString().substring(0, 10),
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: ColorSet.inactiveColor),
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
-                  ),
-                  subtitle: Container(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 15 , bottom: 5),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              '${(event as CalenderDateTime).vaccNameEn}',
-                              style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
-                              maxLines: 3,
-                            ),
-                          ),
-                          (event as CalenderDateTime).vaccNote==null?Text(""):Text(
-                            '${(event as CalenderDateTime).vaccNote}',
-                            style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
-                            maxLines: 3,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  trailing:  Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 20,),
-                  onTap: ()=> EventFunction().VaccineFunction(context,(event as CalenderDateTime).stageVaccDate,
-                    (event as CalenderDateTime).vaccNote,
-                    (event as CalenderDateTime).vaccNameEn,
-                    (event as CalenderDateTime).vaccNameAr,
-                  ),
-                ),
-              ),
-            ),
-          ) ;
-        }
-        else if((event as CalenderDateTime).type == 4){
-          return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: ColorSet.whiteColor,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ColorSet.shadowcolour,
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: Offset(4, 3),
-                    ),
-                  ]),
-              child: ListTile(
-                leading: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Column(
-                    children: [
-                      FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Row(
-                            children: [
-                              Icon(FontAwesomeIcons.calendarDay,color: Colors.brown,size: 12),
-                              SizedBox(width: 2,),
-                              Text(
-                                'Event',
-                                style: TextStyle(color:  Colors.brown , fontSize: 15 , fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                              ),
-                            ],
-                          )),
-                      SizedBox(height: 2,),
-                      Text(
-                        ((DateFormat.yMd().format((event as CalenderDateTime).eventDate))).toString().substring(0, 9),
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: ColorSet.inactiveColor),
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
-                ),
-                subtitle: Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 15 , bottom: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            '${(event as CalenderDateTime).eventNameEn}',
-                            style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
-                            maxLines: 3,
-                          ),
-                        ),
-                        (event as CalenderDateTime).eventDescEn==null?Text(""):Text(
-                          '${(event as CalenderDateTime).eventNameEn}',
-                          style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
-                          maxLines: 3,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                trailing:  Icon(Icons.arrow_forward_ios,color: Colors.brown,size: 20,),
-                onTap: ()=> EventFunction().EventsFunction(context,
-                  (event as CalenderDateTime).eventDate,
-                  (event as CalenderDateTime).eventNameEn,
-                  (event as CalenderDateTime).eventNameAr,
-                  (event as CalenderDateTime).eventDescEn,
-                  (event as CalenderDateTime).eventDescAr,
-                  (event as CalenderDateTime).eventCost,
-                  (event as CalenderDateTime).eventTime,
-                  (event as CalenderDateTime).eventLocation,
-                ),
-              ),
-            ),
-          ) ;
-        }
-        else if ((event as CalenderDateTime).type == 5) {
-          return Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+            ) ;
+          }
+          else if((event as CalenderDateTime).type == 2){
+            return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
               child: Container(
-                decoration: BoxDecoration(
-                    color: ColorSet.whiteColor,
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ColorSet.shadowcolour,
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(4, 3),
-                      ),
-                    ]),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: ListTile(
@@ -794,18 +516,18 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                               fit: BoxFit.scaleDown,
                               child: Row(
                                 children: [
-                                  Icon(Icons.remove_circle_outlined,color: Colors.red,size: 15),
+                                  Icon(Icons.account_circle_outlined,color: Colors.green,size: 17),
                                   SizedBox(width: 2,),
                                   Text(
-                                    'Violation',
-                                    style: TextStyle(color: Colors.red , fontSize: 15 , fontWeight: FontWeight.bold),
+                                    'Absence',
+                                    style: TextStyle(color: Colors.green , fontSize: 15 , fontWeight: FontWeight.bold),
                                     maxLines: 1,
                                   ),
                                 ],
                               )),
                           SizedBox(height: 2,),
-                          Text(
-                            ((DateFormat.yMd().format((event as CalenderDateTime).violationDate))).toString().substring(0, 9),
+                        Text(
+                            ((DateFormat.yMd().format((event as CalenderDateTime).absenceDate))).toString().substring(0, 9),
                             style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -817,37 +539,248 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
                     ),
                     subtitle: Container(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 10 , bottom: 5),
-                        child:
-                       Column(
-                         children: [
-                           Text(
-                              '${(event as CalenderDateTime).violationNameAr}',
-                              style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12 ),
+                        padding: EdgeInsets.only(top: 15 , bottom: 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                '${(event as CalenderDateTime).absenceReasonEn}',
+                                style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
+                                maxLines: 3,
+                              ),
+                            ),
+                            (event as CalenderDateTime).absenceNote==null?Text(""):Text(
+                              '${(event as CalenderDateTime).absenceNote}',
+                              style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
                               maxLines: 3,
                             ),
-                           (event as CalenderDateTime).violationNote==null?Text(''):Text(
-                             '${(event as CalenderDateTime).violationNote}',
-                             style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12 ),
-                             maxLines: 3,
-                           ),
-                         ],
-                       ),
+                          ],
+                        ),
                       ),
                     ),
-                    trailing:  Icon(Icons.arrow_forward_ios,color: Colors.red,size: 20,),
-                    onTap: ()=> EventFunction().ViolationFunction(context,
-                      (event as CalenderDateTime).violationDate,
-                      (event as CalenderDateTime).violationNote,
-                      (event as CalenderDateTime).violationNameAr,
-                      (event as CalenderDateTime).violationNameEn,
-                       ),
+                    trailing:  Icon(Icons.arrow_forward_ios,color: Colors.green,size: 20,),
+                    onTap: ()=> EventFunction().AbsenceFunction(context,(event as CalenderDateTime).absenceDate,
+                      (event as CalenderDateTime).absenceNote,
+                      (event as CalenderDateTime).absenceReasonEn,
+                      (event as CalenderDateTime).absenceReasonAr,
                     ),
+                  ),
                 ),
+              ),
+            ) ;
+          }
+          else if((event as CalenderDateTime).type == 3){
+            return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: ListTile(
+                    leading: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Column(
+                        children: [
+                          FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.syringe,color: Colors.blue,size: 17),
+                                  SizedBox(width: 2,),
+                                  Text(
+                                    'Vaccination',
+                                    style: TextStyle(color:  Colors.blue , fontSize: 15 , fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              )),
+                          SizedBox(height: 2,),
+                          Text(
+                            ((DateFormat.yMd().format((event as CalenderDateTime).stageVaccDate))).toString().substring(0, 10),
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: ColorSet.inactiveColor),
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                    subtitle: Container(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 15 , bottom: 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                '${(event as CalenderDateTime).vaccNameEn}',
+                                style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
+                                maxLines: 3,
+                              ),
+                            ),
+                            (event as CalenderDateTime).vaccNote==null?Text(""):Text(
+                              '${(event as CalenderDateTime).vaccNote}',
+                              style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
+                              maxLines: 3,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    trailing:  Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 20,),
+                    onTap: ()=> EventFunction().VaccineFunction(context,(event as CalenderDateTime).stageVaccDate,
+                      (event as CalenderDateTime).vaccNote,
+                      (event as CalenderDateTime).vaccNameEn,
+                      (event as CalenderDateTime).vaccNameAr,
+                    ),
+                  ),
                 ),
-              );
-        }
-      }).toList(),
+              ),
+            ) ;
+          }
+          else if((event as CalenderDateTime).type == 4){
+            return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+              child: Container(
+                child: ListTile(
+                  leading: Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Column(
+                      children: [
+                        FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              children: [
+                                Icon(FontAwesomeIcons.calendarDay,color: Colors.brown,size: 12),
+                                SizedBox(width: 2,),
+                                Text(
+                                  'Event',
+                                  style: TextStyle(color:  Colors.brown , fontSize: 15 , fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                ),
+                              ],
+                            )),
+                        SizedBox(height: 2,),
+                        Text(
+                          ((DateFormat.yMd().format((event as CalenderDateTime).eventDate))).toString().substring(0, 9),
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: ColorSet.inactiveColor),
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  subtitle: Container(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 15 , bottom: 5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              '${(event as CalenderDateTime).eventNameEn}',
+                              style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
+                              maxLines: 3,
+                            ),
+                          ),
+                          (event as CalenderDateTime).eventDescEn==null?Text(""):Text(
+                            '${(event as CalenderDateTime).eventNameEn}',
+                            style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12,fontWeight: FontWeight.bold ),
+                            maxLines: 3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  trailing:  Icon(Icons.arrow_forward_ios,color: Colors.brown,size: 20,),
+                  onTap: ()=> EventFunction().EventsFunction(context,
+                    (event as CalenderDateTime).eventDate,
+                    (event as CalenderDateTime).eventNameEn,
+                    (event as CalenderDateTime).eventNameAr,
+                    (event as CalenderDateTime).eventDescEn,
+                    (event as CalenderDateTime).eventDescAr,
+                    (event as CalenderDateTime).eventCost,
+                    (event as CalenderDateTime).eventTime,
+                    (event as CalenderDateTime).eventLocation,
+                  ),
+                ),
+              ),
+            ) ;
+          }
+          else if ((event as CalenderDateTime).type == 5) {
+            return Padding(
+                padding: const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: ListTile(
+                      leading: Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Column(
+                          children: [
+                            FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.remove_circle_outlined,color: Colors.red,size: 15),
+                                    SizedBox(width: 2,),
+                                    Text(
+                                      'Violation',
+                                      style: TextStyle(color: Colors.red , fontSize: 15 , fontWeight: FontWeight.bold),
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                )),
+                            SizedBox(height: 2,),
+                            Text(
+                              ((DateFormat.yMd().format((event as CalenderDateTime).violationDate))).toString().substring(0, 9),
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorSet.inactiveColor),
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      subtitle: Container(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 10 , bottom: 5),
+                          child:
+                         Column(
+                           children: [
+                             Text(
+                                '${(event as CalenderDateTime).violationNameAr}',
+                                style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12 ),
+                                maxLines: 3,
+                              ),
+                             (event as CalenderDateTime).violationNote==null?Text(''):Text(
+                               '${(event as CalenderDateTime).violationNote}',
+                               style: TextStyle(color: ColorSet.inactiveColor ,fontSize: 12 ),
+                               maxLines: 3,
+                             ),
+                           ],
+                         ),
+                        ),
+                      ),
+                      trailing:  Icon(Icons.arrow_forward_ios,color: Colors.red,size: 20,),
+                      onTap: ()=> EventFunction().ViolationFunction(context,
+                        (event as CalenderDateTime).violationDate,
+                        (event as CalenderDateTime).violationNote,
+                        (event as CalenderDateTime).violationNameAr,
+                        (event as CalenderDateTime).violationNameEn,
+                         ),
+                      ),
+                  ),
+                  ),
+                );
+          }
+        }).toList(),
+      ),
     );
   }
 }

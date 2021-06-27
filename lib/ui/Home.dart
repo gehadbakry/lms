@@ -232,14 +232,14 @@ class _HomeState extends State<Home> with ChangeNotifier {
                               alignment: Alignment.bottomCenter,
                               child: FittedBox(
                                 child: CircleAvatar(
-                                  backgroundImage:
-                                  NetworkImage(
-                                         'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}'),
-                                  // backgroundImage: HttpStatus == 500
-                                  //     ?AssetImage('assets/images/student.png')
-                                  //     : NetworkImage(
-                                  //     'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}')
-                                  // ,
+                                  // backgroundImage:
+                                  // NetworkImage(
+                                  //        'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}'),
+                                  backgroundImage: HttpStatus.internalServerError == 500
+                                      ?AssetImage('assets/images/student.png')
+                                      : NetworkImage(
+                                      'http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${snapshot.data.imagePath}')
+                                  ,
                                   radius: 40.0,
                                 ),
                                 fit: BoxFit.fill,
@@ -553,12 +553,15 @@ class _HomeState extends State<Home> with ChangeNotifier {
     TextEditingController Epassword = TextEditingController();
     TextEditingController confirmEpassword = TextEditingController();
     var alert = AlertDialog(
-      title: Center(
-          child: Text(
-        "Change password",
-        style: AppTextStyle.headerStyle2,
-      )),
-      content: TextField(
+      title: Column(
+        children: [
+          Center(
+              child: Text(
+            "Change password",
+            style: AppTextStyle.headerStyle2,
+          )),
+          SizedBox(height: 10,),
+          TextField(
             controller: Epassword,
             decoration: InputDecoration(
               prefixIcon: Padding(
@@ -576,6 +579,27 @@ class _HomeState extends State<Home> with ChangeNotifier {
               ),
             ),
           ),
+          SizedBox(height: 10,),
+          TextField(
+            controller: confirmEpassword,
+            decoration: InputDecoration(
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Icon(
+                  Icons.check,
+                  color: ColorSet.primaryColor,
+                  size: 35.0,
+                ),
+              ),
+              hintText: " Confirm password",
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: ColorSet.borderColor),
+                borderRadius: BorderRadius.circular(24.0),
+              ),
+            ),
+          ),
+        ],
+      ),
       actions: [
         FlatButton(
           child: Text(
@@ -608,8 +632,12 @@ class _HomeState extends State<Home> with ChangeNotifier {
               });
 
               var response = await request.send();
-              if (response.statusCode == 200) {
-                Toast.show("Your password was changed",context,duration:Toast.LENGTH_LONG);
+              if (Epassword.text==confirmEpassword.text && response.statusCode == 200) {
+                Toast.show("Your password was changed",context,duration:Toast.LENGTH_LONG,gravity: Toast.CENTER);
+                DisposeWidget();
+              }
+              else if(Epassword.text!=confirmEpassword.text){
+                Toast.show("Passwords don't match",context,duration:Toast.LENGTH_LONG,gravity: Toast.CENTER);
               };
                 },
         )
@@ -621,6 +649,9 @@ class _HomeState extends State<Home> with ChangeNotifier {
       ),
     );
     showDialog(context: context, builder: (BuildContext context) => alert);
+  }
+  DisposeWidget(){
+    Navigator.pop(context);
   }
 
   // bool validateAndSave() {

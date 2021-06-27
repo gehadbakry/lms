@@ -51,9 +51,10 @@ class _SubjectPageState extends State<SubjectPage> {
             color: ColorSet.whiteColor,
             iconSize: 25,
             onPressed: () {
-                Navigator.popAndPushNamed(context,'/BNV',arguments: Student(
-                  studentCode: int.parse(code),
-                ));
+              Navigator.pop(context);
+                // Navigator.popAndPushNamed(context,'/BNV',arguments: Student(
+                //   studentCode: int.parse(code),
+                // ));
               // else if(usertype=='4'|| usertype=='3'){
               //   Navigator.popAndPushNamed(
               //     context,'/choose');

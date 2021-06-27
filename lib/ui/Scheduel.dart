@@ -47,7 +47,7 @@ class _ScheduelState extends State<Scheduel> {
     //AllDaysScheduelInfo().getAllDays(int.parse(Scode), yearCode);
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
-      elevation: 0.9,
+      elevation: 0.0,
       leading: IconButton(
           icon: Icon(Icons.arrow_back),
           color: ColorSet.whiteColor,
@@ -166,6 +166,7 @@ class _ScheduelState extends State<Scheduel> {
         MediaQuery.of(context).padding.top);
     String day;
     return Scaffold(
+      backgroundColor: ColorSet.primaryColor,
       appBar: MyAppBar,
       body: DefaultTabController(
             length: 5,

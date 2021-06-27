@@ -1,8 +1,10 @@
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/Chat/messagesPage.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/student_data.dart';
+import 'package:lms_pro/testpage.dart';
 import 'package:lms_pro/ui/Bus.dart';
 import 'package:lms_pro/ui/Events.dart';
 import 'package:lms_pro/ui/Home.dart';
@@ -29,7 +31,7 @@ void main() async{
     ChangeNotifierProvider<StudentData>(create: (_)=>StudentData(),),
     ChangeNotifierProvider<APIService>(create: (_)=>APIService(),),
   ],
-  child: MyApp(),
+    child: MyApp(),
   ));
 }
 
@@ -49,7 +51,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-    // home: LogIn(),
+      // home: LogIn(),
       initialRoute: '/LogIn',
       routes: {
         '/LogIn':(context) =>  LogIn(),
@@ -67,9 +69,9 @@ class _MyAppState extends State<MyApp> {
         '/recentexam':(context) => RExams(),
         '/materialpage':(context) =>  BuildMaterialPage(),
         '/messagePage':(context)=>MessagePage(),
+        '/test':(context)=>Test(),
 
       },
       navigatorObservers: [routeObserver],
     );
   }}
-
