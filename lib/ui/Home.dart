@@ -619,7 +619,7 @@ class _HomeState extends State<Home> with ChangeNotifier {
               var uri =  Uri.parse("http://169.239.39.105/lms_api2/API/LoginApi/PostUserEditPeofile");
 
               var request = http.MultipartRequest('POST', uri)
-                ..fields['user_code'] = usercode;
+                ..fields['user_code'] = Provider.of<APIService>(context, listen: false).usercode;
             request.fields['password'] = Epassword.text;
             request.fields['facebook_url']='';
               request.fields['twitter_url']='';

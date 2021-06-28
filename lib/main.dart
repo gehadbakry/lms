@@ -2,6 +2,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/Chat/messagesPage.dart';
+import 'package:lms_pro/Teacher/teacher_profile.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/student_data.dart';
 import 'package:lms_pro/testpage.dart';
@@ -69,6 +70,7 @@ class _MyAppState extends State<MyApp> {
         '/recentexam':(context) => RExams(),
         '/materialpage':(context) =>  BuildMaterialPage(),
         '/messagePage':(context)=>MessagePage(),
+        '/teacherProfile':(context) => TeacherProfile(),
         '/test':(context)=>Test(),
 
       },

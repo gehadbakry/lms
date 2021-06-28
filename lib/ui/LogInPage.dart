@@ -263,7 +263,7 @@ class _LogInState extends State<LogIn> {
                                     Navigator.pushNamed(context, '/choose',);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '4' ||(Provider.of<APIService>(context,listen: false).usertype == '3'&& Provider.of<APIService>(context,listen: false).children== "") ){
-                                    Navigator.pushNamed(context, '/test',);
+                                    Navigator.pushNamed(context, '/teacherProfile',);
                                   }
                                   else if(Provider.of<APIService>(context,listen: false).usertype == '2'&& Provider.of<APIService>(context,listen: false).children == ""){
                                     Navigator.pushNamed(context, '/BNV');

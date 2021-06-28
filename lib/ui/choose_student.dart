@@ -78,7 +78,16 @@ class _ChooseStudentState extends State<ChooseStudent> {
                   initialPage: 0,
                   enableInfiniteScroll: false,
                 )),
-          )
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: InkWell(child: Text(" You are a teacher? \nCheck your account",style: AppTextStyle.headerStyle2,),
+              onTap: (){Navigator.pushNamed(context, '/teacherProfile',);},
+              ),
+            ),
+          ),
         ],
       ),
     );

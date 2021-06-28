@@ -345,7 +345,7 @@ class _EditMyProfileState extends State<EditMyProfile> {
     var uri =  Uri.parse("http://169.239.39.105/lms_api2/API/LoginApi/PostUserEditPeofile");
 
     var request = http.MultipartRequest('POST', uri)
-      ..fields['user_code'] = widget.usercode;
+      ..fields['user_code'] = Provider.of<APIService>(context, listen: false).usercode;
     request.fields['password'] = password;
     request.fields['facebook_url']= facebook;
         request.fields['twitter_url']=twitter;
