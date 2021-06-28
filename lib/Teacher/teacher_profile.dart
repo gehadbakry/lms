@@ -70,9 +70,9 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                           color: ColorSet.primaryColor,
                                           borderRadius: new BorderRadius.only(
                                             bottomLeft:
-                                                const Radius.circular(180.0),
+                                            const Radius.circular(180.0),
                                             bottomRight:
-                                                const Radius.circular(180.0),
+                                            const Radius.circular(180.0),
                                           ),
                                         ),
                                       ),
@@ -120,75 +120,83 @@ class _TeacherProfileState extends State<TeacherProfile> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Padding(
-                      padding: const EdgeInsets.only(left: 30, right: 30),
-                      child: GroupedListView<TeacherModel, String>(
-                        elements: snapshot.data.toList(),
-                        groupBy: (TeacherModel e) => e.NameEN,
-                        groupHeaderBuilder: (TeacherModel e) => Padding(
-                          ////TEACHER'S NAME
-                          padding: const EdgeInsets.only(top: 5, bottom: 10),
-                          child: Center(
-                              child: Text('${e.NameEN}',
-                                  style: AppTextStyle.headerStyle2)),
-                        ),
-                        itemBuilder: (context, TeacherModel e) {
-                          /////THE CONTAINER THAT CONTAINS THE STAGE AND CLASS THE TEACHER TEACHES
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 5, bottom: 5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: ColorSet.whiteColor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: ColorSet.shadowcolour,
-                                      spreadRadius: 1,
-                                      blurRadius: 5,
-                                      offset: Offset(4, 3),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Column(
+                        children: [
+                          Padding(
+                            ////TEACHER'S NAME
+                            padding: const EdgeInsets.only(top: 5, bottom: 10),
+                            child: Center(
+                                child: Text('${snapshot.data[0].NameEN}',
+                                    style: AppTextStyle.headerStyle2)),
+                          ),
+                          Expanded(
+                            child: GroupedListView<TeacherModel, String>(
+                              scrollDirection: Axis.horizontal,
+                              elements: snapshot.data.toList(),
+                              groupBy: (TeacherModel e) => e.NameEN,
+                              groupHeaderBuilder: (TeacherModel e) => Container(height:0,width: 0,),
+                              itemBuilder: (context, TeacherModel e) {
+                                /////THE CONTAINER THAT CONTAINS THE STAGE AND CLASS THE TEACHER TEACHES
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 5, bottom: 5 , left:5, ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: ColorSet.whiteColor,
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: ColorSet.shadowcolour,
+                                            spreadRadius: 1,
+                                            blurRadius: 5,
+                                            offset: Offset(4, 3),
+                                          ),
+                                        ]),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Stage: ',
+                                                style: AppTextStyle.headerStyle2,
+                                              ),
+                                              Text(
+                                                '${e.StageNameEn}',
+                                                style: AppTextStyle.textstyle15,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Text('Class: ',
+                                                  style: AppTextStyle.headerStyle2),
+                                              Text('${e.classNameEn}',
+                                                  style: AppTextStyle.textstyle15),
+                                            ],
+                                          ),
+                                          Text(
+                                            '${e.specialistEN}',
+                                            style: AppTextStyle.subText,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ]),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Stage: ',
-                                          style: AppTextStyle.headerStyle2,
-                                        ),
-                                        Text(
-                                          '${e.StageNameEn}',
-                                          style: AppTextStyle.textstyle15,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text('Class: ',
-                                            style: AppTextStyle.headerStyle2),
-                                        Text('${e.classNameEn}',
-                                            style: AppTextStyle.textstyle15),
-                                      ],
-                                    ),
-                                    Text(
-                                      '${e.specialistEN}',
-                                      style: AppTextStyle.subText,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  ),
+                                );
+                              },
+                              order: GroupedListOrder.ASC,
                             ),
-                          );
-                        },
-                        order: GroupedListOrder.ASC,
+                          ),
+                        ],
                       ),
                     );
                   } else if (snapshot.hasError) {
@@ -197,7 +205,14 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   return Center(child: CircularProgressIndicator());
                 }),
           ),
-          SizedBox(height: 15,),
+          Padding(
+            padding: const EdgeInsets.only(top:10,bottom: 10),
+            child: Container(
+              child:Center(
+                child:Text("Your Courses")
+              )
+            ),
+          ),
           ////SUBJECTS TEACHER TEACHES THIS YEAR
           Expanded(
             child: FutureBuilder<List<TeacherSubjects>>(
@@ -205,11 +220,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: (MediaQuery.of(context).size.width)*0.4,
-                      childAspectRatio: 0.6,
-                      crossAxisSpacing:5,
-                    ),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: (MediaQuery.of(context).size.width)*0.4,
+                        childAspectRatio: 0.6,
+                        crossAxisSpacing:5,
+                      ),
                       itemCount: snapshot.data.length,
                       itemBuilder: (context,index){
                         return  GestureDetector(
