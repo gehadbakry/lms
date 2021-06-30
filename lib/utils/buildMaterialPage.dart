@@ -57,7 +57,9 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
         future: MaterialInfo().getMaterial(int.parse(code), subjectCode),
         builder: (context , snapshot){
           if(snapshot.hasData){
-           return snapshot.data.length==0?Center(child: Text("No Material was found",style: AppTextStyle.headerStyle2,)):Padding(
+           return snapshot.data.length==0?
+           Center(child: Text("No Material was found",style: AppTextStyle.headerStyle2,)):
+           Padding(
              padding: const EdgeInsets.only(top: 10),
              child: GroupedListView<Materials, int>(
                  elements: snapshot.data.toList(),

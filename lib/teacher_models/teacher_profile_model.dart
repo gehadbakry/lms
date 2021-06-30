@@ -1,7 +1,7 @@
 class TeacherModel{
   String NameAR , NameEN, StageNameAr , StageNameEn,classNameAR ,
       classNameEn,phaseNameAR,phaseNameEn,aboutMeEn,aboutMeAr ,image,
-  email,SpecialistAR,specialistEN;
+  email,SpecialistAR,specialistEN,SubjectNameAR,SubjectNameEN;
 
   TeacherModel({
     this.NameAR,
@@ -17,7 +17,9 @@ class TeacherModel{
     this.image,
     this.email,
     this.SpecialistAR,
-    this.specialistEN
+    this.specialistEN,
+    this.SubjectNameAR,
+    this.SubjectNameEN,
 });
   factory TeacherModel.fromJson(Map<String, dynamic> json){
     return TeacherModel(
@@ -34,6 +36,8 @@ class TeacherModel{
       aboutMeEn: json['about_me'],
       email: json['email'],
       SpecialistAR: json['Specialist_name_ar'],
-      specialistEN: json['Specialist_name_en']
+      specialistEN: json['Specialist_name_en'],
+      SubjectNameAR: json['subject_name_ar'],
+      SubjectNameEN: json['subject_name_en']
     );}
 }

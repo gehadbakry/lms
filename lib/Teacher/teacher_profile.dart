@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:lms_pro/Teacher/teacher_bottomAppBar.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/teacher_api/getTeacherProfile.dart';
 import 'package:lms_pro/teacher_api/getTeacherSubjects.dart';
@@ -173,7 +174,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                               ),
                                             ],
                                           ),
-                                          Row(
+                                          e.classNameEn==''?Container(height: 0,width: 0,):Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.center,
                                             children: [
@@ -183,7 +184,10 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                                   style: AppTextStyle.textstyle15),
                                             ],
                                           ),
-                                          Text(
+                                          e.classNameEn==''?Text(
+                                            '${e.SubjectNameEN}',
+                                            style: AppTextStyle.subText,
+                                          ):Text(
                                             '${e.specialistEN}',
                                             style: AppTextStyle.subText,
                                           ),
@@ -209,7 +213,29 @@ class _TeacherProfileState extends State<TeacherProfile> {
             padding: const EdgeInsets.only(top:10,bottom: 10),
             child: Container(
               child:Center(
-                child:Text("Your Courses")
+                child:Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width *
+                          0.3,
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10,left: 10),
+                      child: Text("Your Courses",style: AppTextStyle.complaint,),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width *
+                          0.3,
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                )
               )
             ),
           ),
@@ -268,7 +294,10 @@ class _TeacherProfileState extends State<TeacherProfile> {
                               ),
                             ],
                           ),
-                          onTap: (){},
+                          onTap: (){
+                            Navigator.push(context,MaterialPageRoute(builder: (context) =>
+                                TeacherBottomAppBar(stageSubjectCode: snapshot.data[index].subjectCode,)),);
+                          },
                         );
                       }
                   );
