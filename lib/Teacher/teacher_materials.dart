@@ -59,6 +59,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
           "Material",
           style: AppTextStyle.headerStyle,
         ),
+        centerTitle: true,
       ),
       body: Container(
         decoration: BoxDecoration(
