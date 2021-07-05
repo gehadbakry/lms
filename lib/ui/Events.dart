@@ -423,7 +423,8 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
           ),
         ),
       ),
-    )      : Container(
+    )      :
+    Container(
       decoration: BoxDecoration(
           color: ColorSet.whiteColor,
           borderRadius: BorderRadius.only(topRight: Radius.circular(15),topLeft:Radius.circular(15) ),),
@@ -783,5 +784,6 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
       ),
     );
   }
+
 }
 

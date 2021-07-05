@@ -212,31 +212,31 @@ class _TeacherProfileState extends State<TeacherProfile> {
           Padding(
             padding: const EdgeInsets.only(top:10,bottom: 10),
             child: Container(
-              child:Center(
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width *
-                          0.3,
-                      child: Divider(
-                        thickness: 1,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10,left: 10),
-                      child: Text("Your Courses",style: AppTextStyle.complaint,),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width *
-                          0.3,
-                      child: Divider(
-                        thickness: 1,
-                      ),
-                    ),
-                  ],
+                child:Center(
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width *
+                              0.3,
+                          child: Divider(
+                            thickness: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10,left: 10),
+                          child: Text("Your Courses",style: AppTextStyle.complaint,),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width *
+                              0.3,
+                          child: Divider(
+                            thickness: 1,
+                          ),
+                        ),
+                      ],
+                    )
                 )
-              )
             ),
           ),
           ////SUBJECTS TEACHER TEACHES THIS YEAR
@@ -296,7 +296,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           ),
                           onTap: (){
                             Navigator.push(context,MaterialPageRoute(builder: (context) =>
-                                TeacherBottomAppBar(stageSubjectCode: snapshot.data[index].subjectCode,)),);
+                                TeacherBottomAppBar(stageSubjectCode: snapshot.data[index].stageSubjectCode,)),);
                           },
                         );
                       }

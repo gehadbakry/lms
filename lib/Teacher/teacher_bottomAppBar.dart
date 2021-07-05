@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lms_pro/Teacher/teacher_assignment.dart';
+import 'package:lms_pro/Teacher/teacher_events.dart';
+import 'package:lms_pro/Teacher/teacher_journey.dart';
 import 'package:lms_pro/Teacher/teacher_quizzes.dart';
 import 'package:lms_pro/Teacher/teacher_materials.dart';
 
@@ -24,8 +26,10 @@ class _TeacherBottomAppBarState extends State<TeacherBottomAppBar> {
   Widget build(BuildContext context) {
     List page = [
       TeacherMaterials(stageSubjectCode: widget.stageSubjectCode,),
-      TeacherAssignments(),
+      TeacherAssignments(stageSubjectCode:widget.stageSubjectCode ,),
       TeacherQuizzes(stageSubjectCode: widget.stageSubjectCode,),
+      TeacherEvents(),
+      TeacherJourneys(stageSubjectCode: widget.stageSubjectCode,),
     ];
     return Container(
       child: Scaffold(
@@ -35,6 +39,8 @@ class _TeacherBottomAppBarState extends State<TeacherBottomAppBar> {
             BottomNavigationBarItem(icon: Icon(Icons.menu_book) , label: "Material"),
             BottomNavigationBarItem(icon: Icon(Icons.assignment) , label: "Assignments"),
             BottomNavigationBarItem(icon: Icon(Icons.quiz) , label: "Quizzes"),
+            BottomNavigationBarItem(icon: Icon(Icons.event) , label: "Events"),
+            BottomNavigationBarItem(icon: Icon(Icons.celebration) , label: "Journey"),
             ],
           currentIndex: _selectedIndex,
           elevation: 0.9,

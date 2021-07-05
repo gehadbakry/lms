@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/app_style.dart';
 import 'package:lms_pro/teacher_api/getTeacherQuizzes.dart';
@@ -31,6 +33,7 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
+            padding: EdgeInsets.only(bottom: 13),
             width:140,
             child: FloatingActionButton(
               shape:  RoundedRectangleBorder(
@@ -78,10 +81,11 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 10,bottom: 65),
+          padding: const EdgeInsets.only(top: 10),
           child: Center(
             child: FutureBuilder<List<TeacherQuiz>>(
               future: TeacherQuizzesInfo().getTeacherQuizzesInfo(code, 236),
+              //future: TeacherQuizzesInfo().getTeacherQuizzesInfo(code, subjestStageCode),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
@@ -116,7 +120,10 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
                                   Icons.arrow_forward_ios_outlined,
                                   color: ColorSet.primaryColor,
                                 ),
-                                onTap: () {}
+                                onTap: () => showQuizzesInfo(snapshot.data[index].quizName,
+                                    snapshot.data[index].totalGrade,
+                                    snapshot.data[index].noOfStudents,
+                                    snapshot.data[index].date)
                             ),
                           ),
                         ),
@@ -143,5 +150,59 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
         ),
       ),
     );
+  }
+  showQuizzesInfo(var QuizName ,var TotalQuizGrade ,var NoOfStudents ,var quizDate){
+    var date = DateTime.parse(quizDate);
+    var alert = AlertDialog(
+      title: Center(
+          child: Row(
+            children: [
+              Text('${QuizName}',style: AppTextStyle.headerStyle2,),
+              Spacer(),
+              Text('${DateFormat('dd-MM-yyy').format(date)}',style: AppTextStyle.subText,),
+            ],
+          )),
+      content: Container(
+        height:MediaQuery.of(context).size.height*0.2,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Total Grade: ",style: AppTextStyle.headerStyle2,),
+                  Text("${TotalQuizGrade}",style: AppTextStyle.textstyle15,),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("No. of students: ",style: AppTextStyle.headerStyle2,),
+                  Text("${NoOfStudents}",style: AppTextStyle.textstyle15),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        FlatButton(
+          child: Text(
+            "Back",
+            style: TextStyle(color: ColorSet.SecondaryColor),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
 }

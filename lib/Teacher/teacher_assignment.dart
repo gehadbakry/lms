@@ -29,6 +29,7 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
     return Scaffold(
         backgroundColor: ColorSet.primaryColor,
         floatingActionButton: Container(
+          padding: EdgeInsets.only(bottom: 13),
           width: 155,
           child: FloatingActionButton(
             shape: RoundedRectangleBorder(
@@ -66,11 +67,13 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
               ),
             ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 10,bottom: 65),
+            padding: const EdgeInsets.only(top: 10),
             child: FutureBuilder<List<TeacherAssignment>>(
               future: TeacherAssignmentInfo().getTeacherAssignmentInfo(11, 169),
+              //future: TeacherAssignmentInfo().getTeacherAssignmentInfo(code, subjestStageCode),
               builder: (context,snapshot){
                 if(snapshot.hasData){
+
                   return GroupedListView<TeacherAssignment,int>(
                       elements: snapshot.data.toList(),
                       groupBy: (TeacherAssignment e) => e.assignCode,

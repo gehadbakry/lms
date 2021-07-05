@@ -34,6 +34,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
     return Scaffold(
       backgroundColor: ColorSet.primaryColor,
       floatingActionButton: Container(
+        padding: EdgeInsets.only(bottom: 13),
         width:155,
         child: FloatingActionButton(
           shape:  RoundedRectangleBorder(
@@ -70,7 +71,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 10,bottom: 65),
+          padding: const EdgeInsets.only(top: 10),
           child: FutureBuilder<List<TeacherMaterial>>(
               future: TeacherMaterialInfo()
                   .getTeacherMaterialInfo(code, SchoolYear, 236),
@@ -96,7 +97,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                                     spreadRadius: 3,
                                     blurRadius: 5,
                                     offset:
-                                        Offset(4, 2), // changes position of shadow
+                                    Offset(4, 2), // changes position of shadow
                                   ),
                                 ],
                               ),
@@ -148,51 +149,51 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
     ): AlertDialog(
       title: Center(
           child: Text(
-        ChapterName,
-        style: AppTextStyle.headerStyle2,
-      )),
+            ChapterName,
+            style: AppTextStyle.headerStyle2,
+          )),
       content: FutureBuilder<List<TeacherMaterial>>(
-          future: TeacherMaterialInfo()
-              .getTeacherMaterialInfo(code, SchoolYear, 236),
+          future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
+          //future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, subjestStageCode),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return  Container(
                 child: GroupedListView<TeacherMaterial, int>(
                   elements: snapshot.data.toList(),
                   groupBy: (TeacherMaterial e) =>e.chapterLessonCode==null?-1:e.chapterLessonCode,
-                    groupHeaderBuilder: (TeacherMaterial e) => e.chapterCode==ChapterCode? Padding(
-                      padding: EdgeInsets.only(top: 10 , left:10 ,right:10 ,bottom: 5),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          color: ColorSet.whiteColor,
-                          boxShadow: [ BoxShadow(
-                            color: Colors.grey.withOpacity(0.4),
-                            spreadRadius: 3,
-                            blurRadius: 5,
-                            offset: Offset(4, 2), // changes position of shadow
-                          ),],
-                        ),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              leading: Text(e.lessonNameEn,style: AppTextStyle.subtextgrey,),
-                              trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
-                              onTap: () => chooseMaterial(e.lessonNameAR , e.chapterLessonCode ,ChapterCode,e.materialType),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(onPressed: (){}, icon:Icon(Icons.add,color: ColorSet.SecondaryColor,) ),
-                                IconButton(onPressed: (){}, icon:Icon(Icons.edit,color: ColorSet.primaryColor,) ),
-                                IconButton(onPressed: (){}, icon:Icon(Icons.delete,color: Colors.red,)),
-                              ],
-                            ),
-                          ],
-                        ),
+                  groupHeaderBuilder: (TeacherMaterial e) => e.chapterCode==ChapterCode? Padding(
+                    padding: EdgeInsets.only(top: 10 , left:10 ,right:10 ,bottom: 5),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        color: ColorSet.whiteColor,
+                        boxShadow: [ BoxShadow(
+                          color: Colors.grey.withOpacity(0.4),
+                          spreadRadius: 3,
+                          blurRadius: 5,
+                          offset: Offset(4, 2), // changes position of shadow
+                        ),],
                       ),
-                    ):
-                    Container(height: 0,width: 0,),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: Text(e.lessonNameEn,style: AppTextStyle.subtextgrey,),
+                            trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
+                            onTap: () => chooseMaterial(e.lessonNameAR , e.chapterLessonCode ,ChapterCode,e.materialType),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(onPressed: (){}, icon:Icon(Icons.add,color: ColorSet.SecondaryColor,) ),
+                              IconButton(onPressed: (){}, icon:Icon(Icons.edit,color: ColorSet.primaryColor,) ),
+                              IconButton(onPressed: (){}, icon:Icon(Icons.delete,color: Colors.red,)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ):
+                  Container(height: 0,width: 0,),
                   itemBuilder: (context, TeacherMaterial e) =>null,
                   order: GroupedListOrder.ASC,
                 ),

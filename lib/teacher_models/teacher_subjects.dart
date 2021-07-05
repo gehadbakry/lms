@@ -1,5 +1,5 @@
 class TeacherSubjects{
-  int stageCode,subjectCode;
+  int stageCode,subjectCode ,stageSubjectCode;
   String StageNameAR, StageNameEn ,learningPhaseAR,
   subjectNameAR,subjectNameEn,subjectDescEN,subjectDescAR,image;
 
@@ -13,7 +13,8 @@ class TeacherSubjects{
     this.learningPhaseAR,
     this.subjectCode,
     this.stageCode,
-    this.image
+    this.image,
+    this.stageSubjectCode
 });
 
   factory TeacherSubjects.fromJson(Map<String, dynamic> json){
@@ -28,5 +29,6 @@ class TeacherSubjects{
       subjectCode: json['subject_code'],
       stageCode: json['stage_code'],
       image: json['img_path'],
+      stageSubjectCode: json['stage_subject_code']
     );}
 }
