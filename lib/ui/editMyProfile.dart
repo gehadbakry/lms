@@ -144,61 +144,61 @@ class _EditMyProfileState extends State<EditMyProfile> {
                     return Center(child: CircularProgressIndicator());
                   }),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 20,bottom: 5,right: 40,left: 40),
-            //   child: TextField(
-            //     obscureText: hidePassword,
-            //     controller: Epassword,
-            //     decoration: InputDecoration(
-            //       enabledBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: Colors.grey.shade300),
-            //       ),
-            //       focusedBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: ColorSet.primaryColor),
-            //       ),
-            //       prefixIcon: IconButton(
-            //         iconSize: 30,
-            //         onPressed: () {
-            //           setState(() {
-            //             hidePassword = !hidePassword;
-            //           });
-            //         },
-            //         color: Colors.grey.shade400,
-            //         icon: Icon(hidePassword
-            //             ? Icons.visibility_off
-            //             : Icons.visibility),
-            //       ),
-            //       hintText: " New password",
-            //     ),
-            //   ),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 10,bottom: 5,right: 40,left: 40),
-            //   child: TextField(
-            //     controller: EpasswordConfirm,
-            //     decoration: InputDecoration(
-            //       enabledBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: Colors.grey.shade300),
-            //       ),
-            //       focusedBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: ColorSet.primaryColor),
-            //       ),
-            //       prefixIcon: IconButton(
-            //         iconSize: 30,
-            //         onPressed: () {
-            //           setState(() {
-            //             hidePassword = !hidePassword;
-            //           });
-            //         },
-            //         color: Colors.grey.shade400,
-            //         icon: Icon(hidePassword
-            //             ? Icons.check
-            //             : Icons.check),
-            //       ),
-            //       hintText: " Confirm your new password",
-            //     ),
-            //   ),
-            // ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20,bottom: 5,right: 40,left: 40),
+              child: TextField(
+                obscureText: hidePassword,
+                controller: Epassword,
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorSet.primaryColor),
+                  ),
+                  prefixIcon: IconButton(
+                    iconSize: 30,
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                    color: Colors.grey.shade400,
+                    icon: Icon(hidePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                  ),
+                  hintText: " New password",
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10,bottom: 5,right: 40,left: 40),
+              child: TextField(
+                controller: EpasswordConfirm,
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorSet.primaryColor),
+                  ),
+                  prefixIcon: IconButton(
+                    iconSize: 30,
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                    color: Colors.grey.shade400,
+                    icon: Icon(hidePassword
+                        ? Icons.check
+                        : Icons.check),
+                  ),
+                  hintText: " Confirm your new password",
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 10,bottom: 5,right: 40,left: 40),
               child: TextField(
@@ -294,7 +294,7 @@ class _EditMyProfileState extends State<EditMyProfile> {
                   SizedBox(width: 15,),
                   ElevatedButton(onPressed: (){
                     if(Epassword.text==EpasswordConfirm.text && (Epassword.text != null || Epassword.text != '') ){
-                      save(Epassword.text, Efacbook.text, Etwitter.text, Einstagram.text, Elinkedin.text, _image.path);
+                      save(Epassword.text, Efacbook.text, Etwitter.text, Einstagram.text, Elinkedin.text, _image==null?'': _image.path);
                     }
                     else  if(Epassword.text!=EpasswordConfirm.text){
                       Toast.show("Passwords don't match", context,duration: Toast.LENGTH_LONG);
@@ -353,7 +353,7 @@ class _EditMyProfileState extends State<EditMyProfile> {
     request.fields['linkin_url']=linkedin;
     // request.fields['file']=
     //request.files.add(await http.MultipartFile.fromPath('file',_image.path));
-    request.files.add(await http.MultipartFile.fromPath('file',filepath));
+    _image == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',filepath));
 
     request.headers.addAll({
       'Content-Type': 'multipart/form-data',

@@ -48,13 +48,7 @@ class _ScheduelState extends State<Scheduel> {
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.0,
-      leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: ColorSet.whiteColor,
-          iconSize: 25,
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/BNV');
-          }),
+      automaticallyImplyLeading: false,
       actions: [
         Stack(
           children: [

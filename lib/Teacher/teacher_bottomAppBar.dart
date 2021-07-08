@@ -28,8 +28,6 @@ class _TeacherBottomAppBarState extends State<TeacherBottomAppBar> {
       TeacherMaterials(stageSubjectCode: widget.stageSubjectCode,),
       TeacherAssignments(stageSubjectCode:widget.stageSubjectCode ,),
       TeacherQuizzes(stageSubjectCode: widget.stageSubjectCode,),
-      TeacherEvents(),
-      TeacherJourneys(stageSubjectCode: widget.stageSubjectCode,),
     ];
     return Container(
       child: Scaffold(
@@ -39,8 +37,6 @@ class _TeacherBottomAppBarState extends State<TeacherBottomAppBar> {
             BottomNavigationBarItem(icon: Icon(Icons.menu_book) , label: "Material"),
             BottomNavigationBarItem(icon: Icon(Icons.assignment) , label: "Assignments"),
             BottomNavigationBarItem(icon: Icon(Icons.quiz) , label: "Quizzes"),
-            BottomNavigationBarItem(icon: Icon(Icons.event) , label: "Events"),
-            BottomNavigationBarItem(icon: Icon(Icons.celebration) , label: "Journey"),
             ],
           currentIndex: _selectedIndex,
           elevation: 0.9,

@@ -279,7 +279,7 @@ class _HomeState extends State<Home> with ChangeNotifier {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      right: 8, left: 8, top: 5),
+                                      right: 8, left: 8, top: 15),
                                   child: FittedBox(
                                     child: Text(
                                       snapshot.data.sNameEN,
@@ -303,108 +303,98 @@ class _HomeState extends State<Home> with ChangeNotifier {
                                   ],
                                 ),
                                 //SOCIAL MEDIA CONTAINER
-                                Container(
-                                  height: 35,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                        icon: FaIcon(
-                                          FontAwesomeIcons.facebook,
-                                          color: ColorSet.SecondaryColor,
-                                        ),
-                                        onPressed: () async {
-                                          print(snapshot.data.facebook);
-                                          String url = snapshot.data.facebook;
-                                          try {
-                                            await canLaunch(url)
-                                                ? await launch(url)
-                                                : throw 'error';
-                                          } catch (e) {
-                                            Toast.show(
-                                              "No account was found",
-                                              context,
-                                              duration: Toast.LENGTH_LONG,
-                                            );
-                                          }
-                                        },
-                                      ),
-                                      IconButton(
-                                          icon: FaIcon(
-                                            FontAwesomeIcons.twitter,
-                                            color: ColorSet.SecondaryColor,
-                                          ),
-                                          onPressed: () async {
-                                            print(snapshot.data.twitter);
-                                            String url = snapshot.data.twitter;
-                                            try {
-                                              await canLaunch(url)
-                                                  ? await launch(url)
-                                                  : throw 'error';
-                                            } catch (e) {
-                                              Toast.show(
-                                                "No account was found",
-                                                context,
-                                                duration: Toast.LENGTH_LONG,
-                                              );
-                                            }
-                                          }),
-                                      IconButton(
-                                          icon: FaIcon(
-                                            FontAwesomeIcons.linkedinIn,
-                                            color: ColorSet.SecondaryColor,
-                                          ),
-                                          onPressed: () async {
-                                            print(snapshot.data.linkedIn);
-                                            String url = snapshot.data.linkedIn;
-                                            try {
-                                              await canLaunch(url)
-                                                  ? await launch(url)
-                                                  : throw 'error';
-                                            } catch (e) {
-                                              Toast.show(
-                                                "No account was found",
-                                                context,
-                                                duration: Toast.LENGTH_LONG,
-                                              );
-                                            }
-                                          }),
-                                      IconButton(
-                                          icon: FaIcon(
-                                            FontAwesomeIcons.instagram,
-                                            color: ColorSet.SecondaryColor,
-                                          ),
-                                          onPressed: () async {
-                                            print(snapshot.data.instgram);
-                                            String url = snapshot.data.instgram;
-                                            try {
-                                              await canLaunch(url)
-                                                  ? await launch(url)
-                                                  : throw 'error';
-                                            } catch (e) {
-                                              Toast.show(
-                                                "No account was found",
-                                                context,
-                                                duration: Toast.LENGTH_LONG,
-                                              );
-                                            }
-                                          }),
-                                    ],
-                                  ),
-                                ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(bottom: 6, top: 10),
-                                  child: InkWell(
-                                    child: Text(
-                                      "Change password?",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: ColorSet.primaryColor),
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Container(
+                                    height: 35,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          icon: FaIcon(
+                                            FontAwesomeIcons.facebook,
+                                            color: ColorSet.SecondaryColor,
+                                          ),
+                                          onPressed: () async {
+                                            print(snapshot.data.facebook);
+                                            String url = snapshot.data.facebook;
+                                            try {
+                                              await canLaunch(url)
+                                                  ? await launch(url)
+                                                  : throw 'error';
+                                            } catch (e) {
+                                              Toast.show(
+                                                "No account was found",
+                                                context,
+                                                duration: Toast.LENGTH_LONG,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                        IconButton(
+                                            icon: FaIcon(
+                                              FontAwesomeIcons.twitter,
+                                              color: ColorSet.SecondaryColor,
+                                            ),
+                                            onPressed: () async {
+                                              print(snapshot.data.twitter);
+                                              String url = snapshot.data.twitter;
+                                              try {
+                                                await canLaunch(url)
+                                                    ? await launch(url)
+                                                    : throw 'error';
+                                              } catch (e) {
+                                                Toast.show(
+                                                  "No account was found",
+                                                  context,
+                                                  duration: Toast.LENGTH_LONG,
+                                                );
+                                              }
+                                            }),
+                                        IconButton(
+                                            icon: FaIcon(
+                                              FontAwesomeIcons.linkedinIn,
+                                              color: ColorSet.SecondaryColor,
+                                            ),
+                                            onPressed: () async {
+                                              print(snapshot.data.linkedIn);
+                                              String url = snapshot.data.linkedIn;
+                                              try {
+                                                await canLaunch(url)
+                                                    ? await launch(url)
+                                                    : throw 'error';
+                                              } catch (e) {
+                                                Toast.show(
+                                                  "No account was found",
+                                                  context,
+                                                  duration: Toast.LENGTH_LONG,
+                                                );
+                                              }
+                                            }),
+                                        IconButton(
+                                            icon: FaIcon(
+                                              FontAwesomeIcons.instagram,
+                                              color: ColorSet.SecondaryColor,
+                                            ),
+                                            onPressed: () async {
+                                              print(snapshot.data.instgram);
+                                              String url = snapshot.data.instgram;
+                                              try {
+                                                await canLaunch(url)
+                                                    ? await launch(url)
+                                                    : throw 'error';
+                                              } catch (e) {
+                                                Toast.show(
+                                                  "No account was found",
+                                                  context,
+                                                  duration: Toast.LENGTH_LONG,
+                                                );
+                                              }
+                                            }),
+                                      ],
                                     ),
-                                    onTap: () => ChangePasswordDialog(),
                                   ),
                                 ),
                               ],

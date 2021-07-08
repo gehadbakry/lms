@@ -411,7 +411,7 @@ class _NotifiState extends State<Notifi> {
                   else if (snapshot.hasError){
                     return Center(child: Text('error'),);
                   }
-                  return Center(child: CircularProgressIndicator(),);
+                  return Container(height:0,width:0);
                 },
               );
   }

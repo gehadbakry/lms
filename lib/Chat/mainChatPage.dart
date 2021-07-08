@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lms_pro/Chat/messagesPage.dart';
 import 'package:lms_pro/api_services/ChatUser_info.dart';
 import 'package:lms_pro/api_services/NotifiCountAll.dart';
+import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/models/ChatUsers.dart';
 import 'package:lms_pro/models/NotificationModels.dart';
+import 'package:provider/provider.dart';
 import 'customDrawer.dart';
 
 import '../app_style.dart';
@@ -26,16 +28,10 @@ class _ChatPageState extends State<ChatPage> {
     Widget myAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.0,
-      leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
-          iconSize: 25,
-          onPressed: (){
-            Navigator.pop(
-              context);
-          }) ,
       centerTitle: true,
       title: Text("Chat" ,style: AppTextStyle.headerStyle,),
       actions: [
-        Stack(
+        Provider.of<APIService>(context, listen: false).schoolYear != '2'?Container(height:0,width:0): Stack(
           children: [
             IconButton(
                 icon: Icon(Icons.notifications),

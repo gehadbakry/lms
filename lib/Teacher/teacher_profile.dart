@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:lms_pro/Chat/ChatButton.dart';
 import 'package:lms_pro/Teacher/teacher_bottomAppBar.dart';
+import 'package:lms_pro/Teacher/teacher_drawer.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/teacher_api/getTeacherProfile.dart';
 import 'package:lms_pro/teacher_api/getTeacherSubjects.dart';
@@ -17,12 +19,19 @@ class TeacherProfile extends StatefulWidget {
 }
 
 class _TeacherProfileState extends State<TeacherProfile> {
+  int code;
+  int SchoolYear;
+  int userCode;
   @override
   Widget build(BuildContext context) {
-    int code = int.parse(Provider.of<APIService>(context, listen: false).code);
-    int SchoolYear = Provider.of<APIService>(context, listen: false).schoolYear;
-
+    setState(() {
+      code = int.parse(Provider.of<APIService>(context, listen: false).code);
+      SchoolYear = Provider.of<APIService>(context, listen: false).schoolYear;
+      userCode = int.parse(Provider.of<APIService>(context, listen: false).usercode);
+    });
     return Scaffold(
+      drawer: TeacherDrawer(),
+      floatingActionButton: ChatButton(code: code,userCode: userCode,),
       appBar: AppBar(
         backgroundColor: ColorSet.primaryColor,
         elevation: 0.0,

@@ -259,80 +259,78 @@ class _TeacherJourneysState extends State<TeacherJourneys> with TickerProviderSt
               ),
             ),
           )
-        :  Container(
-      decoration: BoxDecoration(
-        color: ColorSet.whiteColor,
-        borderRadius: BorderRadius.only(topRight: Radius.circular(15),topLeft:Radius.circular(15) ),),
-      child: ListView(
-        children: selectedEvents.map((event) {
-            return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: ListTile(
-                    leading: Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Column(
-                        children: [
-                          FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.celebration,color: Colors.purple,size: 15),
-                                  SizedBox(width: 2,),
-                                  Text(
-                                    'Journey',
-                                    style: TextStyle(color: Colors.purple , fontSize: 15 , fontWeight: FontWeight.bold),
-                                    maxLines: 1,
-                                  ),
-                                ],
-                              )),
-                          SizedBox(height: 2,),
-                          Text(
-                            ((DateFormat.yMd().format((event as TeacherJourneyDateTime).dateFrom))).toString().substring(0, 9),
-                            style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: ColorSet.inactiveColor),
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                    subtitle: Container(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 7 , bottom: 5),
+        :  ListView(
+          children: selectedEvents.map((event) {
+              return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ColorSet.whiteColor,
+                    borderRadius: BorderRadius.all(Radius.circular(15) ),),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: ListTile(
+                      leading: Padding(
+                        padding: const EdgeInsets.only(top: 5),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                '${(event as TeacherJourneyDateTime).journeyName}',
-                                style: TextStyle(color: Colors.purple ,fontSize: 12,fontWeight: FontWeight.bold ),
-                                maxLines: 3,
-                              ),
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.celebration,color: Colors.purple,size: 15),
+                                    SizedBox(width: 2,),
+                                    Text(
+                                      'Journey',
+                                      style: TextStyle(color: Colors.purple , fontSize: 15 , fontWeight: FontWeight.bold),
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                )),
+                            SizedBox(height: 2,),
+                            Text(
+                              ((DateFormat.yMd().format((event as TeacherJourneyDateTime).dateFrom))).toString().substring(0, 9),
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorSet.inactiveColor),
+                              maxLines: 1,
                             ),
                           ],
                         ),
                       ),
-                    ),
-                   // trailing:  Icon(Icons.arrow_forward_ios,color: Colors.purple,size: 20,),
-                    // onTap: () => JourneyFunction(context,
-                    //     (event as TeacherJourneyDateTime).journeyName,
-                    //     (event as TeacherJourneyDateTime).journeyNameAr,
-                    //     (event as TeacherJourneyDateTime).journeyNameEn,
-                    //     (event as TeacherJourneyDateTime).dateFrom,
-                    //     (event as TeacherJourneyDateTime).dateTo,
-                    //     (event as TeacherJourneyDateTime).companionAllowed,
-                    //     (event as TeacherJourneyDateTime).numberOfCompanions)
+                      subtitle: Container(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 7 , bottom: 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  '${(event as TeacherJourneyDateTime).journeyName}',
+                                  style: TextStyle(color: Colors.purple ,fontSize: 12,fontWeight: FontWeight.bold ),
+                                  maxLines: 3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                     // trailing:  Icon(Icons.arrow_forward_ios,color: Colors.purple,size: 20,),
+                      // onTap: () => JourneyFunction(context,
+                      //     (event as TeacherJourneyDateTime).journeyName,
+                      //     (event as TeacherJourneyDateTime).journeyNameAr,
+                      //     (event as TeacherJourneyDateTime).journeyNameEn,
+                      //     (event as TeacherJourneyDateTime).dateFrom,
+                      //     (event as TeacherJourneyDateTime).dateTo,
+                      //     (event as TeacherJourneyDateTime).companionAllowed,
+                      //     (event as TeacherJourneyDateTime).numberOfCompanions)
+                      ),
                     ),
                   ),
-                ),
-            ) ;
-        }).toList(),
-      ),
-    );
+              ) ;
+          }).toList(),
+        );
   }
   // JourneyFunction(var context,var Jname,var JnameAR,var JnameEN ,var JdateFrom,var JdateTo ,var allowedComp ,var maxComp) {
   //   var alert = AlertDialog(
