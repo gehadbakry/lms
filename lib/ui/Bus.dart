@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/app_style.dart';
 import 'package:lms_pro/models/Student.dart';
@@ -9,6 +10,7 @@ import 'package:lms_pro/models/bus_data.dart';
 import 'package:lms_pro/api_services/bus_info.dart';
 import 'package:lms_pro/utils/myBottomBar.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 
 class Bus extends StatefulWidget {
@@ -160,9 +162,22 @@ class _BusState extends State<Bus> {
                                             Icons.person_pin_rounded,
                                             color: ColorSet.primaryColor,
                                           ),
-                                          title: Text(
-                                            "Driver",
-                                            style: AppTextStyle.headerStyle2,
+                                          title: Row(
+                                            children: [
+                                              Text(
+                                                "Driver: ",
+                                                style: AppTextStyle.headerStyle2,
+                                              ),
+                                              FittedBox(
+                                                child: Text(
+                                                  "${snapshot.data.driverName}",
+                                                  style:
+                                                  AppTextStyle.leadtextstyle,
+                                                  maxLines: 1,
+                                                ),
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         Column(
@@ -172,48 +187,23 @@ class _BusState extends State<Bus> {
                                                 image: AssetImage(
                                                     'assets/images/driver.png'),
                                               ),
-                                              title: FittedBox(
-                                                child: Text(
-                                                  "Name: ${snapshot.data.driverName}",
-                                                  style:
-                                                      AppTextStyle.leadtextstyle,
-                                                  maxLines: 1,
-                                                ),
-                                                fit: BoxFit.fill,
-                                              ),
                                               subtitle: Text(
                                                 "phone: ${snapshot.data.driverPhoneNumb}",
                                                 style: AppTextStyle.leadtextstyle,
-                                              ),
+                                                  ),
+                                              trailing:  IconButton(
+                                                  icon: Icon(Icons.file_copy,
+                                                      color:
+                                                      ColorSet.SecondaryColor,
+                                                      size: 20),
+                                                  onPressed: () {
+                                                    Clipboard.setData(new ClipboardData(text: " ${snapshot.data.driverPhoneNumb}"));
+                                                    Toast.show("Number was copied",context,duration:Toast.LENGTH_LONG);
+                                                  }) ,
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            InkWell(
-                                              child: Text(
-                                                "complaint",
-                                                style: AppTextStyle.complaint,
-                                              ),
-                                              onTap: () {},
-                                            ),
-                                            IconButton(
-                                                icon: Icon(
-                                                  Icons.phone,
-                                                  color: ColorSet.SecondaryColor,
-                                                  size: 20,
-                                                ),
-                                                onPressed: () {}),
-                                            IconButton(
-                                                icon: Icon(Icons.file_copy,
-                                                    color:
-                                                        ColorSet.SecondaryColor,
-                                                    size: 20),
-                                                onPressed: () {}),
-                                          ],
-                                        ),
+
                                       ],
                                     ),
                                     Container(
@@ -230,9 +220,21 @@ class _BusState extends State<Bus> {
                                             Icons.person_pin_rounded,
                                             color: ColorSet.primaryColor,
                                           ),
-                                          title: Text(
-                                            "Supervisor",
-                                            style: AppTextStyle.headerStyle2,
+                                          title: Row(
+                                            children: [
+                                              Text(
+                                                "Supervisor: ",
+                                                style: AppTextStyle.headerStyle2,
+                                              ),
+                                              FittedBox(
+                                                fit: BoxFit.fill,
+                                                child: Text(
+                                                  "${snapshot.data.supervisorName}",
+                                                  style: AppTextStyle.leadtextstyle,
+                                                  maxLines: 1,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         Container(
@@ -242,43 +244,22 @@ class _BusState extends State<Bus> {
                                               image: AssetImage(
                                                   'assets/images/businesswoman.png'),
                                             ),
-                                            title: Text(
-                                              "Name:${snapshot.data.supervisorName}",
-                                              style: AppTextStyle.leadtextstyle,
-                                              maxLines: 1,
-                                            ),
                                             subtitle: Text(
                                               "phone: ${snapshot.data.superPhoneNumb}",
                                               style: AppTextStyle.leadtextstyle,
                                             ),
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            InkWell(
-                                              child: Text(
-                                                "complaint",
-                                                style: AppTextStyle.complaint,
-                                              ),
-                                              onTap: () {},
-                                            ),
-                                            IconButton(
-                                                icon: Icon(
-                                                  Icons.phone,
-                                                  color: ColorSet.SecondaryColor,
-                                                  size: 20,
-                                                ),
-                                                onPressed: () {}),
-                                            IconButton(
+                                            trailing:  IconButton(
                                                 icon: Icon(Icons.file_copy,
                                                     color:
-                                                        ColorSet.SecondaryColor,
+                                                    ColorSet.SecondaryColor,
                                                     size: 20),
-                                                onPressed: () {}),
-                                          ],
+                                                onPressed: () {
+                                                  Clipboard.setData(new ClipboardData(text: " ${snapshot.data.superPhoneNumb}"));
+                                                  Toast.show("Number was copied",context,duration:Toast.LENGTH_LONG);
+                                                }),
+                                          ),
                                         ),
+
                                       ],
                                     ),
                                   ],

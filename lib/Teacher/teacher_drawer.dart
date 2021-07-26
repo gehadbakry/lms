@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:lms_pro/Teacher/teacher_classes.dart';
 import 'package:lms_pro/Teacher/teacher_edit_profile.dart';
 import 'package:lms_pro/Teacher/teacher_events.dart';
 import 'package:lms_pro/Teacher/teacher_journey.dart';
+import 'package:lms_pro/Teacher/teacher_singleDay_scheduel.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/teacher_api/getTeacherDays.dart';
 import 'package:lms_pro/teacher_api/getTeacherProfile.dart';
+import 'package:lms_pro/teacher_models/teacher_days.dart';
 import 'package:lms_pro/teacher_models/teacher_profile_model.dart';
 import 'package:provider/provider.dart';
 
@@ -115,6 +119,18 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
                   MaterialPageRoute(builder: (context) =>  TeacherEditProfile(code: code,usercode: userCode,))
               );}
           ),
+          ListTile(
+              leading: Icon(Icons.sensor_door_rounded,color: ColorSet.primaryColor),
+              title: Text("My classes",style: AppTextStyle.headerStyle2,),
+              onTap: ( ){Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TeacherClasses(code: code,))
+              );}
+          ),
+          ListTile(
+              leading: Icon(Icons.schedule,color: ColorSet.primaryColor),
+              title: Text("My schedule",style: AppTextStyle.headerStyle2,),
+              onTap: ( ) => scheduelDialog(),
+          ),
           Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 25),
@@ -125,5 +141,61 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
         ],
       ),
     );
+  }
+
+  scheduelDialog(){
+    var alert = AlertDialog(
+      content: FutureBuilder< List<TeacherDays>>(
+        future: TeacherDaysInfo().getTeacherDaysInfo(30, 17),
+        //future:TeacherDaysInfo().getTeacherDaysInfo(code, SchoolYear );
+        builder: (contex,snapshot){
+          if(snapshot.hasData){
+            return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 0.9,
+                  crossAxisSpacing:2,
+                  crossAxisCount: 2,
+                ),
+    itemCount: snapshot.data.length,
+    shrinkWrap: true,
+    itemBuilder: (BuildContext context, index) {
+                  return Center(
+                    child: InkWell(
+                      child: Text('${snapshot.data[index].dayNameEN}',style: AppTextStyle.headerStyle2,),
+                      onTap: (){Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>  SingleDayScheduel(dayCode: snapshot.data[index].dayCode,
+                          dayNameAR: snapshot.data[index].dayNameAR,
+                            dayNameEn:snapshot.data[index].dayNameEN ,
+                          ))
+                      );},
+                    ),
+                  );
+    }
+            );
+          }
+          else if(snapshot.hasError){
+            return Text("error");
+          }
+          return Center(child: CircularProgressIndicator(),);
+        },
+      ),
+      actions: [
+        FlatButton(
+          child: Text(
+            "Back",
+            style: TextStyle(color: ColorSet.SecondaryColor),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(24.0),
+          ),
+        )
+    );
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
 }

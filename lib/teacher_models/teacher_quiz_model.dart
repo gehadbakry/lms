@@ -1,6 +1,7 @@
 class TeacherQuiz{
   var quizCode , totalGrade , noOfStudents , studentMark , studentRank , rank , grade,classCode,isConfirm,isConfirmStudent;
   String quizName ,date ;
+  List<dynamic> classesCode;
 
   TeacherQuiz({
     this.date,
@@ -15,6 +16,7 @@ class TeacherQuiz{
     this.isConfirm,
     this.isConfirmStudent,
     this.noOfStudents,
+    this.classesCode,
 });
 
   factory TeacherQuiz.fromJson(Map<String, dynamic> json){
@@ -31,5 +33,6 @@ class TeacherQuiz{
       isConfirm: json['is_confirm'],
       isConfirmStudent: json['is_confirm_student'],
       noOfStudents: json['no_of_student'],
+      classesCode: (json['class_code'] as List<dynamic>).toList(),
     );}
 }

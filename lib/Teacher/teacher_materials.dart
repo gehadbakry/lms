@@ -30,6 +30,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
   int subjestStageCode;
   var subjectChapterLessonCode;
   bool isPublished = false;
+  TextEditingController LinkName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +111,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                     itemBuilder: (context, TeacherMaterial e) {
                       return null;
                     },
-                    order: GroupedListOrder.ASC,
+                    order: GroupedListOrder.DESC,
                   );
                 } else if (snapshot.hasError) {
                   return Center(child: Text("Error"));
@@ -134,7 +135,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
             style: AppTextStyle.headerStyle2,
           )),
       content: FutureBuilder<List<TeacherMaterial>>(
-          //future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
+         // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
           future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, subjestStageCode),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -181,7 +182,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                     Container(height: 0,width: 0,);
                   },
                   itemBuilder: (context, TeacherMaterial e) =>null,
-                  order: GroupedListOrder.ASC,
+                  order: GroupedListOrder.DESC,
                 ),
               );
             } else if (snapshot.hasError) {
@@ -212,6 +213,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
     );
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
   chooseMaterial(var lessonName,var lessonCode,var ChapterCode,var materialType){
     var alert = materialType==null?AlertDialog(title: Text("No material to show",style: AppTextStyle.headerStyle2,),):AlertDialog(
       title: Center(child: Text(lessonName,style: AppTextStyle.complaint,)),
@@ -221,12 +223,13 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
           color: Colors.grey.shade50,
         ),
         child: FutureBuilder<List<TeacherMaterial>>(
-            //future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
+           // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
             future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, widget.stageSubjectCode),
             builder: (context , snapshot){
               if(snapshot.hasData){
                 return Center(
-                  child: snapshot.data.length==0?Text("No Material was found",style: AppTextStyle.headerStyle2,):GroupedListView<TeacherMaterial, int>(
+                  child: snapshot.data.length==0?Text("No Material was found",style: AppTextStyle.headerStyle2,):
+                  GroupedListView<TeacherMaterial, int>(
                     elements: snapshot.data.toList(),
                     groupBy: (TeacherMaterial e) =>e.chapterLessonMaterialCode==null?-1:e.chapterLessonMaterialCode,
                     groupHeaderBuilder: (TeacherMaterial e) => e.chapterCode==ChapterCode && e.chapterLessonCode == lessonCode?
@@ -243,7 +246,8 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                                   IconButton(onPressed: ()async{
                                     String url = e.materialpath;
                                     e.materialType==2?
-                                    await canLaunch(url) ? await launch(url) : throw 'error'
+                                    await canLaunch('http://169.239.39.105/LMS_site_demo/Home/Getpdf?path=${e.materialpath}') ?
+                                    await launch('http://169.239.39.105/LMS_site_demo/Home/Getpdf?path=${e.materialpath}') : throw 'error'
                                         :
                                     Toast.show(
                                       "No Material was found",
@@ -262,18 +266,19 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                                       context,
                                       duration: Toast.LENGTH_LONG,
                                     );
-                                  }, icon: Icon(Icons.video_call,color:e.materialType==3?ColorSet.primaryColor:ColorSet.inactiveColor,)),
+                                  }, icon: Icon(Icons.link,color:e.materialType==3?ColorSet.primaryColor:ColorSet.inactiveColor,)),
                                   IconButton(onPressed: ()async{
                                     String url = e.materialpath;
                                     e.materialType==1?
-                                    await canLaunch(url) ? await launch(url) : throw 'error'
+                                    await canLaunch('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${e.materialpath}') ?
+                                    await launch('http://169.239.39.105/LMS_site_demo/Home/GetImg?path=${e.materialpath}') : throw 'error'
                                         :
                                     Toast.show(
                                       "No link was found",
                                       context,
                                       duration: Toast.LENGTH_LONG,
                                     );
-                                  }, icon: Icon(Icons.link,color:e.materialType==1?ColorSet.primaryColor:ColorSet.inactiveColor,)),
+                                  }, icon: Icon(Icons.image,color:e.materialType==1?ColorSet.primaryColor:ColorSet.inactiveColor,)),
                                 ],
                               ),
                               Container(
@@ -297,7 +302,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                       ),
                     ):Container(height: 0.0,width: 0.0,),
                     itemBuilder: (context, TeacherMaterial e) =>null,
-                    order: GroupedListOrder.ASC,
+                    order: GroupedListOrder.DESC,
                   ),
                 );
               }
@@ -398,9 +403,9 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                       primary: ColorSet.SecondaryColor,
                     ),
                     child: Text("link"),
-                    onPressed: ()async{
-                        file = await FilePicker.getFile();
-                        extension = "3";
+                    onPressed: (){
+                      extension =3;
+                      addLink();
                     },
                   ),
                 ],
@@ -426,37 +431,71 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
 
             ElevatedButton(
               onPressed: ()async{
-                var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostMaterialUpload");
-                var request = new http.MultipartRequest("POST", uri);
-                request.fields['material_name'] = MaterialName.text;
-                //request.fields['file']= code.toString();
-                //request.files.add(await http.MultipartFile.fromPath('file',file.path));
-                file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
-                request.fields['material_type_code'] = extension;
-                request.fields['subject_chapter_lesson_code'] = chapterLessonCode.toString();
-                request.fields['schooling_year_code'] = SchoolYear.toString();
-                request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
-                request.fields['is_publish'] = isPublished==true?"False":"True";
-                request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
-                request.fields['classes'] = '10';
-                request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
-                request.fields['material_path'] ='';
+                if(file != null){
+                  var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostMaterialUpload");
+                  var request = new http.MultipartRequest("POST", uri);
+                  request.fields['material_name'] = MaterialName.text;
+                  //request.fields['file']= code.toString();
+                  //request.files.add(await http.MultipartFile.fromPath('file',file.path));
+                  file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
+                  request.fields['material_type_code'] =extension==null?'': extension.toString();
+                  request.fields['subject_chapter_lesson_code'] = chapterLessonCode.toString();
+                  request.fields['schooling_year_code'] = SchoolYear.toString();
+                  request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+                  request.fields['is_publish'] = isPublished==true?"False":"True";
+                  request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
+                  request.fields['classes'] = '10';
+                  request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
+                  request.fields['material_path'] ='';
 
 
-                request.headers.addAll({
-                  'Content-Type': 'multipart/form-data',
-                });
+                  request.headers.addAll({
+                    'Content-Type': 'multipart/form-data',
+                  });
 
-                var response = await request.send();
-                print(response.statusCode);
-                if (response.statusCode == 200) {
-                  Toast.show("File was Posted",context,duration:Toast.LENGTH_LONG);
-                  print("posted");
+                  var response = await request.send();
+                  print(response.statusCode);
+                  if (response.statusCode == 200) {
+                    Toast.show("File was Posted",context,duration:Toast.LENGTH_LONG);
+                    print("posted");
+                  }
+                  else{
+                    print("Not Posted");
+                  }
+
                 }
                 else{
-                  print("Not Posted");
-                }
+                  var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostMaterialUpload");
+                  var request = new http.MultipartRequest("POST", uri);
+                  request.fields['material_name'] = MaterialName.text;
+                  //request.fields['file']= code.toString();
+                  //request.files.add(await http.MultipartFile.fromPath('file',file.path));
+                //  file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
+                  request.fields['material_type_code'] =extension==null?'': extension.toString();
+                  request.fields['subject_chapter_lesson_code'] = chapterLessonCode.toString();
+                  request.fields['schooling_year_code'] = SchoolYear.toString();
+                  request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+                  request.fields['is_publish'] = isPublished==true?"False":"True";
+                  request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
+                  request.fields['classes'] = '10';
+                  request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
+                  request.fields['material_path'] =LinkName.text==null?'':LinkName.text;
 
+
+                  request.headers.addAll({
+                    'Content-Type': 'multipart/form-data',
+                  });
+
+                  var response = await request.send();
+                  print(response.statusCode);
+                  if (response.statusCode == 200) {
+                    Toast.show("File was Posted",context,duration:Toast.LENGTH_LONG);
+                    print("posted");
+                  }
+                  else{
+                    print("Not Posted");
+                  }
+                }
               },
               child: Text("Save and upload",),
               style: ElevatedButton.styleFrom(
@@ -487,10 +526,12 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
 
     showDialog(context: context, builder: (BuildContext context) => alert);
    }
+
     editMaterialDialog(var chapterLessonCode,var chapterLessonMaterialCode){
      var extension ;
      File file;
      bool isPressed = false;
+     bool chooseFile = false;
      TextEditingController EditMaterialName = TextEditingController();
      var alert = AlertDialog(
        title: Center(child: Text("Edit Materials",style: AppTextStyle.headerStyle2,)),
@@ -538,6 +579,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                        onPressed: ()async{
                          file = await FilePicker.getFile();
                          extension = "2";
+                         chooseFile = true;
                        },
                      ),
                      ElevatedButton(
@@ -548,6 +590,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                        onPressed: ()async{
                          file = await FilePicker.getFile();
                          extension = "1";
+                         chooseFile = true;
                        },
                      ),
                    ],
@@ -558,8 +601,8 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                    ),
                    child: Text("New link"),
                    onPressed: ()async{
-                     file = await FilePicker.getFile();
-                     extension = "3";
+                       extension =3;
+                       addLink();
                    },
                  ),
                ],
@@ -584,40 +627,8 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
            ),
 
            ElevatedButton(
-             onPressed: ()async{
-               var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostMaterialEdit");
-               var request = new http.MultipartRequest("POST", uri);
-               request.fields['material_name'] = EditMaterialName.text;
-               //request.fields['file']= code.toString();
-               //request.files.add(await http.MultipartFile.fromPath('file',file.path));
-               file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
-               request.fields['material_type_code'] = extension==null?'':extension;
-               request.fields['subject_chapter_lesson_code'] = chapterLessonCode.toString();
-               request.fields['schooling_year_code'] = SchoolYear.toString();
-               request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
-               request.fields['is_publish'] = isPublished==true?"False":"True";
-               request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
-               request.fields['classes'] = '';
-               request.fields['stage_subject_code'] = '236';
-               request.fields['material_path'] ='';
-               request.fields['subjects_chapters_lessons_material_code']= chapterLessonMaterialCode.toString();
-
-
-               request.headers.addAll({
-                 'Content-Type': 'multipart/form-data',
-               });
-
-               var response = await request.send();
-               print(response.statusCode);
-               if (response.statusCode == 200) {
-                 Toast.show("File was Posted",context,duration:Toast.LENGTH_LONG);
-                 print("posted");
-               }
-               else{
-                 print("Not Posted");
-               }
-
-             },
+             onPressed: () => chooseFile==true?onPressChooseFile(EditMaterialName.text, extension.toString(), chapterLessonMaterialCode.toString(), file):
+             onPressNotChoosenFile(EditMaterialName.text, extension.toString(), chapterLessonMaterialCode.toString()),
              child: Text("Save and upload",),
              style: ElevatedButton.styleFrom(
                  primary: ColorSet.primaryColor
@@ -644,6 +655,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
      );
      showDialog(context: context, builder: (BuildContext context) => alert);
    }
+
     deleteMaterialDialog(var chapterMaterialCode)async{
      var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostMaterialDelete");
      var request = new http.MultipartRequest("POST", uri);
@@ -663,6 +675,105 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
        print("Not deleted");
      }
    }
+
+   addLink(){
+     var alert = AlertDialog(
+       content:  Container(
+         child: Padding(
+           padding: const EdgeInsets.only(top: 10,right: 10,left: 10,bottom: 10),
+           child: TextField(
+             controller:LinkName,
+             decoration: InputDecoration(
+                 hintStyle: TextStyle(fontSize: 12,color: ColorSet.inactiveColor),
+                 border: OutlineInputBorder(
+                   borderSide: BorderSide(color: ColorSet.borderColor),
+                   borderRadius: BorderRadius.circular(24.0),
+                 ),
+                 enabledBorder: UnderlineInputBorder(
+                   borderSide: BorderSide(color: Colors.grey.shade300),
+                 ),
+                 focusedBorder: UnderlineInputBorder(
+                   borderSide: BorderSide(color: ColorSet.primaryColor),
+                 ),
+                 hintText: "Enter your link"
+
+             ),
+
+           ),
+         ),
+       ),
+       actions: [
+         FlatButton(
+           child: Text(
+             "okay",
+             style: TextStyle(color: ColorSet.SecondaryColor),
+           ),
+           onPressed: () {
+             Navigator.pop(context);
+           },
+         )
+       ],
+     );
+    showDialog(context: context, builder: (BuildContext context) => alert);
+   }
+
+    onPressChooseFile(var materialName , var extension ,var chapterMaterialCode,var file)async{
+     var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostMaterialEdit");
+     var request = new http.MultipartRequest("POST", uri);
+     request.fields['material_name'] = materialName;
+     file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
+     request.fields['material_type_code'] = extension==null?'':extension;
+     request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+     request.fields['is_publish'] = isPublished==true?"False":"True";
+     request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
+     request.fields['classes'] = '';
+     request.fields['material_path'] = LinkName.text==null?'':LinkName.text;
+     request.fields['subjects_chapters_lessons_material_code']= chapterMaterialCode;
+
+
+     request.headers.addAll({
+       'Content-Type': 'multipart/form-data',
+     });
+
+     var response = await request.send();
+     print(response.statusCode);
+     if (response.statusCode == 200) {
+       Toast.show("File was Posted",context,duration:Toast.LENGTH_LONG);
+       print("posted");
+     }
+     else{
+       print("Not Posted");
+     }
+   }
+
+    onPressNotChoosenFile(var materialName , var extension ,var chapterMaterialCode) async {
+    var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostMaterialEdit");
+    var request = new http.MultipartRequest("POST", uri);
+    request.fields['material_name'] = materialName;
+    //file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
+    request.fields['material_type_code'] = extension==null?'':extension;
+    request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+    request.fields['is_publish'] = isPublished==true?"False":"True";
+    request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
+    request.fields['classes'] = '';
+    request.fields['material_path'] =LinkName.text==null?'':LinkName.text;
+    request.fields['subjects_chapters_lessons_material_code']= chapterMaterialCode;
+
+
+    request.headers.addAll({
+    'Content-Type': 'multipart/form-data',
+    });
+
+    var response = await request.send();
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+    Toast.show("File was Posted",context,duration:Toast.LENGTH_LONG);
+    print("posted");
+    }
+    else{
+    print("Not Posted");
+    }
+  }
 
 
 }

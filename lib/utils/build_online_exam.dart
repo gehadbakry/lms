@@ -4,13 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/api_services/online_exam_info.dart';
+import 'package:lms_pro/api_services/webViewAPI.dart';
 import 'package:lms_pro/models/online_exam.dart';
 import 'package:lms_pro/models/quiz.dart';
 import 'package:lms_pro/models/subject.dart';
+import 'package:lms_pro/models/webViewLink.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../app_style.dart';
 
@@ -27,6 +32,8 @@ class _OnlineExamState extends State<OnlineExam> {
   var setExamCode;
   var args;
   var usercode;
+  var url;
+
   void initState() {
     subject = Subject();
     super.initState();
@@ -48,11 +55,6 @@ class _OnlineExamState extends State<OnlineExam> {
       }
     }
     );
-    // subject = ModalRoute.of(context).settings.arguments;
-    // setState(() {
-    //   code = Provider.of<APIService>(context, listen: false).code;
-    //   subjectCode = subject.subjectCode;
-    // });
     return FutureBuilder<List<OnlineExams>>(
        future: OnlineExamInfo().getOnlineExam(int.parse(code), subjectCode),
         builder: (context, snapshot) {
@@ -61,46 +63,49 @@ class _OnlineExamState extends State<OnlineExam> {
               return GroupedListView<OnlineExams, int>(
                 elements: snapshot.data.toList(),
                 groupBy: (OnlineExams e) => e.examCode,
-                groupHeaderBuilder: (OnlineExams e) =>  Padding(
-                  padding: const EdgeInsets.only(top: 15 , bottom: 10 ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20 ,left:20),
-                    child: GestureDetector(
-                      child: Container(
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: ColorSet.whiteColor,
-                          borderRadius:BorderRadius.all(Radius.circular(15)),
-                          boxShadow:[ BoxShadow(
-                            color: ColorSet.shadowcolour,
-                            spreadRadius: 1,
-                            blurRadius: 5,
-                            offset: Offset(4, 3),
-                          ),]
-                        ),
-                        child: ListTile(
-                          leading:
-                              Text('${e.examName} ',style: AppTextStyle.headerStyle2,),
-                          title:Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Column(
-                              children: [
-                                Text('${(e.publishDate).substring(0,10)}',style: AppTextStyle.subText,),
-                                SizedBox(height: 5,),
-                                Text('${e.studentMark} / ${e.totalGrade}',style: AppTextStyle.complaint,),
-                              ],
+                groupHeaderBuilder: (OnlineExams e) {
+                 return Padding(
+                    padding: const EdgeInsets.only(top: 15 , bottom: 10 ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20 ,left:20),
+                      child: GestureDetector(
+                        child: Container(
+                          height: 70,
+                          decoration: BoxDecoration(
+                              color: ColorSet.whiteColor,
+                              borderRadius:BorderRadius.all(Radius.circular(15)),
+                              boxShadow:[ BoxShadow(
+                                color: ColorSet.shadowcolour,
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: Offset(4, 3),
+                              ),]
+                          ),
+                          child: ListTile(
+                            leading:
+                            Text('${e.examName} ',style: AppTextStyle.headerStyle2,),
+                            title:Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Column(
+                                children: [
+                                  Text('${(e.publishDate).substring(0,10)}',style: AppTextStyle.subText,),
+                                  SizedBox(height: 5,),
+                                  Text('${e.studentMark} / ${e.totalGrade}',style: AppTextStyle.complaint,),
+                                ],
+                              ),
+                            ),
+                            trailing: Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Icon(Icons.arrow_forward_ios,color: ColorSet.inactiveColor,),
                             ),
                           ),
-                          trailing: Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Icon(Icons.arrow_forward_ios,color: ColorSet.inactiveColor,),
-                          ),
                         ),
+                        onTap: () => alertDialog(e.examCode , e.examName),
                       ),
-                      onTap: () => alertDialog(e.examCode , e.examName),
                     ),
-                  ),
-                ),
+                  );
+                  } ,
+
                 itemBuilder: (context, OnlineExams e){
                   return null;
                 },
@@ -119,7 +124,14 @@ class _OnlineExamState extends State<OnlineExam> {
           );
         });
   }
-  alertDialog(var newCode , String examName) {
+  alertDialog(var newCode , String examName) async {
+    WebViewPost webViewPost = WebViewPost(
+      examCode: usercode.runtimeType==String?usercode:usercode.toString(),
+      userCode: newCode.runtimeType==String?newCode:newCode.toString(),
+      // examCode: '3004',
+      // userCode: '5192',
+    );
+    url = await WebViewApi().webLink(webViewPost) ;
     var alert = FutureBuilder<List<OnlineExams>>(
         future: OnlineExamInfo().getOnlineExam(int.parse(code), subjectCode),
         builder: (context, snapshot) {
@@ -153,13 +165,43 @@ class _OnlineExamState extends State<OnlineExam> {
         actions: [
           FlatButton(
             child: Text(
+              "Enter exam",
+              style: AppTextStyle.complaint,
+            ),
+            onPressed: ()async{
+              try {
+                await canLaunch('${jsonDecode(url)}')
+                    ? await launch('${jsonDecode(url)}')
+                    : throw 'error';
+              } catch (e) {
+                Toast.show(
+                  "No account was found",
+                  context,
+                  duration: Toast.LENGTH_LONG,
+                );
+              }
+              // try {
+              //   await canLaunch('http://169.239.39.105/LMS_site_demo/online_test/Index?exam_code=3004')
+              //       ? await launch('http://169.239.39.105/LMS_site_demo/online_test/Index?exam_code=3004')
+              //       : throw 'error';
+              // } catch (e) {
+              //   Toast.show(
+              //     "No account was found",
+              //     context,
+              //     duration: Toast.LENGTH_LONG,
+              //   );
+              // }
+            } ,
+          ),
+          FlatButton(
+            child: Text(
               "Okay",
               style: TextStyle(color: ColorSet.SecondaryColor),
             ),
             onPressed: () {
               Navigator.pop(context);
             },
-          )
+          ),
         ],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -180,4 +222,5 @@ class _OnlineExamState extends State<OnlineExam> {
     );
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
   }

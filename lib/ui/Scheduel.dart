@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_pro/api_services/NotifiCountAll.dart';
 import 'package:lms_pro/api_services/all_days_info.dart';
@@ -37,7 +38,7 @@ class _ScheduelState extends State<Scheduel> {
         usercode = Provider.of<APIService>(context, listen: false).usercode;
         yearCode = Provider.of<APIService>(context, listen: false).schoolYear;
       } else if (Provider.of<APIService>(context, listen: false).usertype ==
-              "3" ||
+          "3" ||
           Provider.of<APIService>(context, listen: false).usertype == "4") {
         Scode = (student.studentCode).toString();
         usercode = student.userCode;
@@ -48,7 +49,13 @@ class _ScheduelState extends State<Scheduel> {
     Widget MyAppBar = AppBar(
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.0,
-      automaticallyImplyLeading: false,
+      leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: ColorSet.whiteColor,
+          iconSize: 25,
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/BNV');
+          }),
       actions: [
         Stack(
           children: [
@@ -135,24 +142,24 @@ class _ScheduelState extends State<Scheduel> {
         elevation: 0.0,
         backgroundColor: ColorSet.whiteColor,
         automaticallyImplyLeading: false,
-        bottom:TabBar(
-          tabs: [
-            // Text("Sun",maxLines: 1,softWrap: true,),
-            // Text("Mon",maxLines: 1,softWrap: true,),
-            // Text("Tues",maxLines: 1,softWrap: true,),
-            // Text("Wedn",maxLines: 1,softWrap: true,),
-            // Text("Thur",maxLines: 1,softWrap: true,),
-            DaysButton("Sun",context),
-            DaysButton("Mon",context),
-            DaysButton("Tues",context),
-            DaysButton("Wed",context),
-            DaysButton("Thur",context),
-          ],
-          labelColor: ColorSet.primaryColor,
-          unselectedLabelColor:Colors.grey  ,
-          indicatorWeight: 0.005,
-
-        ) ,
+        // bottom:TabBar(
+        //   tabs: [
+        //     // Text("Sun",maxLines: 1,softWrap: true,),
+        //     // Text("Mon",maxLines: 1,softWrap: true,),
+        //     // Text("Tues",maxLines: 1,softWrap: true,),
+        //     // Text("Wedn",maxLines: 1,softWrap: true,),
+        //     // Text("Thur",maxLines: 1,softWrap: true,),
+        //     DaysButton("Sun",context),
+        //     DaysButton("Mon",context),
+        //     DaysButton("Tues",context),
+        //     DaysButton("Wed",context),
+        //     DaysButton("Thur",context),
+        //   ],
+        //   labelColor: ColorSet.primaryColor,
+        //   unselectedLabelColor:Colors.grey  ,
+        //   indicatorWeight: 0.005,
+        //
+        // ) ,
       ), );
     //Allowed height to work with
     var newheight = (MediaQuery.of(context).size.height -
@@ -162,45 +169,57 @@ class _ScheduelState extends State<Scheduel> {
     return Scaffold(
       backgroundColor: ColorSet.primaryColor,
       appBar: MyAppBar,
-      body: DefaultTabController(
-            length: 5,
-            child: FutureBuilder<List<AllDaysScheduel>>(
-              future: AllDaysScheduelInfo().getAllDays(int.parse(Scode), yearCode),
-              builder: (context,snapshot){
-                if(snapshot.hasData){
-                  return snapshot.data.length==0?
-                  Scaffold(appBar: bottomAppBar,
-                    backgroundColor: ColorSet.whiteColor,
-                    body: Center(
-                      child:Text("No scheduel was found",style: AppTextStyle.headerStyle2,),
-                    ),
+      body: FutureBuilder<List<AllDaysScheduel>>(
+        future: AllDaysScheduelInfo().getAllDays(int.parse(Scode), yearCode),
+        builder: (context,snapshot){
+    if(snapshot.hasData){
+      return snapshot.data.length==0?
+      Scaffold(appBar: bottomAppBar,
+        backgroundColor: ColorSet.whiteColor,
+        body: Center(
+          child:Text("No scheduel was found",style: AppTextStyle.headerStyle2,),
+        ),
+      )
+          : Padding(
+            padding: const EdgeInsets.only(top:20,left:20,right:20),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 0.9,
+                crossAxisSpacing:8,
+                crossAxisCount: 2,
+              ),
+            itemCount: snapshot.data.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, index) {
+                return GestureDetector(
+                  child: DaysButton(snapshot.data[index].dayNameAr,snapshot.data[index].dayNameEn, context),
+                  onTap:()=>{
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ScheduelPage(
+                    dayCode: snapshot.data[index].dayCode,
+                    DayNameEn: snapshot.data[index].dayNameEn,
+                    DayNameAR: snapshot.data[index].dayNameAr,
+                    Scode: Scode,
+                    userCode: usercode,
+                  )),
                   )
-                      : Scaffold(
-                    appBar: bottomAppBar,
-                    backgroundColor: ColorSet.primaryColor,
-                    body: TabBarView(
-                      children: [
-                        ////GRABI TDI KOL PAGE EL CODE BTA3 EL YOUM
-                        ScheduelPage(dayCode: snapshot.data[0].dayCode,),
-                        ScheduelPage(dayCode: snapshot.data[1].dayCode,),
-                        ScheduelPage(dayCode: snapshot.data[2].dayCode,),
-                        ScheduelPage(dayCode: snapshot.data[3].dayCode,),
-                        ScheduelPage(dayCode: snapshot.data[4].dayCode,),
-                      ],
-                    ),
-                  );
-                }
-                else if (snapshot.hasError){
-                  return Center(child: Text("error"));
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
+                  }
                 );
-              },
-            ),
 
 
-          ),
+    }
+        ),
+          );
+
+    }
+    else if (snapshot.hasError){
+      return Center(child: Text("error"));
+    }
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+        }),
       floatingActionButton: ChatButton(userCode: usercode,code: Scode,),
     );
     //   Scaffold(
@@ -253,32 +272,49 @@ class _ScheduelState extends State<Scheduel> {
   }
 
 //DAYS' NAMES CONTAINERS
-  Container DaysButton(String day, BuildContext ctx) {
-    return Container(
-      height: 35,
-      width: (MediaQuery.of(ctx).size.width -
-              MediaQuery.of(ctx).padding.right -
-              MediaQuery.of(ctx).padding.left) *
-          0.3,
-      decoration: BoxDecoration(
-        color: ColorSet.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        boxShadow: [
-          BoxShadow(
-            color: ColorSet.shadowcolour,
-            blurRadius: 3,
-            spreadRadius: 3,
-          ),
-        ],
+   DaysButton(String dayAR,String dayEN, BuildContext ctx) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Container(
+        height: 35,
+        width: (MediaQuery.of(ctx).size.width -
+            MediaQuery.of(ctx).padding.right -
+            MediaQuery.of(ctx).padding.left) *
+            0.3,
+        decoration: BoxDecoration(
+          color: ColorSet.whiteColor,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          boxShadow: [
+            BoxShadow(
+              color: ColorSet.shadowcolour,
+              blurRadius: 3,
+              spreadRadius: 3,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "$dayAR",
+                  maxLines: 1,
+                  softWrap: true,
+                  style: AppTextStyle.headerStyle2,
+                )),
+            FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "$dayEN",
+                  maxLines: 1,
+                  softWrap: true,
+                  style: AppTextStyle.headerStyle2,
+                )),
+          ],
+        ),
       ),
-      child: Center(
-          child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                "$day",
-                maxLines: 1,
-                softWrap: true,
-              ))),
     );
   }
 }

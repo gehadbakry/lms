@@ -1,5 +1,5 @@
 class TeacherAssignment{
-  var assignCode , totalGrade ,studentMark , isConfirmed ,assignmentStudentCode ,type;
+  var assignCode , totalGrade ,studentMark , isConfirmed ,assignmentStudentCode ,type,lessonCode,chapterCode;
   String chapterNameEN,chapterNameAR,lessonNameAR,lessonNameEN,filePath ,assignmentName,publishDate,publishTime;
 
   TeacherAssignment({
@@ -16,7 +16,9 @@ class TeacherAssignment{
     this.type,
     this.assignmentName,
     this.publishDate,
-    this.publishTime
+    this.publishTime,
+    this.chapterCode,
+    this.lessonCode,
 });
   factory TeacherAssignment.fromJson(Map<String, dynamic> json){
     return TeacherAssignment(
@@ -34,5 +36,7 @@ class TeacherAssignment{
       assignmentStudentCode: json['assignment_student_code'],
       isConfirmed: json['is_confirm'],
       lessonNameEN: json['lesson_name_en'],
+      chapterCode:json['subject_chapter_code'],
+      lessonCode: json['subject_chapter_lesson_code']
     );}
 }
