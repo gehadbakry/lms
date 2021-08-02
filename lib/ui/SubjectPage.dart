@@ -154,8 +154,8 @@ class _SubjectPageState extends State<SubjectPage> {
                                 child:Column(
                                   children: [
                                     Container(
-                                      width: 108,
-                                      height: 121,
+                                      width:(MediaQuery.of(context).size.width)*0.25,
+                                      height: (MediaQuery.of(context).size.height)*0.2,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadiusDirectional.circular(14),
                                           boxShadow: [
@@ -178,7 +178,7 @@ class _SubjectPageState extends State<SubjectPage> {
                                         title: Text(snapshot.data[index].subjectNameEn , style:TextStyle(
                                             color: ColorSet.primaryColor,
                                             fontSize: 10,
-                                            fontWeight: FontWeight.bold),maxLines: 2,),
+                                            fontWeight: FontWeight.bold),maxLines: 1,),
                                         subtitle: snapshot.data[index].teacherNameEn == null?Text(""):
                                         Text(snapshot.data[index].teacherNameEn , style: TextStyle(
                                               color: ColorSet.inactiveColor,
@@ -190,7 +190,7 @@ class _SubjectPageState extends State<SubjectPage> {
 
                                         trailing: Text("Ch.${snapshot.data[index].numberChapters}" , style: TextStyle(
                                             color: ColorSet.SecondaryColor,
-                                            fontSize: 12,
+                                            fontSize: 9,
                                             fontWeight: FontWeight.normal)),
                                       ),
                                     ),

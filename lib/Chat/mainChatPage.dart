@@ -102,12 +102,12 @@ class _ChatPageState extends State<ChatPage> {
       appBar: myAppBar,
       body: Scaffold(
         backgroundColor: ColorSet.whiteColor,
-        appBar: AppBar(
-          backgroundColor: ColorSet.whiteColor,
-          iconTheme: IconThemeData(color:ColorSet.primaryColor),
-          elevation: 0.0,
-        ),
-        drawer: CustomDrawer(),
+        // appBar: AppBar(
+        //   backgroundColor: ColorSet.whiteColor,
+        //   iconTheme: IconThemeData(color:ColorSet.primaryColor),
+        //   elevation: 0.0,
+        // ),
+        // drawer: CustomDrawer(),
         drawerEnableOpenDragGesture: true,
         body: FutureBuilder<List<ChatUsers>>(
           future: ChatUserInfo().getChatUsers(widget.code.runtimeType ==String?int.parse(widget.code):widget.code),

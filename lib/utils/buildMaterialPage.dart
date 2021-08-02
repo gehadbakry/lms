@@ -171,6 +171,7 @@ class _BuildMaterialPageState extends State<BuildMaterialPage> {
     );
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
   chooseMaterial(var lessonName,var lessonCode,var ChapterCode){
     var alert = AlertDialog(
       title: Center(child: Text(lessonName,style: AppTextStyle.complaint,)),

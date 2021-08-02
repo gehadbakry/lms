@@ -62,7 +62,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
           padding: const EdgeInsets.only(top: 10),
           child: FutureBuilder<List<TeacherMaterial>>(
               future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, widget.stageSubjectCode),
-             // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
+            // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data.length==0?
@@ -135,7 +135,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
             style: AppTextStyle.headerStyle2,
           )),
       content: FutureBuilder<List<TeacherMaterial>>(
-         // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
+        // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
           future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, subjestStageCode),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -161,18 +161,28 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                         child: Column(
                           children: [
                             ListTile(
-                              leading: Text(e.lessonNameEn,style: AppTextStyle.subtextgrey,),
+                              leading: Padding(
+                                padding: const EdgeInsets.only(right: 7),
+                                child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(e.lessonNameEn,style: AppTextStyle.subtextgrey,)),
+                              ),
                               trailing: Icon(Icons.arrow_forward_ios_outlined,color: Colors.grey,),
                               onTap: () => chooseMaterial(e.lessonNameAR , e.chapterLessonCode ,ChapterCode,e.materialType),
                             ),
-                            GestureDetector(
-                              onTap: () => uploadMaterialDialog(e.chapterLessonCode),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  IconButton(onPressed: () {}, icon:Icon(Icons.add,color: ColorSet.SecondaryColor,) ),
-                                 Text("Add a new Material",style: AppTextStyle.subText,)
-                                ],
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5,left: 5,bottom: 10),
+                              child: GestureDetector(
+                                onTap: () => uploadMaterialDialog(e.chapterLessonCode),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.add,color: ColorSet.SecondaryColor,) ,
+                                   FittedBox(
+                                       fit: BoxFit.scaleDown,
+                                       child: Text("Add a new Material",style: AppTextStyle.subText,))
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -224,7 +234,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
         ),
         child: FutureBuilder<List<TeacherMaterial>>(
            // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
-            future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, widget.stageSubjectCode),
+           future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, widget.stageSubjectCode),
             builder: (context , snapshot){
               if(snapshot.hasData){
                 return Center(
@@ -375,28 +385,32 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
 
             Padding(
               padding: const EdgeInsets.only(top: 10,bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    style:ElevatedButton.styleFrom(
-                      primary: ColorSet.SecondaryColor,
-                    ),
-                    child: Text("file"),
-                    onPressed: ()async{
-                    file = await FilePicker.getFile();
-                    extension = "2";
-                    },
-                  ),
-                  ElevatedButton(
-                    style:ElevatedButton.styleFrom(
-                      primary: ColorSet.SecondaryColor,
-                    ),
-                    child: Text("image"),
-                    onPressed: ()async{
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style:ElevatedButton.styleFrom(
+                          primary: ColorSet.SecondaryColor,
+                        ),
+                        child: Text("file"),
+                        onPressed: ()async{
                         file = await FilePicker.getFile();
-                        extension = "1";
-                    },
+                        extension = "2";
+                        },
+                      ),
+                      ElevatedButton(
+                        style:ElevatedButton.styleFrom(
+                          primary: ColorSet.SecondaryColor,
+                        ),
+                        child: Text("image"),
+                        onPressed: ()async{
+                            file = await FilePicker.getFile();
+                            extension = "1";
+                        },
+                      ),
+                    ],
                   ),
                   ElevatedButton(
                     style:ElevatedButton.styleFrom(

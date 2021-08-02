@@ -43,12 +43,6 @@ class _RecentAssignmentState extends State<RecentAssignment> {
     Widget MyAppBar = AppBar (
       backgroundColor: ColorSet.primaryColor,
       elevation: 0.9,
-      leading: IconButton(icon:Icon(Icons.arrow_back),  color: ColorSet.whiteColor,
-          iconSize: 25,
-          onPressed: (){
-            Navigator.pop(
-              context,);
-          }) ,
       centerTitle: true,
       title: Text("Recent Assignments", style:AppTextStyle.headerStyle),
       actions: [

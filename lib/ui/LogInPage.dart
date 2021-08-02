@@ -94,6 +94,7 @@ class _LogInState extends State<LogIn> {
               ),
             ),
           ),
+
           Center(
             child: Container(
               width: newWidth * 0.8,
@@ -103,11 +104,12 @@ class _LogInState extends State<LogIn> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 90),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         //School logo
                         Container(
                           height: 118,
-                          width: 284,
+                          width: newWidth * 0.8,
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                 image: AssetImage('assets/images/logo2.jpeg'),
@@ -219,7 +221,7 @@ class _LogInState extends State<LogIn> {
                               value: index, child: Text("$index"))).toList(),
                         ),
                         SizedBox(
-                          height: 35.0,
+                          height: 15.0,
                         ),
                         //Log in button
                         Container(

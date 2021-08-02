@@ -18,4 +18,10 @@ class SelectedChatInfo{
       throw Exception('Failed to load data!');
     }
   }
+  Stream<List<SelectedChat>> getStreamOfMessages(Duration refreshTime,int userLogedin , int userSelected) async* {
+    while (true) {
+      await Future.delayed(refreshTime);
+      yield await getSelectedChat(userLogedin , userSelected);
+    }
+  }
 }

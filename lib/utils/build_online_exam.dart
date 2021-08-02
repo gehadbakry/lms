@@ -144,7 +144,7 @@ class _OnlineExamState extends State<OnlineExam> {
           ],
         ),
         content: Container(
-          height: MediaQuery.of(context).size.height*0.3,
+          height: MediaQuery.of(context).size.height*0.4,
           child: ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder:(context , index){

@@ -73,7 +73,7 @@ class _AssignmentDetailsState extends State<AssignmentDetails> {
                   groupBy: (Assignment e) => e.assignmentCode,
                   groupHeaderBuilder: (Assignment e) =>  Padding(
                             padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 20),
+                                left: 20, right: 20, top: 10,bottom: 10),
                             child: Container(
                               decoration: BoxDecoration(
                                   color: ColorSet.whiteColor,

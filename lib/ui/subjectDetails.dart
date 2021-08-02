@@ -72,8 +72,8 @@ class _SubjectDetailsState extends State<SubjectDetails> {
           automaticallyImplyLeading: false,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topRight: Radius.circular(24),
-              topLeft: Radius.circular(24),
+              topRight: Radius.circular(15),
+              topLeft: Radius.circular(15),
             ),
           ),
           backgroundColor: ColorSet.whiteColor,
@@ -93,9 +93,10 @@ class _SubjectDetailsState extends State<SubjectDetails> {
               fit: BoxFit.fitWidth,
               child: Text("Online Exams",style:TextStyle(color: ColorSet.primaryColor),)),
          ],
-        indicatorWeight: 0.005,
-        labelPadding: EdgeInsets.only(right:MediaQuery.of(context).size.width*0.015,
-        ),
+        //indicatorWeight: 0.005,
+        indicatorColor: ColorSet.whiteColor,
+        labelPadding: EdgeInsets.only(right:MediaQuery.of(context).size.width*0.015,),
+
         unselectedLabelStyle: TextStyle(color: Colors.grey ,fontWeight: FontWeight.normal) ,
       ),
     ));

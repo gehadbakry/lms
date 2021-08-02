@@ -56,15 +56,16 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: FutureBuilder<List<TeacherAssignment>>(
-              future: TeacherAssignmentInfo().getTeacherAssignmentInfo(11, 169),
-              //future: TeacherAssignmentInfo().getTeacherAssignmentInfo(code, subjestStageCode),
+              //future: TeacherAssignmentInfo().getTeacherAssignmentInfo(11, 169),
+              future: TeacherAssignmentInfo().getTeacherAssignmentInfo(code, subjestStageCode),
               builder: (context,snapshot){
                 if(snapshot.hasData){
-                  return GroupedListView<TeacherAssignment,int>(
+                  return snapshot.data.length==0?Center(child: Text("No assignments to show",style: AppTextStyle.headerStyle2,),)
+                      : GroupedListView<TeacherAssignment,int>(
                       elements: snapshot.data.toList(),
                       groupBy: (TeacherAssignment e) =>e.chapterCode==null?e.lessonCode:e.chapterCode,
                      groupHeaderBuilder: (TeacherAssignment e) {
-                       return Column(
+                       return  Column(
                          children: [
                            Padding(
                              padding: const EdgeInsets.only(
@@ -138,11 +139,12 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
     var alert = AlertDialog(
       title: Center(child: Text('${assignmentName}',style: AppTextStyle.complaint,),),
       content: FutureBuilder<List<TeacherAssignment>>(
-        future: TeacherAssignmentInfo().getTeacherAssignmentInfo(11, 169),
-        //future: TeacherAssignmentInfo().getTeacherAssignmentInfo(code, subjestStageCode),
+       // future: TeacherAssignmentInfo().getTeacherAssignmentInfo(11, 169),
+        future: TeacherAssignmentInfo().getTeacherAssignmentInfo(code, subjestStageCode),
         builder: (context,snapshot){
           if(snapshot.hasData){
-            return GroupedListView<TeacherAssignment,int>(
+            return snapshot.data.length==0?Center(child: Text("No lessons to show",style: AppTextStyle.headerStyle2),)
+                : GroupedListView<TeacherAssignment,int>(
               elements: snapshot.data.toList(),
               groupBy: (TeacherAssignment e) => e.assignCode,
               groupHeaderBuilder: (TeacherAssignment e) {
@@ -306,26 +308,30 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
 
           Padding(
             padding: const EdgeInsets.only(top: 10,bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Column(
               children: [
-                ElevatedButton(
-                  style:ElevatedButton.styleFrom(
-                    primary: ColorSet.SecondaryColor,
-                  ),
-                  child: Text("file"),
-                  onPressed: ()async{
-                    file = await FilePicker.getFile();
-                  },
-                ),
-                ElevatedButton(
-                  style:ElevatedButton.styleFrom(
-                    primary: ColorSet.SecondaryColor,
-                  ),
-                  child: Text("image"),
-                  onPressed: ()async{
-                    file = await FilePicker.getFile();
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      style:ElevatedButton.styleFrom(
+                        primary: ColorSet.SecondaryColor,
+                      ),
+                      child: Text("File"),
+                      onPressed: ()async{
+                        file = await FilePicker.getFile();
+                      },
+                    ),
+                    ElevatedButton(
+                      style:ElevatedButton.styleFrom(
+                        primary: ColorSet.SecondaryColor,
+                      ),
+                      child: Text("Image"),
+                      onPressed: ()async{
+                        file = await FilePicker.getFile();
+                      },
+                    ),
+                  ],
                 ),
                 ElevatedButton(
                   style:ElevatedButton.styleFrom(
@@ -456,32 +462,36 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
 
           Padding(
             padding: const EdgeInsets.only(top: 10,bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Column(
               children: [
-                ElevatedButton(
-                  style:ElevatedButton.styleFrom(
-                    primary: ColorSet.SecondaryColor,
-                  ),
-                  child: Text("file"),
-                  onPressed: ()async{
-                    file = await FilePicker.getFile();
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      style:ElevatedButton.styleFrom(
+                        primary: ColorSet.SecondaryColor,
+                      ),
+                      child: Text("New file"),
+                      onPressed: ()async{
+                        file = await FilePicker.getFile();
+                      },
+                    ),
+                    ElevatedButton(
+                      style:ElevatedButton.styleFrom(
+                        primary: ColorSet.SecondaryColor,
+                      ),
+                      child: Text("New image"),
+                      onPressed: ()async{
+                        file = await FilePicker.getFile();
+                      },
+                    ),
+                  ],
                 ),
                 ElevatedButton(
                   style:ElevatedButton.styleFrom(
                     primary: ColorSet.SecondaryColor,
                   ),
-                  child: Text("image"),
-                  onPressed: ()async{
-                    file = await FilePicker.getFile();
-                  },
-                ),
-                ElevatedButton(
-                  style:ElevatedButton.styleFrom(
-                    primary: ColorSet.SecondaryColor,
-                  ),
-                  child: Text("link"),
+                  child: Text("New link"),
                   onPressed: (){
                     addLink();
                   },

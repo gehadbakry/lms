@@ -118,7 +118,8 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              IconButton(onPressed: (){},
+                              IconButton(
+                                  onPressed: () {},
                                   icon: Icon(Icons.add, color: ColorSet.SecondaryColor,)),
                               IconButton(
                                   onPressed: () => editQuiz(e.quizCode,e.quizName, e.totalGrade, e.date),
@@ -146,24 +147,36 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
     );
   }
 
-  showQuizzesInfo(
-      var QuizName, var TotalQuizGrade, var NoOfStudents, var quizDate) {
+  showQuizzesInfo(var QuizName, var TotalQuizGrade, var NoOfStudents, var quizDate) {
     var date = DateTime.parse(quizDate);
     var alert = AlertDialog(
-      title: Center(
-          child: Row(
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            '${QuizName}',
-            style: AppTextStyle.headerStyle2,
-          ),
-          Spacer(),
-          Text(
-            '${DateFormat('dd-MM-yyy').format(date)}',
-            style: AppTextStyle.subText,
+      FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          '${QuizName}',
+          style: AppTextStyle.headerStyle2,
+        ),
+      ),
+      SizedBox(height: 5,),
+      FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          '${DateFormat('dd-MM-yyy').format(date)}',
+          style: AppTextStyle.subText,
+        ),
+      ),
+          Container(
+            width: MediaQuery.of(context).size.width *
+                0.65,
+            child: Divider(
+              thickness: 1,
+            ),
           ),
         ],
-      )),
+      ),
       content: Container(
         height: MediaQuery.of(context).size.height * 0.2,
         child: Center(
@@ -277,8 +290,6 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
             child: RaisedButton(
                child: Text("Pick you Date!", style:AppTextStyle.headerStyle,),
               color: ColorSet.primaryColor,
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),),
               onPressed:() => datePicker(context),
              ),
           ),
@@ -314,9 +325,9 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
               print("Not Posted");
             }
           },
-            child:  Text("Save and upload",),
+            child:  Text("Save and upload",style: AppTextStyle.headerStyle,),
             style: ElevatedButton.styleFrom(
-                primary: ColorSet.primaryColor
+                primary: ColorSet.SecondaryColor
             ),)
           // Text(
           //   "${DateFormat('yyyy-MM-dd ').format( selecteddate)}",
@@ -350,7 +361,9 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
       title: Column(
         children: [
           Center(child: Text("Edit quiz", style: AppTextStyle.headerStyle2,)),
-          Center(child: Text("${quizname}", style: AppTextStyle.headerStyle2,)),
+          Center(child: FittedBox(
+              fit:BoxFit.scaleDown,
+              child: Text("${quizname}", style: AppTextStyle.headerStyle2,))),
         ],
       ),
       content: ListView(
@@ -408,12 +421,11 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
             child: RaisedButton(
               child: Text("Pick you Date!", style:AppTextStyle.headerStyle,),
               color: ColorSet.primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),),
               onPressed:() => datePicker(context),
             ),
           ),
-          ElevatedButton(onPressed: ()async{
+          ElevatedButton(
+            onPressed: ()async{
             quizMark.text.isEmpty? Toast.show("Enter a new Grade",context,duration:Toast.LENGTH_LONG):Container(height: 0,width: 0,);
             var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostQuizEdit");
             var request = new http.MultipartRequest("POST", uri);
@@ -441,9 +453,9 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
               print("Not Posted");
             }
           },
-            child:  Text("Save and upload",),
+            child:  Text("Save and upload",style: AppTextStyle.headerStyle,),
             style: ElevatedButton.styleFrom(
-                primary: ColorSet.primaryColor
+                primary:ColorSet.SecondaryColor
             ),)
           // Text(
           //   "${DateFormat('yyyy-MM-dd ').format( selecteddate)}",

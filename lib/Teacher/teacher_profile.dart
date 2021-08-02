@@ -175,7 +175,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           padding: const EdgeInsets.only(right: 10,left: 10),
                           child: Column(
                             children: [
-                              Text("${DayNameEN}",style: AppTextStyle.subtextgrey,),
+                              Text("${DateFormat('EEEE').format(DateTime.now())}",style: AppTextStyle.subtextgrey,),
                               Text("${DateFormat('dd-MM-yyyy').format(DateTime.now())}",style: TextStyle(fontSize: 15,
                                   color: ColorSet.SecondaryColor),)
                             ],
@@ -183,7 +183,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width *
-                              0.55,
+                              0.5,
                           child: Divider(
                             thickness: 1,
                           ),
@@ -194,7 +194,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
             ),
           ),
           ////SCHEDUEL CONTAINER
-          Container(
+          (DateFormat('EEEE').format(DateTime.now())=='Friday' || DateFormat('EEEE').format(DateTime.now())=='Saturday')?
+          Center(child: Text("No schedule today",style:AppTextStyle.headerStyle2)):Container(
             height: 130,
             child: FutureBuilder<List<TeacherScheduel>>(
               future: TeacherScheduelInfo().getTeacherScheduelInfo(30, 17, scheduelDayCode),
@@ -238,7 +239,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
           ),
           ////COURSES SEPARATOR
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(30),
             child: Container(
                 child:Center(
                     child:Row(
@@ -246,7 +247,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width *
-                              0.3,
+                              0.2,
                           child: Divider(
                             thickness: 1,
                           ),
@@ -257,7 +258,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width *
-                              0.3,
+                              0.2,
                           child: Divider(
                             thickness: 1,
                           ),
@@ -286,8 +287,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           child: Column(
                             children: [
                               Container(
-                                width: 90,
-                                height: 105,
+                                width: MediaQuery.of(context).size.width*0.25,
+                                height: MediaQuery.of(context).size.height*0.18,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadiusDirectional.circular(14),
                                     boxShadow: [

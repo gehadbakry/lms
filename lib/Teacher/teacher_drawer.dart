@@ -36,7 +36,7 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
       userCode = int.parse(Provider.of<APIService>(context, listen: false).usercode);
     });
     return Drawer(
-      child: Column(
+      child: ListView(
         children: [
           Container(
             height: 210,
@@ -132,10 +132,12 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
               onTap: ( ) => scheduelDialog(),
           ),
           Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: InkWell(
-              child: Text("Log out?",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: ColorSet.SecondaryColor),),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 25),
+              child: InkWell(
+                child: Text("Log out?",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: ColorSet.SecondaryColor),),
+              ),
             ),
           )
         ],
@@ -156,9 +158,9 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
                   crossAxisSpacing:2,
                   crossAxisCount: 2,
                 ),
-    itemCount: snapshot.data.length,
-    shrinkWrap: true,
-    itemBuilder: (BuildContext context, index) {
+      itemCount: snapshot.data.length,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, index) {
                   return Center(
                     child: InkWell(
                       child: Text('${snapshot.data[index].dayNameEN}',style: AppTextStyle.headerStyle2,),

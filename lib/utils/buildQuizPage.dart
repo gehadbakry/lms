@@ -58,7 +58,7 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
     // });
     return FutureBuilder<List<Quiz>>(
        future: QuizInfo().getQuiz(int.parse(code), subjectCode),
-      //  future: QuizInfo().getQuiz(969, 35),
+      // future: QuizInfo().getQuiz(969, 35),
         builder: (context , snapshot){
           if(snapshot.hasData){
             if(snapshot.data.length >0 ){
@@ -149,41 +149,27 @@ class _QuizPageDetailsState extends State<QuizPageDetails> {
               title: Container(
                 child: Column(
                   children: [
-                    ListTile(
-                     title: Row(
-                        children: [
-                          FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                quizName,
-                                style: AppTextStyle.subText,
-                              )),
-                          Spacer(),
-                          Column(
-                            children: [
-                              FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      "Result: ${studentMark} / ${total} ",
-                                      style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
-                                    ),
-                                  )),
-                              // FittedBox(
-                              //     fit: BoxFit.fitWidth,
-                              //     child: FittedBox(
-                              //       fit: BoxFit.scaleDown,
-                              //       child: Text(
-                              //         "Rank: $Srank ",
-                              //         style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
-                              //       ),
-                              //     )),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                     Column(
+                       children: [
+                         FittedBox(
+                             fit: BoxFit.scaleDown,
+                             child: Text(
+                               quizName,
+                               style: AppTextStyle.subText,
+                             )),
+                         FittedBox(
+                             fit: BoxFit.fitWidth,
+                             child: FittedBox(
+                               fit: BoxFit.scaleDown,
+                               child: Text(
+                                 "Result: ${studentMark} / ${total} ",
+                                 style: TextStyle(fontSize: 12 , color: ColorSet.inactiveColor),
+                               ),
+                             )),
+
+                       ],
+                     ),
+
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Divider(height: 1,thickness: 2,),
