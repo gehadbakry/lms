@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:lms_pro/Teacher/teacher_fill_marks.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/app_style.dart';
+import 'package:lms_pro/teacher_api/getTeacherClasses.dart';
 import 'package:lms_pro/teacher_api/getTeacherQuizzes.dart';
+import 'package:lms_pro/teacher_models/teacher_classes.dart';
 import 'package:lms_pro/teacher_models/teacher_quiz_model.dart';
 import 'package:provider/provider.dart';
 
@@ -235,6 +237,8 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
   createQuiz() {
     TextEditingController quizName = TextEditingController();
     TextEditingController quizMark = TextEditingController();
+    String classesCodes = "";
+    String mySelection;
     var alert = AlertDialog(
       title: Center(child: Text("Add a new quiz", style: AppTextStyle.headerStyle2,)),
       content: ListView(
@@ -295,6 +299,35 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
               onPressed:() => datePicker(context),
              ),
           ),
+          FutureBuilder<List<TeacherClasses>>(
+            //future:TeacherClassesInfo().getTeacherClassesInfo(272, 236),
+              future:TeacherClassesInfo().getTeacherClassesInfo(code, subjestStageCode),
+              builder: (context,snapshot){
+                if(snapshot.hasData){
+                  return  DropdownButton(
+                    items:snapshot.data.map((item) {
+                      return  DropdownMenuItem(
+                        child: new Text('${(item as TeacherClasses).classNameEn}'),
+                        value: (item as TeacherClasses).classCode.toString(),
+                      );
+                    }).toList(),
+                    onChanged: (newVal) {
+                      setState(() {
+                        mySelection = newVal;
+                        classesCodes = mySelection+","+classesCodes;
+
+                      });
+                    },
+                    hint: Text("choose Classes"),
+                    value: mySelection,
+                  );
+                }
+                else if(snapshot.hasError){
+                  return Center(child:Text("Error"));
+                }
+                return Center(child:CircularProgressIndicator());
+              }),
+
           ElevatedButton(onPressed: ()async{
             var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostQuizCreate");
             var request = new http.MultipartRequest("POST", uri);
@@ -305,7 +338,7 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
              request.fields['stage_subject_code'] =subjestStageCode.toString();
             //request.fields['stage_subject_code'] ='236';
             request.fields['user_insert_code'] =userCode;
-            request.fields['classes'] ='2034,2045';
+            request.fields['classes'] =classesCodes.substring(0,classesCodes.length-1);
 
             request.headers.addAll({
               'Content-Type': 'multipart/form-data',
@@ -353,6 +386,8 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
   editQuiz(var quizCode,var quizname ,var quizmarks ,var quizDate){
     TextEditingController quizName = TextEditingController();
     TextEditingController quizMark = TextEditingController();
+    String classesCodes = "";
+    String mySelection;
     var alert = AlertDialog(
       title: Column(
         children: [
@@ -420,6 +455,35 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
               onPressed:() => datePicker(context),
             ),
           ),
+
+          FutureBuilder<List<TeacherClasses>>(
+            //future:TeacherClassesInfo().getTeacherClassesInfo(272, 236),
+              future:TeacherClassesInfo().getTeacherClassesInfo(code, subjestStageCode),
+              builder: (context,snapshot){
+                if(snapshot.hasData){
+                  return  DropdownButton(
+                    items:snapshot.data.map((item) {
+                      return  DropdownMenuItem(
+                        child: new Text('${(item as TeacherClasses).classNameEn}'),
+                        value: (item as TeacherClasses).classCode.toString(),
+                      );
+                    }).toList(),
+                    onChanged: (newVal) {
+                      setState(() {
+                        mySelection = newVal;
+                        classesCodes = mySelection+","+classesCodes;
+
+                      });
+                    },
+                    hint: Text("choose Classes"),
+                    value: mySelection,
+                  );
+                }
+                else if(snapshot.hasError){
+                  return Center(child:Text("Error"));
+                }
+                return Center(child:CircularProgressIndicator());
+              }),
           ElevatedButton(
             onPressed: ()async{
             quizMark.text.isEmpty? Toast.show("Enter a new Grade",context,duration:Toast.LENGTH_LONG):Container(height: 0,width: 0,);
@@ -432,7 +496,7 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
             // request.fields['stage_subject_code'] =subjestStageCode.toString();
             request.fields['stage_subject_code'] ='236';
             request.fields['user_insert_code'] =userCode;
-            request.fields['classes'] =' 2034,2045';
+            request.fields['classes'] =classesCodes.substring(0,classesCodes.length-1);
             request.fields['quize_code'] =quizCode.toString();
 
             request.headers.addAll({

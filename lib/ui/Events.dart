@@ -499,6 +499,9 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
         else if((event as CalenderDateTime).type == 2){
           return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
             child: Container(
+              decoration: BoxDecoration(
+                color: ColorSet.whiteColor,
+                borderRadius: BorderRadius.all(Radius.circular(15) ),),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: ListTile(
@@ -568,6 +571,9 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
         else if((event as CalenderDateTime).type == 3){
           return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
             child: Container(
+              decoration: BoxDecoration(
+                color: ColorSet.whiteColor,
+                borderRadius: BorderRadius.all(Radius.circular(15) ),),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: ListTile(
@@ -637,6 +643,9 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
         else if((event as CalenderDateTime).type == 4){
           return Padding(padding:const EdgeInsets.only(right: 20, left: 20,bottom: 10),
             child: Container(
+              decoration: BoxDecoration(
+                color: ColorSet.whiteColor,
+                borderRadius: BorderRadius.all(Radius.circular(15) ),),
               child: ListTile(
                 leading: Padding(
                   padding: const EdgeInsets.only(top: 5),
@@ -709,6 +718,9 @@ class _EventsState extends State<Events> with TickerProviderStateMixin {
           return Padding(
               padding: const EdgeInsets.only(right: 20, left: 20,bottom: 10),
               child: Container(
+                decoration: BoxDecoration(
+                  color: ColorSet.whiteColor,
+                  borderRadius: BorderRadius.all(Radius.circular(15) ),),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: ListTile(

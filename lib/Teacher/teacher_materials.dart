@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_pro/api_services/api_service.dart';
+import 'package:lms_pro/teacher_api/getTeacherClasses.dart';
 import 'package:lms_pro/teacher_api/getTeacherMaterial.dart';
+import 'package:lms_pro/teacher_models/teacher_classes.dart';
 import 'package:lms_pro/teacher_models/teacher_material_model.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -32,6 +34,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
   bool isPublished = false;
   TextEditingController LinkName = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -39,6 +42,8 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
       SchoolYear = Provider.of<APIService>(context, listen: false).schoolYear;
       subjestStageCode = widget.stageSubjectCode;
     });
+
+
     return Scaffold(
       backgroundColor: ColorSet.primaryColor,
       appBar: AppBar(
@@ -61,8 +66,8 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
         child: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: FutureBuilder<List<TeacherMaterial>>(
-              future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, widget.stageSubjectCode),
-            // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
+             future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, widget.stageSubjectCode),
+             //future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data.length==0?
@@ -136,7 +141,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
           )),
       content: FutureBuilder<List<TeacherMaterial>>(
         // future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, 236),
-          future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, subjestStageCode),
+        future: TeacherMaterialInfo().getTeacherMaterialInfo(code, SchoolYear, subjestStageCode),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return snapshot.data.length==0?Center(child: Text("No lessons were found",style: AppTextStyle.headerStyle2,),)
@@ -351,6 +356,8 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
     var extension ;
     File file;
     TextEditingController MaterialName = TextEditingController();
+    String classesCodes = "";
+    String mySelection;
     bool isPressed = false;
     var alert = SafeArea(child:AlertDialog(
       title: Center(child: Text("Upload a new chapter",style: AppTextStyle.headerStyle2,),),
@@ -443,6 +450,35 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
               title: Text("Delay publishing?",style: AppTextStyle.headerStyle2,),
             ),
 
+            FutureBuilder<List<TeacherClasses>>(
+              //future:TeacherClassesInfo().getTeacherClassesInfo(272, 236),
+                future:TeacherClassesInfo().getTeacherClassesInfo(code, subjestStageCode),
+                builder: (context,snapshot){
+                if(snapshot.hasData){
+                  return  DropdownButton(
+                    items:snapshot.data.map((item) {
+                      return  DropdownMenuItem(
+                        child: new Text('${(item as TeacherClasses).classNameEn}'),
+                        value: (item as TeacherClasses).classCode.toString(),
+                      );
+                    }).toList(),
+                    onChanged: (newVal) {
+                      setState(() {
+                        mySelection = newVal;
+                        classesCodes = mySelection+","+classesCodes;
+
+                      });
+                    },
+                    hint: Text("choose Classes"),
+                    value: mySelection,
+                  );
+                }
+                else if(snapshot.hasError){
+                  return Center(child:Text("Error"));
+                }
+                return Center(child:CircularProgressIndicator());
+                }),
+
             ElevatedButton(
               onPressed: ()async{
                 if(file != null){
@@ -455,10 +491,10 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                   request.fields['material_type_code'] =extension==null?'': extension.toString();
                   request.fields['subject_chapter_lesson_code'] = chapterLessonCode.toString();
                   request.fields['schooling_year_code'] = SchoolYear.toString();
-                  request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+                  request.fields['publish_date'] =  DateFormat('MM-dd-yyy').format(DateTime.now());
                   request.fields['is_publish'] = isPublished==true?"False":"True";
                   request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
-                  request.fields['classes'] = '10';
+                  request.fields['classes'] = classesCodes.substring(0,classesCodes.length-1);
                   request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
                   request.fields['material_path'] ='';
 
@@ -474,6 +510,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                     print("posted");
                   }
                   else{
+                    Toast.show("File not Posted",context,duration:Toast.LENGTH_LONG);
                     print("Not Posted");
                   }
 
@@ -488,10 +525,10 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                   request.fields['material_type_code'] =extension==null?'': extension.toString();
                   request.fields['subject_chapter_lesson_code'] = chapterLessonCode.toString();
                   request.fields['schooling_year_code'] = SchoolYear.toString();
-                  request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+                  request.fields['publish_date'] =  DateFormat('MM-dd-yyy').format(DateTime.now());
                   request.fields['is_publish'] = isPublished==true?"False":"True";
                   request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
-                  request.fields['classes'] = '10';
+                  request.fields['classes'] =  classesCodes.substring(0,classesCodes.length-1);
                   request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
                   request.fields['material_path'] =LinkName.text==null?'':LinkName.text;
 
@@ -507,6 +544,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
                     print("posted");
                   }
                   else{
+                    Toast.show("File wasn't Posted",context,duration:Toast.LENGTH_LONG);
                     print("Not Posted");
                   }
                 }
@@ -686,6 +724,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
        print("delete");
      }
      else{
+       Toast.show("Not deleted",context,duration:Toast.LENGTH_LONG);
        print("Not deleted");
      }
    }
@@ -737,7 +776,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
      request.fields['material_name'] = materialName;
      file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
      request.fields['material_type_code'] = extension==null?'':extension;
-     request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+     request.fields['publish_date'] =  DateFormat('MM-dd-yyy').format(DateTime.now());
      request.fields['is_publish'] = isPublished==true?"False":"True";
      request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
      request.fields['classes'] = '';
@@ -756,6 +795,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
        print("posted");
      }
      else{
+       Toast.show("File wasn't Posted",context,duration:Toast.LENGTH_LONG);
        print("Not Posted");
      }
    }
@@ -766,7 +806,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
     request.fields['material_name'] = materialName;
     //file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
     request.fields['material_type_code'] = extension==null?'':extension;
-    request.fields['publish_date'] =  DateFormat('dd-MM-yyy').format(DateTime.now());
+    request.fields['publish_date'] =  DateFormat('MM-dd-yyy').format(DateTime.now());
     request.fields['is_publish'] = isPublished==true?"False":"True";
     request.fields['user_update_code'] = Provider.of<APIService>(context, listen: false).usercode;
     request.fields['classes'] = '';
@@ -785,6 +825,7 @@ class _TeacherMaterialsState extends State<TeacherMaterials> {
     print("posted");
     }
     else{
+      Toast.show("File wasn't Posted",context,duration:Toast.LENGTH_LONG);
     print("Not Posted");
     }
   }

@@ -137,7 +137,7 @@ class _FillStudentsMarksState extends State<FillStudentsMarks> {
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
   postStudentMark(int studentCode,String mark) async {
-    var uri =  Uri.parse("http://169.239.39.105/lms_api2/swagger/ui/index#!/TeacherApi/TeacherApi_PostQuizStudentSaveMarks");
+    var uri =  Uri.parse("http://169.239.39.105/lms_api2//api/TeacherApi/PostQuizStudentSaveMarks");
     var request = new http.MultipartRequest("POST", uri);
     request.fields['quiz_code'] =widget.quizCode.toString();
     request.fields['user_code'] =Provider.of<APIService>(context, listen: false).usercode;
@@ -156,6 +156,7 @@ class _FillStudentsMarksState extends State<FillStudentsMarks> {
       print("posted");
     }
     else{
+      Toast.show("Mark wasn't Posted",context,duration:Toast.LENGTH_LONG);
       print("Not Posted");
     }
 

@@ -6,7 +6,9 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/teacher_api/getTeacherAssignments.dart';
+import 'package:lms_pro/teacher_api/getTeacherClasses.dart';
 import 'package:lms_pro/teacher_models/teacher_assignment_model.dart';
+import 'package:lms_pro/teacher_models/teacher_classes.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -252,6 +254,8 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
     File file;
     TextEditingController MaterialName = TextEditingController();
     TextEditingController grade = TextEditingController();
+    String classesCodes = "";
+    String mySelection;
     var alert = AlertDialog(
       title: Center(child: Text('Add New assignment',style: AppTextStyle.headerStyle2,)),
       content:  ListView(
@@ -346,17 +350,46 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
             ),
           ),
 
+          FutureBuilder<List<TeacherClasses>>(
+            //future:TeacherClassesInfo().getTeacherClassesInfo(272, 236),
+              future:TeacherClassesInfo().getTeacherClassesInfo(code, subjestStageCode),
+              builder: (context,snapshot){
+                if(snapshot.hasData){
+                  return  DropdownButton(
+                    items:snapshot.data.map((item) {
+                      return  DropdownMenuItem(
+                        child: new Text('${(item as TeacherClasses).classNameEn}'),
+                        value: (item as TeacherClasses).classCode.toString(),
+                      );
+                    }).toList(),
+                    onChanged: (newVal) {
+                      setState(() {
+                        mySelection = newVal;
+                        classesCodes = mySelection+","+classesCodes;
+
+                      });
+                    },
+                    hint: Text("choose Classes"),
+                    value: mySelection,
+                  );
+                }
+                else if(snapshot.hasError){
+                  return Center(child:Text("Error"));
+                }
+                return Center(child:CircularProgressIndicator());
+              }),
+
           ElevatedButton(onPressed: ()async{
             var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostAssignmentCreate");
             var request = new http.MultipartRequest("POST", uri);
             request.fields['publish_time'] = DateFormat('HH:MM:00').format(DateTime.now());
             request.fields['assignment_name'] =MaterialName.text;
-            request.fields['publish_date'] =DateFormat('dd-MM-yyy').format(DateTime.now()) ;
+            request.fields['publish_date'] =DateFormat('MM-dd-yyy').format(DateTime.now()) ;
             request.fields['total_grade'] = grade.text;
             request.fields['teacher_code'] = Provider.of<APIService>(context, listen: false).code.toString();
             request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
             //request.fields['stage_subject_code'] = '169';
-            request.fields['classes'] = '13';
+            request.fields['classes'] = classesCodes.substring(0,classesCodes.length-1);
             request.fields['chapters'] =chapterCode==null?"":chapterCode.toString();
             request.fields['lessons'] =lessonCode==null?'':lessonCode.toString();
             file == null?request.fields['file']= '':request.files.add(await http.MultipartFile.fromPath('file',file.path));
@@ -373,6 +406,7 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
             print("posted");
             }
             else{
+              Toast.show("File wasn't Posted",context,duration:Toast.LENGTH_LONG);
             print("Not Posted");
             }
           },
@@ -406,6 +440,8 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
     File file;
     TextEditingController MaterialName = TextEditingController();
     TextEditingController grade = TextEditingController();
+    String classesCodes = "";
+    String mySelection;
     var alert = AlertDialog(
       title: Center(child: Text('Edit assignment name',style: AppTextStyle.headerStyle2,)),
       content:  ListView(
@@ -500,18 +536,47 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
             ),
           ),
 
+          FutureBuilder<List<TeacherClasses>>(
+            //future:TeacherClassesInfo().getTeacherClassesInfo(272, 236),
+              future:TeacherClassesInfo().getTeacherClassesInfo(code, subjestStageCode),
+              builder: (context,snapshot){
+                if(snapshot.hasData){
+                  return  DropdownButton(
+                    items:snapshot.data.map((item) {
+                      return  DropdownMenuItem(
+                        child: new Text('${(item as TeacherClasses).classNameEn}'),
+                        value: (item as TeacherClasses).classCode.toString(),
+                      );
+                    }).toList(),
+                    onChanged: (newVal) {
+                      setState(() {
+                        mySelection = newVal;
+                        classesCodes = mySelection+","+classesCodes;
+
+                      });
+                    },
+                    hint: Text("choose Classes"),
+                    value: mySelection,
+                  );
+                }
+                else if(snapshot.hasError){
+                  return Center(child:Text("Error"));
+                }
+                return Center(child:CircularProgressIndicator());
+              }),
+
           ElevatedButton(onPressed: ()async{
             var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostAssignmentEdit");
             var request = new http.MultipartRequest("POST", uri);
             request.fields['publish_time'] = DateFormat('HH:MM:00').format(DateTime.now());
             request.fields['assignment_name'] =MaterialName.text.isEmpty?assignName:MaterialName.text;
-            request.fields['publish_date'] =DateFormat('dd-MM-yyy').format(DateTime.now()) ;
+            request.fields['publish_date'] =DateFormat('MM-dd-yyy').format(DateTime.now()) ;
             request.fields['total_grade'] = grade.text.isEmpty?totalGrade.toString():grade.text;
             request.fields['teacher_code'] = Provider.of<APIService>(context, listen: false).code.toString();
             request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
             // request.fields['teacher_code'] = '11';
             // request.fields['stage_subject_code'] = '169';
-            request.fields['classes'] = '13';
+            request.fields['classes'] = classesCodes.substring(0,classesCodes.length-1);
             request.fields['chapters'] =chapterCode==null?'':chapterCode.toString();
             request.fields['lessons'] =lessonCode==null?'':lessonCode.toString();
             file == null?request.fields['file']=filePath:request.files.add(await http.MultipartFile.fromPath('file',file.path));
@@ -528,6 +593,7 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
               print("posted");
             }
             else{
+              Toast.show("File wasn't Posted",context,duration:Toast.LENGTH_LONG);
               print("Not Posted");
             }
           },
@@ -573,6 +639,7 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
       print("delete");
     }
     else{
+      Toast.show("Not deleted",context,duration:Toast.LENGTH_LONG);
       print("Not deleted");
     }
   }
