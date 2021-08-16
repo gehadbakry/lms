@@ -1,7 +1,7 @@
 class TeacherScheduel{
-  int courseCode,dayCode;
+  int courseCode,dayCode,schoolCourseCode;
   String courseStart,courseEnd,subjectNameAR,subjectNameEN,
-  dayNameAR,dayNameEn,teacherNameAR,teacherNameEn;
+  dayNameAR,dayNameEn,teacherNameAR,teacherNameEn,classNameAR,classNameEN,stageNameAr,stageNameEn;
 
   TeacherScheduel({
     this.dayCode,
@@ -14,6 +14,11 @@ class TeacherScheduel{
     this.courseEnd,
     this.courseStart,
     this.subjectNameEN,
+    this.classNameAR,
+    this.classNameEN,
+    this.schoolCourseCode,
+    this.stageNameAr,
+    this.stageNameEn,
 });
   factory TeacherScheduel.fromJson(Map<String, dynamic> json){
     return TeacherScheduel(
@@ -27,5 +32,10 @@ class TeacherScheduel{
       courseEnd: json['course_end_time'],
       courseStart: json['course_start_time'],
       subjectNameEN: json['subject_name_en'],
+      classNameAR: json['school_class_name_ar'],
+      classNameEN: json['school_class_name_en'],
+      schoolCourseCode: json['school_courses_table_setup_stages_details_code'],
+      stageNameAr: json['stage_name_ar'],
+      stageNameEn: json['stage_name_en'],
     );}
 }

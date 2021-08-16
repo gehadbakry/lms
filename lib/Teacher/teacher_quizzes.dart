@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:lms_pro/Teacher/teacher_fill_marks.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/app_style.dart';
 import 'package:lms_pro/teacher_api/getTeacherQuizzes.dart';
@@ -72,8 +73,8 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
           padding: const EdgeInsets.only(top: 10),
           child: Center(
             child: FutureBuilder<List<TeacherQuiz>>(
-              future: TeacherQuizzesInfo().getTeacherQuizzesInfo(code, 236),
-              //future: TeacherQuizzesInfo().getTeacherQuizzesInfo(code, subjestStageCode),
+              //future: TeacherQuizzesInfo().getTeacherQuizzesInfo(code, 236),
+              future: TeacherQuizzesInfo().getTeacherQuizzesInfo(code, subjestStageCode),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data.length==0?Text("No quizzes were found",style: AppTextStyle.headerStyle2,):
@@ -119,7 +120,9 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context,MaterialPageRoute(builder: (context) =>FillStudentsMarks(quizCode:e.quizCode,quizName: e.quizName,)),);
+                                  },
                                   icon: Icon(Icons.add, color: ColorSet.SecondaryColor,)),
                               IconButton(
                                   onPressed: () => editQuiz(e.quizCode,e.quizName, e.totalGrade, e.date),
@@ -229,7 +232,6 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
     );
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
-
   createQuiz() {
     TextEditingController quizName = TextEditingController();
     TextEditingController quizMark = TextEditingController();
@@ -294,20 +296,14 @@ class _TeacherQuizzesState extends State<TeacherQuizzes> {
              ),
           ),
           ElevatedButton(onPressed: ()async{
-            print(quizName.text);
-            print(selecteddate);
-            print(code);
-            print(quizMark.text);
-            print(subjestStageCode);
-            print(userCode);
             var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostQuizCreate");
             var request = new http.MultipartRequest("POST", uri);
              request.fields['quize_name'] = quizName.text.isEmpty?"Unknown name":quizName.text;
             request.fields['quize_date'] =selecteddate==null?DateTime.now().toString():selecteddate.toString();
             request.fields['teacher_code'] =code.toString();
             request.fields['quize_mark'] =quizMark.text.isEmpty?"No marks were assigned":quizMark.text;
-            // request.fields['stage_subject_code'] =subjestStageCode.toString();
-            request.fields['stage_subject_code'] ='236';
+             request.fields['stage_subject_code'] =subjestStageCode.toString();
+            //request.fields['stage_subject_code'] ='236';
             request.fields['user_insert_code'] =userCode;
             request.fields['classes'] ='2034,2045';
 

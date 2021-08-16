@@ -36,7 +36,7 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
       userCode = int.parse(Provider.of<APIService>(context, listen: false).usercode);
     });
     return Drawer(
-      child: ListView(
+      child: Column(
         children: [
           Container(
             height: 210,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/teacher_api/getTeacherScheduel.dart';
 import 'package:lms_pro/teacher_models/teacher_scheduel.dart';
+import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../app_style.dart';
@@ -32,8 +34,9 @@ class _SingleDayScheduelState extends State<SingleDayScheduel> {
           borderRadius:BorderRadius.only(topRight: Radius.circular(15),topLeft:Radius.circular(15) ),
         ),
         child: FutureBuilder<List<TeacherScheduel>>(
-          future: TeacherScheduelInfo()
-              .getTeacherScheduelInfo(30, 17, widget.dayCode),
+          //future: TeacherScheduelInfo().getTeacherScheduelInfo(30, 17, widget.dayCode),
+          future: TeacherScheduelInfo().getTeacherScheduelInfo(int.parse(Provider.of<APIService>(context, listen: false).code),
+              Provider.of<APIService>(context, listen: false).schoolYear, widget.dayCode),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(

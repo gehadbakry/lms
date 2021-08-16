@@ -354,8 +354,8 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
             request.fields['publish_date'] =DateFormat('dd-MM-yyy').format(DateTime.now()) ;
             request.fields['total_grade'] = grade.text;
             request.fields['teacher_code'] = Provider.of<APIService>(context, listen: false).code.toString();
-            //request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
-            request.fields['stage_subject_code'] = '169';
+            request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
+            //request.fields['stage_subject_code'] = '169';
             request.fields['classes'] = '13';
             request.fields['chapters'] =chapterCode==null?"":chapterCode.toString();
             request.fields['lessons'] =lessonCode==null?'':lessonCode.toString();
@@ -501,30 +501,16 @@ class _TeacherAssignmentsState extends State<TeacherAssignments> {
           ),
 
           ElevatedButton(onPressed: ()async{
-            print(MaterialName.text.isEmpty);
-            print( MaterialName.text);
-            print(assignName);
-            print( grade.text.isEmpty);
-            print(totalGrade);
-            print(grade.text);
-            print(file);
-            print(filePath);
-            print(Provider.of<APIService>(context, listen: false).code);
-            print(DateFormat('HH:MM:00').format(DateTime.now()));
-            print(DateFormat('dd-MM-yyy').format(DateTime.now()));
-            print('chapter Code ${chapterCode}');
-            print('lesson code ${lessonCode}');
-            print('assignment code ${assignCode}');
             var uri =  Uri.parse("http://169.239.39.105/lms_api2/api/TeacherApi/PostAssignmentEdit");
             var request = new http.MultipartRequest("POST", uri);
             request.fields['publish_time'] = DateFormat('HH:MM:00').format(DateTime.now());
             request.fields['assignment_name'] =MaterialName.text.isEmpty?assignName:MaterialName.text;
             request.fields['publish_date'] =DateFormat('dd-MM-yyy').format(DateTime.now()) ;
             request.fields['total_grade'] = grade.text.isEmpty?totalGrade.toString():grade.text;
-            //request.fields['teacher_code'] = Provider.of<APIService>(context, listen: false).code.toString();
-            //request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
-            request.fields['teacher_code'] = '11';
-            request.fields['stage_subject_code'] = '169';
+            request.fields['teacher_code'] = Provider.of<APIService>(context, listen: false).code.toString();
+            request.fields['stage_subject_code'] = (widget.stageSubjectCode).toString();
+            // request.fields['teacher_code'] = '11';
+            // request.fields['stage_subject_code'] = '169';
             request.fields['classes'] = '13';
             request.fields['chapters'] =chapterCode==null?'':chapterCode.toString();
             request.fields['lessons'] =lessonCode==null?'':lessonCode.toString();

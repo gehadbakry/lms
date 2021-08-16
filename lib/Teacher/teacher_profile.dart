@@ -4,6 +4,7 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_pro/Chat/ChatButton.dart';
 import 'package:lms_pro/Teacher/teacher_bottomAppBar.dart';
+import 'package:lms_pro/Teacher/teacher_checkIn.dart';
 import 'package:lms_pro/Teacher/teacher_drawer.dart';
 import 'package:lms_pro/api_services/api_service.dart';
 import 'package:lms_pro/teacher_api/getTeacherDays.dart';
@@ -194,17 +195,19 @@ class _TeacherProfileState extends State<TeacherProfile> {
             ),
           ),
           ////SCHEDUEL CONTAINER
-          (DateFormat('EEEE').format(DateTime.now())=='Friday' || DateFormat('EEEE').format(DateTime.now())=='Saturday')?
-          Center(child: Text("No schedule today",style:AppTextStyle.headerStyle2)):Container(
+          Container(
             height: 130,
             child: FutureBuilder<List<TeacherScheduel>>(
-              future: TeacherScheduelInfo().getTeacherScheduelInfo(30, 17, scheduelDayCode),
+              //future: TeacherScheduelInfo().getTeacherScheduelInfo(30, 17, 2),
+              future: TeacherScheduelInfo().getTeacherScheduelInfo(userCode, SchoolYear, scheduelDayCode),
               builder: (context,snapshot){
                 if(snapshot.hasData){
                   return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context,index){
-                        return snapshot.data[index].dayCode == scheduelDayCode?Padding(
+                        return
+                          snapshot.data[index].dayCode == scheduelDayCode?
+                        Padding(
                           padding: const EdgeInsets.only(left: 25),
                           child: TimelineTile(
                             indicatorStyle: IndicatorStyle(
@@ -215,9 +218,28 @@ class _TeacherProfileState extends State<TeacherProfile> {
                             endChild: Column(
                               children: [
                                 ListTile(
-                                  title: Text(snapshot.data[index].subjectNameEN , style: AppTextStyle.headerStyle2,),
-                                  subtitle: Text(snapshot.data[index].teacherNameEn, style: AppTextStyle.subtextgrey,),
-                                  trailing: Text("${(snapshot.data[index].courseStart).substring(0,5)} : ${(snapshot.data[index].courseEnd).substring(0,5)}",style: AppTextStyle.subText,),
+                                  title: Row(
+                                    children: [
+                                      Text(snapshot.data[index].subjectNameEN , style: AppTextStyle.headerStyle2,),
+                                      SizedBox(width: 15,),
+                                      Text("${(snapshot.data[index].courseStart).substring(0,5)} : ${(snapshot.data[index].courseEnd).substring(0,5)}",style: AppTextStyle.subText,),
+                                    ],
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      Text('${snapshot.data[index].stageNameEn} ', style: AppTextStyle.subtextgrey,),
+                                      Text('${snapshot.data[index].classNameEN}', style: AppTextStyle.subtextgrey,),
+                                    ],
+                                  ),
+                                  trailing:Column(
+                                    children: [
+                                      Icon(Icons.arrow_forward_ios_outlined,color: Colors.red,),
+                                    ],
+                                  ),
+                               onTap: () => checkIntoClassDialog(context,snapshot.data[index].schoolCourseCode,scheduelDayCode,
+                                   (snapshot.data[index].courseStart).substring(0,5),(snapshot.data[index].courseEnd).substring(0,5),
+                                 snapshot.data[index].classNameEN,snapshot.data[index].stageNameEn,snapshot.data[index].subjectNameEN
+                               ),
                                 ),
                               ],
                             ),
@@ -226,7 +248,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           ),
                         ) :
                         Center(
-                          child: Text("No scheduel today"),
+                          child: Text("No schedule today"),
                         );
                       });
                 }
@@ -342,4 +364,13 @@ class _TeacherProfileState extends State<TeacherProfile> {
       ),
     );
   }
-}
+  checkIntoClassDialog(BuildContext context,int classCode,int dayCode,String start,String end,String className,String stageName,String subjectName){
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return CheckIn(dayCode: dayCode,courseCode: classCode,startTime: start,endTime: end,className: className,stageName: stageName,subjectName: subjectName,);
+      },
+    );
+  }
+  }
